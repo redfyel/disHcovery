@@ -5,6 +5,9 @@ import Recipes from './components/recipes/Recipes'
 import Auth from './components/auth/Auth'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
+import RecipeRoulette from './components/recipe-roulette/RecipeRoulette'
+import Saved from './components/saved/Saved'
+import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
 import './App.css'
 
@@ -24,19 +27,31 @@ function App() {
               path : '/recipes',
               element : <Recipes/>
          },
+        // {
+        //   path : '/join-us',
+        //   element : <Auth/>,
+        //   children : [
+        //     {
+        //       path : '/login',
+        //       element : <Login />
+        //     },
+        //     {
+        //       path : '/register',
+        //       element : <Register />
+        //     },    
+        //   ]
+        // },
         {
-          path : '/join-us',
-          element : <Auth/>,
-          children : [
-            {
-              path : '/login',
-              element : <Login />
-            },
-            {
-              path : '/register',
-              element : <Register />
-            },    
-          ]
+          path : '/recipe-roulette',
+          element : <RecipeRoulette/>
+        },
+        {
+          path : '/saved',
+          element : <Saved />
+        },
+        {
+          path : '/community',
+          element : <Community />
         }
        
       ]

@@ -11,7 +11,10 @@
   },
   "dependencies": {
     "bootstrap": "^5.3.3",
+    "framer-motion": "^12.4.4",
     "react": "^19.0.0",
+    "react-confetti": "^6.2.2",
+    "react-custom-roulette": "^1.4.1",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.1.5"
   },
