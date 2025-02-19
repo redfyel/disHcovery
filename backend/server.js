@@ -3,7 +3,7 @@ const exp = require('express')
 const app = exp()
 
 // import environment variables
-require('dotenv').config
+require('dotenv').config()
 
 // import MongoClient
 const {MongoClient} = require('mongodb')
@@ -26,7 +26,7 @@ mongoclient.connect().then((connectionObj)=>{
     app.set('usersCollection', usersCollection)
 
     // start HTTP server
-    app.listen(process.env.PORT, () => console.log(`Server started on Port ${process.env.port}`))
+    app.listen(process.env.PORT, () => console.log(`Server started on Port ${process.env.PORT}`))
 }).catch((err)=>console.log("Error in DB Connection: ", err))
 
 // import and mount recipe-related API routes
@@ -38,4 +38,4 @@ const userApp = require('./APIs/userAPI')
 app.use('/user-api', userApp)
 
 // error handling middleware
-app.use((err, req, res, next) => res.status(500).send({message : "An error ocuured: ", errorMessage: err.message}))
+// app.use((err, req, res, next) => res.status(500).send({message : "An error ocuured: ", errorMessage: err.message}))
