@@ -3,27 +3,35 @@ import { Wheel } from "react-custom-roulette";
 import Confetti from "react-confetti";
 import { motion } from "framer-motion";
 
-const RecipeRoulette = () => {
-  const allRecipes = [
-    { name: "Spaghetti Carbonara", image: "https://via.placeholder.com/150" },
-    { name: "Avocado Toast", image: "https://via.placeholder.com/150" },
-    { name: "Chicken Alfredo", image: "https://via.placeholder.com/150" },
-    { name: "Banana Pancakes", image: "https://via.placeholder.com/150" },
-    { name: "Tomato Basil Soup", image: "https://via.placeholder.com/150" }
-  ];
-
+function RecipeRoulette() {
   const [recipes, setRecipes] = useState([]);
+  const [error, setError] = useState(null);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   useEffect(() => {
-    const shuffled = allRecipes.sort(() => 0.5 - Math.random()).slice(0, 3);
-    setRecipes(shuffled);
+    async function fetchRecipes() {
+      try {
+        const res = await fetch("http://localhost:4000/recipe-api/recipes");
+        if (!res.ok) throw new Error("Network response was not ok");
+        const data = await res.json();
+
+        const shuffled = data.payload.sort(() => 0.5 - Math.random()).slice(0, 4);
+        setRecipes(shuffled);
+      } catch (err) {
+        console.error("Error fetching recipes...", err.message);
+        setError(err);
+      }
+    }
+
+    fetchRecipes();
   }, []);
 
   const handleSpinClick = () => {
     if (recipes.length > 0) {
+      setSelectedRecipe(null);
       const randomIndex = Math.floor(Math.random() * recipes.length);
       setPrizeNumber(randomIndex);
       setMustSpin(true);
@@ -33,41 +41,62 @@ const RecipeRoulette = () => {
   const handleStopSpinning = () => {
     setMustSpin(false);
     setShowConfetti(true);
-    setTimeout(() => setShowConfetti(false), 3000); // Confetti lasts 3s
+    setSelectedRecipe(recipes[prizeNumber]);
+    setTimeout(() => setShowConfetti(false), 3000);
   };
 
   return (
-    <div className="flex flex-col items-center justify-center p-8 bg-[#F5E6C8] min-h-screen text-[#5A3825]">
+    <div className="flex flex-col items-center justify-center p-8 bg-gradient-to-b from-[#FFFAF0] to-[#F4A261] min-h-screen text-[#5A3825]">
       {showConfetti && <Confetti />}
       <h1 className="text-4xl font-bold mb-6">🍽️ Recipe Roulette 🎰</h1>
+
       {recipes.length > 0 && (
-        <Wheel 
-          mustStartSpinning={mustSpin}
-          prizeNumber={prizeNumber}
-          data={recipes.map(r => ({ option: r.name, style: { backgroundColor: "#FFB703", color: "#023047" } }))}
-          onStopSpinning={handleStopSpinning}
-          outerBorderColor="#FB8500"
-          pointerProps={{ style: { borderBottomColor: "#FF6600" } }}
-        />
+        <div className="relative">
+          <Wheel
+            mustStartSpinning={mustSpin}
+            prizeNumber={prizeNumber}
+            data={recipes.map((r) => ({
+              option: r.title.length > 25 ? r.title.substring(0, 25) + "..." : r.title,
+              style: { backgroundColor: "#F77F00", color: "#FFF" },
+            }))}
+            onStopSpinning={handleStopSpinning}
+            outerBorderColor="#E63946"
+            outerBorderWidth={8}
+            innerBorderColor="#F4A261"
+            radiusLineColor="#2A9D8F"
+            radiusLineWidth={2}
+            backgroundColors={["#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51"]}
+            textColors={["#FFF"]}
+            pointerProps={{ style: { borderBottomColor: "#E63946" } }}
+          />
+          <div className="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#E63946] rounded-full"></div>
+        </div>
       )}
-      <button 
-        onClick={handleSpinClick} 
-        className="mt-6 px-6 py-3 bg-[#FB8500] text-white text-lg rounded-lg shadow-md hover:bg-[#E76F51] transition-all duration-300 transform hover:scale-105"
+
+      <button
+        onClick={handleSpinClick}
+        className="mt-6 px-6 py-3 bg-[#E63946] text-white text-lg rounded-lg shadow-md hover:bg-[#D62828] transition-all duration-300 transform hover:scale-105"
       >
         Give it a Whirl! 🎡
       </button>
-      {prizeNumber !== null && (
-        <motion.div 
+
+      {selectedRecipe && (
+        <motion.div
           className="mt-6 p-4 bg-white shadow-lg rounded-lg text-center"
-          initial={{ opacity: 0, y: 20 }} 
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
         >
-          <h2 className="text-2xl font-bold">You got: {recipes[prizeNumber].name}!</h2>
-          <img src={recipes[prizeNumber].image} alt={recipes[prizeNumber].name} className="mt-4 w-40 h-40 rounded-lg" />
+          <h2 className="text-2xl font-bold">You got: {selectedRecipe.title}!</h2>
+          <img
+            src={selectedRecipe.image}
+            alt={selectedRecipe.title}
+            className="mt-4 w-20 h-20 rounded-lg"
+          />
         </motion.div>
       )}
     </div>
   );
-};
+}
 
 export default RecipeRoulette;
