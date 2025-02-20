@@ -5,6 +5,10 @@ const app = exp()
 // import environment variables
 require('dotenv').config()
 
+// middleware
+const cors = require('cors')
+app.use(cors())
+
 // import MongoClient
 const {MongoClient} = require('mongodb')
 
