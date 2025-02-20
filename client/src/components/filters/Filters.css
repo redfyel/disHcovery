@@ -1,48 +1,62 @@
-/* src/components/RecipeFilter.css */
+/* Filters Box */
 .filter-container {
-    background-color: #ffffff; /* White background */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    max-width: 300px; /* Set a max width for the filter sidebar */
-    margin: 20px; /* Add some margin */
-}
-
-h2 {
-    font-size: 24px;
+    background-color: #ffffff;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+    max-width: 350px; /* Increased width */
+    margin: 20px;
+  }
+  
+  /* Filter Headings */
+  h2 {
+    font-size: 26px;
     margin-bottom: 20px;
-    color: #333; /* Darker text color for better readability */
-}
-
-.filter-section {
-    margin-bottom: 20px; /* Space between filter sections */
-}
-
-.filter-section h3 {
-    font-size: 18px;
+    color: #333;
+  }
+  
+  .filter-section {
+    margin-bottom: 25px;
+  }
+  
+  .filter-section h3 {
+    font-size: 20px;
     margin-bottom: 10px;
-    color: #555; /* Slightly lighter color for section titles */
-}
-
-label {
-    display: block; /* Stack the labels vertically */
-    margin-bottom: 5px; /* Space between each label */
-    cursor: pointer; /* Change cursor to pointer on hover */
-}
-
-input[type="checkbox"],
-input[type="radio"] {
-    margin-right: 10px; /* Space between checkbox/radio and label text */
-}
-
-input[type="checkbox"]:hover,
-input[type="radio"]:hover {
-    transform: scale(1.1); /* Slightly enlarge on hover for better UX */
-}
-
-@media (max-width: 768px) {
+    color: #555;
+  }
+  
+  /* Checkbox and Radio Styles */
+  label {
+    display: block;
+    margin-bottom: 8px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  input[type="checkbox"],
+  input[type="radio"] {
+    margin-right: 12px;
+    transform: scale(1.1);
+  }
+  
+  input[type="checkbox"]:hover,
+  input[type="radio"]:hover {
+    transform: scale(1.2);
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
     .filter-container {
-        max-width: 100%; /* Full width on smaller screens */
-        margin: 10px; /* Adjust margin for smaller screens */
+      max-width: 100%;
+      margin: 10px;
     }
-}
+  
+    .recipes-container {
+      flex-direction: column-reverse; /* Filters move below recipes */
+    }
+  
+    .filters-column {
+      width: 100%;
+    }
+  }
+  

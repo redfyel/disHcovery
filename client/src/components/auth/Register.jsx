@@ -1,6 +1,5 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
-import { calcGeneratorDuration } from "framer-motion";
 
 function Register({ onRegisterSuccess }) {  
   const { register, handleSubmit, formState: { errors } } = useForm();

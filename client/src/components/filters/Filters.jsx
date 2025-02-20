@@ -2,51 +2,23 @@ import React, { useState } from "react";
 import "./Filters.css"; // Import the CSS file
 
 const RecipeFilter = ({ onFilterChange }) => {
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [selectedCategories, setSelectedIngredients] = useState([]);
   const [selectedMealType, setSelectedMealType] = useState("");
   const [selectedDiet, setSelectedDiet] = useState("");
   const [selectedCookTime, setSelectedCookTime] = useState("");
   const [selectedCuisine, setSelectedCuisine] = useState("");
   const [selectedNutrition, setSelectedNutrition] = useState("");
 
-  const ingredients = [
-    "Milk",
-    "Eggs",
-    "Bread",
-    "Potatoes",
-    "Onions",
-    "Carrots",
-    "Butter",
-    "Chicken",
-    "Cheese",
-    "Mushrooms",
-  ];
-  const mealTypes = [
-    "Appetizers",
-    "Beverages",
-    "Breads",
-    "Breakfast",
-    "Brunch",
-  ];
-  const diets = [
-    "Lacto Vegetarian",
-    "Ovo Vegetarian",
-    "Ovo-Lacto Vegetarian",
-    "Pescatarian",
-    "Vegan",
-  ];
+  const Categories = ["Quick & Easy", "Healthy", "Family-Friendly", "Budget-Friendly", "One-Pot", "Comfort Food", "Seasonal", "Special Occasion", "BBQ", "Soup", "Salad", "Pasta", "Baking", "Grilling"];
+  const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Appetizer", "Side Dish", "Main Course"];
+  const diets = ["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Low-Carb", "Keto", "Paleo", "High-Protein"];
   const cookTimes = ["Under 15 min", "Under 30 min", "Under 60 min"];
-  const cuisines = ["African", "American", "Asian", "Australian", "British"];
-  const nutritionOptions = [
-    "Healthy",
-    "High Protein",
-    "Low Sugars",
-    "Low Energy",
-    "Low Sodium",
-  ];
+  const cuisines = ["American", "British", "Italian", "Mexican", "Indian", "Chinese", "French", "Thai", "Japanese", "Mediterranean"];
+
+
 
   const handleIngredientChange = (ingredient) => {
-    setSelectedIngredients((prev) =>
+    setSelectedCategories((prev) =>
       prev.includes(ingredient)
         ? prev.filter((i) => i !== ingredient)
         : [...prev, ingredient]
@@ -55,7 +27,7 @@ const RecipeFilter = ({ onFilterChange }) => {
 
   const handleFilterChange = () => {
     onFilterChange({
-      ingredients: selectedIngredients,
+      Categories: selectedCategories,
       mealType: selectedMealType,
       diet: selectedDiet,
       cookTime: selectedCookTime,
@@ -68,12 +40,12 @@ const RecipeFilter = ({ onFilterChange }) => {
     <div className="filter-container">
       <h2>Filter</h2>
       <div className="filter-section">
-        <h3>Ingredients</h3>
-        {ingredients.map((ingredient) => (
+        <h3>Categories</h3>
+        {Categories.map((ingredient) => (
           <label key={ingredient}>
             <input
               type="checkbox"
-              checked={selectedIngredients.includes(ingredient)}
+              checked={selectedCategories.includes(ingredient)}
               onChange={() => {
                 handleIngredientChange(ingredient);
                 handleFilterChange();
@@ -156,25 +128,6 @@ const RecipeFilter = ({ onFilterChange }) => {
               }}
             />
             {cuisine}
-          </label>
-        ))}
-      </div>
-
-            <div className="filter-section">
-        <h3>Nutrition</h3>
-        {nutritionOptions.map((option) => (
-          <label key={option}>
-            <input
-              type="radio"
-              name="nutrition"
-              value={option}
-              checked={selectedNutrition === option}
-              onChange={() => {
-                setSelectedNutrition(option);
-                handleFilterChange();
-              }}
-            />
-            {option}
           </label>
         ))}
       </div>

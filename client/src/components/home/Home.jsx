@@ -1,58 +1,59 @@
 import React from 'react';
 import { FaSearch, FaUser } from "react-icons/fa";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, Card } from "react-bootstrap";
 import { motion } from "framer-motion";
 import "./Home.css";
 
 export default function HomePage() {
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-vh-100 bg-light">
       {/* Navbar */}
       <motion.nav 
         initial={{ y: -50, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.5 }}
-        className="flex justify-between items-center p-4 bg-white shadow-md"
+        className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-3"
       >
-        <h1 className="text-2xl font-bold">disHcovery</h1>
-        <div className="flex items-center border rounded-full px-3 py-1">
-          <FaSearch className="text-gray-500" />
-          <input
-            type="text"
-            placeholder="Search recipes..."
-            className="outline-none px-2"
-          />
+        <div className="container d-flex justify-content-between align-items-center">
+          <h1 className="navbar-brand fw-bold">disHcovery</h1>
+          <div className="d-flex align-items-center border rounded-pill px-3 py-1">
+            <FaSearch className="text-muted" />
+            <input
+              type="text"
+              placeholder="Search recipes..."
+              className="form-control border-0 ms-2"
+            />
+          </div>
+          <Button variant="outline-primary" className="d-flex align-items-center gap-2">
+            <FaUser /> Login / Signup
+          </Button>
         </div>
-        <Button variant="outline" className="flex items-center gap-2">
-          <FaUser /> Login / Signup
-        </Button>
       </motion.nav>
 
-      {/* 1. Video Section */}
-      <section className="relative w-full h-[500px]">
+      {/* Video Section */}
+      <section className="position-relative w-100" style={{ height: "500px" }}>
         <video 
-          className="absolute top-0 left-0 w-full h-full object-cover"
+          className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
           autoPlay loop muted
         >
-          <source src="/videos/food-video.mp4" type="video/mp4" />
+          <source src="../../assets/home.mp4" type="video/mp4" />
         </video>
-        <div className="absolute inset-0 bg-black bg-opacity-40 flex flex-col justify-center items-center text-white">
-          <h2 className="text-4xl font-semibold">Discover Delicious Recipes</h2>
-          <p className="mt-2">Find, save, and share your favorite recipes with ease.</p>
-          <Button className="mt-4">Get Started</Button>
+        <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-center align-items-center text-white">
+          <h2 className="fs-1 fw-semibold">Discover Delicious Recipes</h2>
+          <p className="mt-2 fs-5">Find, save, and share your favorite recipes with ease.</p>
+          <Button variant="primary" className="mt-3">Get Started</Button>
         </div>
       </section>
 
-      {/* 2. Features Section */}
+      {/* Features Section */}
       <motion.section 
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
-        className="p-8 text-center bg-white"
+        className="container text-center my-5"
       >
-        <h3 className="text-3xl font-semibold">Why Choose disHcovery?</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+        <h3 className="fw-semibold fs-2">Why Choose disHcovery?</h3>
+        <div className="row mt-4">
           {[
             { id: 1, title: "Explore Recipes", desc: "Discover a variety of global cuisines." },
             { id: 2, title: "Save & Share", desc: "Save recipes and share with your friends." },
@@ -60,20 +61,24 @@ export default function HomePage() {
           ].map((feature) => (
             <motion.div 
               key={feature.id}
-              className="p-6 bg-gray-100 rounded-lg shadow-md"
+              className="col-md-4 p-3"
               whileHover={{ scale: 1.05 }}
             >
-              <h4 className="text-xl font-semibold">{feature.title}</h4>
-              <p className="mt-2 text-gray-600">{feature.desc}</p>
+              <Card className="shadow-sm p-3">
+                <Card.Body>
+                  <h4 className="fw-semibold">{feature.title}</h4>
+                  <p className="text-muted">{feature.desc}</p>
+                </Card.Body>
+              </Card>
             </motion.div>
           ))}
         </div>
       </motion.section>
 
-      {/* 3. Meal Categories Section */}
-      <section className="p-8">
-        <h3 className="text-2xl font-semibold mb-4 text-center">Explore Meals</h3>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {/* Meal Categories Section */}
+      <section className="container text-center my-5">
+        <h3 className="fw-semibold fs-3 mb-4">Explore Meals</h3>
+        <div className="row">
           {[
             { id: 1, title: "Breakfast", image: "/images/breakfast.jpg" },
             { id: 2, title: "Lunch", image: "/images/lunch.jpg" },
@@ -81,19 +86,16 @@ export default function HomePage() {
           ].map((meal, index) => (
             <motion.div 
               key={meal.id}
+              className="col-md-4 p-3"
               initial={{ opacity: 0, y: 50 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: index * 0.2 }}
             >
-              <Card className="overflow-hidden">
-                <img
-                  src={meal.image}
-                  alt={meal.title}
-                  className="w-full h-48 object-cover"
-                />
-                <CardContent className="p-4 text-center">
-                  <h4 className="text-lg font-semibold">{meal.title}</h4>
-                </CardContent>
+              <Card className="shadow-sm overflow-hidden">
+                <Card.Img variant="top" src={meal.image} className="h-100 object-fit-cover" />
+                <Card.Body className="text-center">
+                  <h4 className="fw-semibold">{meal.title}</h4>
+                </Card.Body>
               </Card>
             </motion.div>
           ))}
@@ -105,7 +107,7 @@ export default function HomePage() {
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 1 }}
-        className="bg-gray-900 text-white text-center p-4 mt-8"
+        className="bg-dark text-white text-center p-3 mt-5"
       >
         &copy; {new Date().getFullYear()} disHcovery. All Rights Reserved.
       </motion.footer>
