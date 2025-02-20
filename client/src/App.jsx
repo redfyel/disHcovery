@@ -11,7 +11,7 @@ import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
 import CoolAI from './components/ai-ingredients/CoolAI'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
-import './App.css'
+//import './App.css'
 
 
 
@@ -44,6 +44,14 @@ function App() {
         //     },    
         //   ]
         // },
+           {
+               path : '/login',
+               element : <Login />
+             },
+             {
+              path : '/register',
+              element : <Register />
+            },
         {
           path : '/recipe-roulette',
           element : <RecipeRoulette/>

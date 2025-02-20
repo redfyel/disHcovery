@@ -22,7 +22,7 @@ function Login() {
   return (
     <form className="auth-form" onSubmit={handleSubmit(userLogin)}>
       <h3 className="text-center fs-4">Login</h3>
-      {err.length !== 0 && <p className="error text-center text-danger">{err}</p>}
+      {/* {err.length !== 0 && <p className="error text-center text-danger">{err}</p>} */}
       <div>
         <label>Username</label>
         <input type="text" {...register("username", { required: true })} />
