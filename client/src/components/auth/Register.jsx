@@ -1,5 +1,6 @@
 import { useForm } from "react-hook-form";
 import { useState } from "react";
+import { calcGeneratorDuration } from "framer-motion";
 
 function Register({ onRegisterSuccess }) {  
   const { register, handleSubmit, formState: { errors } } = useForm();
@@ -15,7 +16,8 @@ function Register({ onRegisterSuccess }) {
       let data = await res.json();
       
       if (data.message === "user created") {
-        onRegisterSuccess();
+      //  onRegisterSuccess();
+      console.log("User created");
       } else {
         setErr(data.message);
       }
