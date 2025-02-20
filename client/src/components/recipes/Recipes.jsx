@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import  "./Filters.jsx"; // Import the filter component
 import "./Recipes.css"; // Import the CSS file
 
 const Recipes = () => {
@@ -7,25 +8,18 @@ const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // State for filters
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [selectedMealType, setSelectedMealType] = useState([]);
-  const [selectedDiet, setSelectedDiet] = useState([]);
-  const [selectedCookTime, setSelectedCookTime] = useState([]);
-  const [selectedCuisine, setSelectedCuisine] = useState([]);
+  const [filters, setFilters] = useState({}); // State to hold filter options
 
   // Fetch recipes from the backend
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch("http://localhost:4000/recipe-api/recipes");
+        const response = await fetch('/api/recipes'); // Adjust the URL if necessary
         if (!response.ok) {
           throw new Error('Failed to fetch recipes');
         }
         const data = await response.json();
-        console.log(data);
-        setRecipes(data.payload);
+        setRecipes(data);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -37,11 +31,16 @@ const Recipes = () => {
   }, []);
 
   // Filter recipes based on search input and selected filters
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
-    // Add logic for other filters based on selected state variables
-    // ... (implement filter logic for ingredients, meal type, diet, etc.)
-    return matchesSearch; // Include additional conditions for filters
+  const filteredRecipes = recipes.filter((recipe) => {
+    const matchesSearch = recipe.name.toLowerCase().includes(search.toLowerCase());
+    const matchesIngredients = filters.ingredients ? filters.ingredients.every(ingredient => recipe.ingredients.includes(ingredient)) : true;
+    const matchesMealType = filters.mealType ? recipe.mealType === filters.mealType : true;
+    const matchesDiet = filters.diet ? recipe.diet === filters.diet : true;
+    const matchesCookTime = filters.cookTime ? recipe.cookTime === filters.cookTime : true;
+    const matchesCuisine = filters.cuisine ? recipe.cuisine === filters.cuisine : true;
+    const matchesNutrition = filters.nutrition ? recipe.nutrition === filters.nutrition : true;
+
+    return matchesSearch && matchesIngredients && matchesMealType && matchesDiet && matchesCookTime && matchesCuisine && matchesNutrition;
   });
 
   if (loading) return <div className="loading">Loading recipes...</div>;
@@ -51,80 +50,41 @@ const Recipes = () => {
     <div className="recipes-page">
       <h1 className="recipes-title">Discover Delicious Recipes</h1>
 
-      {/* Main layout for filters and recipes */}
-      <div className="layout">
-        <div className="filter-sidebar">
-          <h3>Filter</h3>
-          <div className="filter-section">
-            <h4>Ingredients</h4>
-            {/* Add your ingredient checkboxes */}
-            {['Milk', 'Eggs', 'Bread', 'Potatoes'].map(ingredient => (
-              <div key={ingredient}>
-                <input 
-                  type="checkbox" 
-                  value={ingredient} 
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedIngredients(prev => 
-                      prev.includes(value)
-                        ? prev.filter(item => item !== value)
-                        : [...prev, value]
-                    );
-                  }} 
-                />
-                {ingredient}
-              </div>
-            ))}
-          </div>
+      {/* Search Bar */}
+      <div className="search-filter-container">
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search Recipes..."
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+      </div>
 
-          <div className="filter-section">
-            <h4>Meal Type</h4>
-            {/* Add your meal type checkboxes */}
-            {['Appetizers', 'Beverages', 'Breads', 'Breakfast'].map(meal => (
-              <div key={meal}>
-                <input 
-                  type="checkbox" 
-                  value={meal} 
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedMealType(prev => 
-                      prev.includes(value)
-                        ? prev.filter(item => item !== value)
-                        : [...prev, value]
-                    );
-                  }} 
-                />
-                {meal}
-              </div>
-            ))}
-          </div>
+      {/* Filter Component */}
+      <RecipeFilter onFilterChange={setFilters} />
 
-          {/* Add similar sections for Diet, Cook Time, Cuisine, and Nutrition */}
-
-        </div>
-
-        {/* Recipe Listing */}
-        <div className="recipe-grid">
-          {filteredRecipes.length > 0 ? (
-            filteredRecipes.map((recipe) => (
-              <div key={recipe._id} className="recipe-card">
-                <img
-                  src={recipe.image} // Ensure your recipe model has an imageURL field
-                  alt={recipe.title}
-                  className="recipe-image"
-                />
-                <h3 className="recipe-name">{recipe.title}</h3>
-                <p className="recipe-cuisine">{recipe.cuisine}</p>
-                <p className="recipe-time">⏱ {recipe.cook_time}</p>
-                <Link to={`/recipe/${recipe._id}`} className="view-details">
-                  View Details →
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p className="no-results">No recipes found.</p>
-          )}
-        </div>
+      {/* Recipe Listing */}
+      <div className="recipe-grid">
+        {filteredRecipes.length > 0 ? (
+          filteredRecipes.map((recipe) => (
+            <div key={recipe._id} className="recipe-card">
+              <img
+                src={recipe.imageURL} // Ensure your recipe model has an imageURL field
+                alt={recipe.name}
+                className="recipe-image"
+              />
+              <h3 className="recipe-name">{recipe.name}</h3>
+              <p className="recipe-cuisine">{recipe.cuisine}</p>
+              <p className="recipe-time">⏱ {recipe.cookingTime}</p>
+              <Link to={`/recipe/${recipe._id}`} className="view-details">
+                View Details →
+              </Link>
+            </div>
+          ))
+        ) : (
+          <p className="no-results">No recipes found.</p>
+        )}
       </div>
     </div>
   );
