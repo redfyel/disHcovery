@@ -18,7 +18,7 @@ function RecipeRoulette() {
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
 
-        const shuffled = data.payload.sort(() => 0.5 - Math.random()).slice(0, 4);
+        const shuffled = data.payload.sort(() => 0.5 - Math.random()).slice(0, 6);
         setRecipes(shuffled);
       } catch (err) {
         console.error("Error fetching recipes...", err.message);
@@ -66,7 +66,7 @@ function RecipeRoulette() {
             radiusLineColor="#2A9D8F"
             radiusLineWidth={2}
             backgroundColors={["#264653", "#2A9D8F", "#E9C46A", "#F4A261", "#E76F51"]}
-            textColors={["#FFF"]}
+            textColors={["#000"]}
             pointerProps={{ style: { borderBottomColor: "#E63946" } }}
           />
           <div className="absolute top-[50%] left-[50%] transform -translate-x-1/2 -translate-y-1/2 w-16 h-16 bg-[#E63946] rounded-full"></div>
@@ -75,7 +75,7 @@ function RecipeRoulette() {
 
       <button
         onClick={handleSpinClick}
-        className="mt-6 px-6 py-3 bg-[#E63946] text-white text-lg rounded-lg shadow-md hover:bg-[#D62828] transition-all duration-300 transform hover:scale-105"
+        className="mt-6 px-6 py-3 bg-[#000] text-white text-lg rounded-lg shadow-md hover:bg-[#000] transition-all duration-300 transform hover:scale-105"
       >
         Give it a Whirl! 🎡
       </button>
@@ -91,7 +91,7 @@ function RecipeRoulette() {
           <img
             src={selectedRecipe.image}
             alt={selectedRecipe.title}
-            className="mt-4 w-20 h-20 rounded-lg"
+            className="mt-4 rounded-lg" style={{width: "50px"}}
           />
         </motion.div>
       )}

@@ -9,7 +9,10 @@ import RecipeRoulette from './components/recipe-roulette/RecipeRoulette'
 import Saved from './components/saved/Saved'
 import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
+import CoolAI from './components/ai-ingredients/CoolAI'
+import CoolAIFull from './components/ai-ingredients/CoolAIFull'
 import './App.css'
+
 
 
 function App() {
@@ -52,6 +55,10 @@ function App() {
         {
           path : '/community',
           element : <Community />
+        },
+        {
+          path : '/ai-ingredients',
+          element : <CoolAI/>
         }
        
       ]

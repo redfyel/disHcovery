@@ -1,5 +1,5 @@
 import {Link} from 'react-router-dom'
-
+import Search from '../search-box/Search';
 import './Header.css'
 
 function Header(){
@@ -26,6 +26,8 @@ function Header(){
                 <Link to ='/community'>Community</Link>
             </li>
         </ul>
+
+        <Search/>
        </div>
     )
 }
