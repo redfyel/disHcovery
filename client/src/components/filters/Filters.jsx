@@ -1,57 +1,56 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./Filters.css"; // Import the CSS file
 
 const RecipeFilter = ({ onFilterChange }) => {
-  const [selectedCategories, setSelectedIngredients] = useState([]);
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [selectedMealType, setSelectedMealType] = useState("");
   const [selectedDiet, setSelectedDiet] = useState("");
   const [selectedCookTime, setSelectedCookTime] = useState("");
   const [selectedCuisine, setSelectedCuisine] = useState("");
   const [selectedNutrition, setSelectedNutrition] = useState("");
 
-  const Categories = ["Quick & Easy", "Healthy", "Family-Friendly", "Budget-Friendly", "One-Pot", "Comfort Food", "Seasonal", "Special Occasion", "BBQ", "Soup", "Salad", "Pasta", "Baking", "Grilling"];
+  const categories = [
+    "Quick & Easy", "Healthy", "Family-Friendly", "Budget-Friendly", "One-Pot",
+    "Comfort Food", "Seasonal", "Special Occasion", "BBQ", "Soup", "Salad",
+    "Pasta", "Baking", "Grilling"
+  ];
   const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert", "Appetizer", "Side Dish", "Main Course"];
   const diets = ["Vegetarian", "Vegan", "Gluten-Free", "Dairy-Free", "Low-Carb", "Keto", "Paleo", "High-Protein"];
   const cookTimes = ["Under 15 min", "Under 30 min", "Under 60 min"];
   const cuisines = ["American", "British", "Italian", "Mexican", "Indian", "Chinese", "French", "Thai", "Japanese", "Mediterranean"];
 
-
-
-  const handleIngredientChange = (ingredient) => {
-    setSelectedCategories((prev) =>
-      prev.includes(ingredient)
-        ? prev.filter((i) => i !== ingredient)
-        : [...prev, ingredient]
-    );
-  };
-
-  const handleFilterChange = () => {
+  // Update filter state when any filter changes
+  useEffect(() => {
     onFilterChange({
-      Categories: selectedCategories,
+      categories: selectedCategories,
       mealType: selectedMealType,
       diet: selectedDiet,
       cookTime: selectedCookTime,
       cuisine: selectedCuisine,
       nutrition: selectedNutrition,
     });
+  }, [selectedCategories, selectedMealType, selectedDiet, selectedCookTime, selectedCuisine, selectedNutrition, onFilterChange]);
+
+  const handleCategoryChange = (category) => {
+    setSelectedCategories((prev) =>
+      prev.includes(category) ? prev.filter((c) => c !== category) : [...prev, category]
+    );
   };
 
   return (
     <div className="filter-container">
       <h2>Filter</h2>
+
       <div className="filter-section">
         <h3>Categories</h3>
-        {Categories.map((ingredient) => (
-          <label key={ingredient}>
+        {categories.map((category) => (
+          <label key={category}>
             <input
               type="checkbox"
-              checked={selectedCategories.includes(ingredient)}
-              onChange={() => {
-                handleIngredientChange(ingredient);
-                handleFilterChange();
-              }}
+              checked={selectedCategories.includes(category)}
+              onChange={() => handleCategoryChange(category)}
             />
-            {ingredient}
+            {category}
           </label>
         ))}
       </div>
@@ -65,10 +64,7 @@ const RecipeFilter = ({ onFilterChange }) => {
               name="mealType"
               value={type}
               checked={selectedMealType === type}
-              onChange={() => {
-                setSelectedMealType(type);
-                handleFilterChange();
-              }}
+              onChange={() => setSelectedMealType(type)}
             />
             {type}
           </label>
@@ -84,10 +80,7 @@ const RecipeFilter = ({ onFilterChange }) => {
               name="diet"
               value={diet}
               checked={selectedDiet === diet}
-              onChange={() => {
-                setSelectedDiet(diet);
-                handleFilterChange();
-              }}
+              onChange={() => setSelectedDiet(diet)}
             />
             {diet}
           </label>
@@ -103,10 +96,7 @@ const RecipeFilter = ({ onFilterChange }) => {
               name="cookTime"
               value={time}
               checked={selectedCookTime === time}
-              onChange={() => {
-                setSelectedCookTime(time);
-                handleFilterChange();
-              }}
+              onChange={() => setSelectedCookTime(time)}
             />
             {time}
           </label>
@@ -122,10 +112,7 @@ const RecipeFilter = ({ onFilterChange }) => {
               name="cuisine"
               value={cuisine}
               checked={selectedCuisine === cuisine}
-              onChange={() => {
-                setSelectedCuisine(cuisine);
-                handleFilterChange();
-              }}
+              onChange={() => setSelectedCuisine(cuisine)}
             />
             {cuisine}
           </label>

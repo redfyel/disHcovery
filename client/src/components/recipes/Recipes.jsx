@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import Filters from "../filters/Filters"; // Import Filters component
 import "./Recipes.css"; // Import CSS file
 
@@ -9,6 +9,7 @@ const Recipes = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [filters, setFilters] = useState({}); // Holds selected filter options
+  const navigate = useNavigate(); // Used for navigation
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -43,26 +44,26 @@ const Recipes = () => {
     if (areFiltersApplied()) {
       updatedRecipes = updatedRecipes.filter((recipe) => {
         const matchesCategories = filters.Categories
-          ? filters.Categories.every((ingredient) =>
-              recipe.Categories?.includes(ingredient)
+          ? filters.Categories.every((category) =>
+              recipe.category?.includes(category)
             )
           : true;
         const matchesMealType = filters.mealType
-          ? recipe.mealType === filters.mealType
+          ? recipe.meal_type === filters.mealType
           : true;
-        const matchesDiet = filters.diet ? recipe.diet === filters.diet : true;
+        const matchesDiet = filters.diet ? recipe.diet_filters?.includes(filters.diet) : true;
         const matchesCookTime = filters.cookTime
-          ? recipe.cookTime?.includes(filters.cookTime)
+          ? recipe.cook_time?.includes(filters.cookTime)
           : true;
         const matchesCuisine = filters.cuisine
           ? recipe.cuisine === filters.cuisine
           : true;
         const matchesNutrition = filters.nutrition
-          ? recipe.nutrition === filters.nutrition
+          ? recipe.nutrition_info?.includes(filters.nutrition)
           : true;
 
         return (
-          matchesIngredients &&
+          matchesCategories &&
           matchesMealType &&
           matchesDiet &&
           matchesCookTime &&
@@ -99,9 +100,14 @@ const Recipes = () => {
                   <h3 className="recipe-name">{recipe.title}</h3>
                   <p className="recipe-meal_type">{recipe.meal_type}</p>
                   <p className="recipe-total_time">⏱ {recipe.total_time}</p>
-                  <Link to={`/recipe/${recipe._id}`} className="view-details">
+                  
+                  {/* Pass recipe data using state */}
+                  <button 
+                    onClick={() => navigate("/recipe", { state: { recipe } })} 
+                    className="view-details"
+                  >
                     View Details →
-                  </Link>
+                  </button>
                 </div>
               ))
             ) : (
