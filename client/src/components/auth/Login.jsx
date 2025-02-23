@@ -1,40 +1,48 @@
-// import  {userLoginContext} from "../../contexts/userLoginContext";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
-import { useContext } from "react";
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
+import "./auth.css";
 
 function Login() {
-  // const { loginUser, userLoginStatus, err } = useContext(userLoginContext);
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   function userLogin(userCred) {
-    loginUser(userCred);
+    console.log("User Logged In", userCred);
   }
 
-  // useEffect(() => {
-  //   if (userLoginStatus === true) {
-  //     navigate("/user-profile");
-  //   }
-  // }, [userLoginStatus]);
-
   return (
-    <form className="auth-form" onSubmit={handleSubmit(userLogin)}>
-      <h3 className="text-center fs-4">Login</h3>
-      {/* {err.length !== 0 && <p className="error text-center text-danger">{err}</p>} */}
-      <div>
-        <label>Username</label>
-        <input type="text" {...register("username", { required: true })} />
-        {errors.username && <span className="error">*This field is required</span>}
-      </div>
-      <div>
-        <label>Password</label>
-        <input type="password" {...register("password", { required: true })} />
-        {errors.password && <span className="error">*This field is required</span>}
-      </div>
-      <button type="submit" className="btn">Login</button>
-    </form>
+    <div className="auth-wrapper">
+      <form className="auth-form" onSubmit={handleSubmit(userLogin)}>
+        <h2 className="auth-title">Login</h2>
+
+        <div className="input-group">
+          <input 
+            type="text" 
+            placeholder="Username" 
+            {...register("username", { required: true })} 
+          />
+          {errors.username && <span className="error">*Required</span>}
+        </div>
+
+        <div className="input-group">
+          <input 
+            type={showPassword ? "text" : "password"} 
+            placeholder="Password" 
+            {...register("password", { required: true })} 
+          />
+          <span className="toggle-password" onClick={() => setShowPassword(!showPassword)}>👁️</span>
+          {errors.password && <span className="error">*Required</span>}
+        </div>
+
+        <button type="submit" className="btn">SIGN IN</button>
+
+      
+       
+        <p className="switch-auth">Don't have an account? <span onClick={() => navigate('/register')}>Register</span></p>
+      </form>
+    </div>
   );
 }
 
