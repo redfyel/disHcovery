@@ -24,10 +24,14 @@ mongoclient.connect().then((connectionObj)=>{
     // connect to collection
     const recipesCollection = db.collection('recipes')
     const usersCollection = db.collection('users')
+    const ingredientsCollection  = db.collection('ingredients')
+
 
     // share collection objects with the API
     app.set('recipesCollection', recipesCollection)
     app.set('usersCollection', usersCollection)
+    app.set('ingredientsCollection', ingredientsCollection)
+
 
     // start HTTP server
     app.listen(process.env.PORT, () => console.log(`Server started on Port ${process.env.PORT}`))
@@ -40,6 +44,10 @@ app.use('/recipe-api', recipesApp)
 // Import and mount the user-related API routes
 const userApp = require('./APIs/userAPI')
 app.use('/user-api', userApp)
+
+const ingreApp = require('./APIs/ingredientsAPI')
+app.use('/ingredient-api', ingreApp)
+
 
 // error handling middleware
 // app.use((err, req, res, next) => res.status(500).send({message : "An error ocuured: ", errorMessage: err.message}))

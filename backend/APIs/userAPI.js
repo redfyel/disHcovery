@@ -4,6 +4,8 @@ let userApp = exp.Router();
 const { Db } = require("mongodb");
 const bcryptjs = require("bcryptjs");
 const jwt = require('jsonwebtoken'); 
+const expressAsyncHandler = require("express-async-handler");
+
 
 //add a body parser middleware
 userApp.use(exp.json());
