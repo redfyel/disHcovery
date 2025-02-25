@@ -1,31 +1,27 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
-import "./Recipes.css"; // Import the CSS file
+import { useNavigate } from "react-router-dom";
+import Filters from "../filters/Filters"; // Import Filters component
+import "./Recipes.css"; // Import CSS file
 
 const Recipes = () => {
-  const [search, setSearch] = useState("");
   const [recipes, setRecipes] = useState([]);
+  const [filteredRecipes, setFilteredRecipes] = useState([]); // Stores recipes after filtering
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
-  // State for filters
-  const [selectedIngredients, setSelectedIngredients] = useState([]);
-  const [selectedMealType, setSelectedMealType] = useState([]);
-  const [selectedDiet, setSelectedDiet] = useState([]);
-  const [selectedCookTime, setSelectedCookTime] = useState([]);
-  const [selectedCuisine, setSelectedCuisine] = useState([]);
+  const [filters, setFilters] = useState({}); // Holds selected filter options
+  const navigate = useNavigate(); // Used for navigation
 
-  // Fetch recipes from the backend
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
         const response = await fetch("http://localhost:4000/recipe-api/recipes");
         if (!response.ok) {
-          throw new Error('Failed to fetch recipes');
+          throw new Error("Failed to fetch recipes");
         }
         const data = await response.json();
-        console.log(data);
-        setRecipes(data.payload);
+        console.log("Fetched Recipes:", data.payload);
+        setRecipes(data.payload || []); // Store all recipes
+        setFilteredRecipes(data.payload || []); // Initially show all recipes
       } catch (err) {
         setError(err.message);
       } finally {
@@ -36,13 +32,49 @@ const Recipes = () => {
     fetchRecipes();
   }, []);
 
-  // Filter recipes based on search input and selected filters
-  const filteredRecipes = recipes.filter(recipe => {
-    const matchesSearch = recipe.title.toLowerCase().includes(search.toLowerCase());
-    // Add logic for other filters based on selected state variables
-    // ... (implement filter logic for ingredients, meal type, diet, etc.)
-    return matchesSearch; // Include additional conditions for filters
-  });
+  // Function to check if filters are applied
+  const areFiltersApplied = () => {
+    return Object.values(filters).some((filter) => filter && filter.length > 0);
+  };
+
+  // Apply filters when filter state changes
+  useEffect(() => {
+    let updatedRecipes = recipes;
+
+    if (areFiltersApplied()) {
+      updatedRecipes = updatedRecipes.filter((recipe) => {
+        const matchesCategories = filters.Categories
+          ? filters.Categories.every((category) =>
+              recipe.category?.includes(category)
+            )
+          : true;
+        const matchesMealType = filters.mealType
+          ? recipe.meal_type === filters.mealType
+          : true;
+        const matchesDiet = filters.diet ? recipe.diet_filters?.includes(filters.diet) : true;
+        const matchesCookTime = filters.cookTime
+          ? recipe.cook_time?.includes(filters.cookTime)
+          : true;
+        const matchesCuisine = filters.cuisine
+          ? recipe.cuisine === filters.cuisine
+          : true;
+        const matchesNutrition = filters.nutrition
+          ? recipe.nutrition_info?.includes(filters.nutrition)
+          : true;
+
+        return (
+          matchesCategories &&
+          matchesMealType &&
+          matchesDiet &&
+          matchesCookTime &&
+          matchesCuisine &&
+          matchesNutrition
+        );
+      });
+    }
+
+    setFilteredRecipes(updatedRecipes);
+  }, [filters, recipes]);
 
   if (loading) return <div className="loading">Loading recipes...</div>;
   if (error) return <div className="error">{error}</div>;
@@ -51,79 +83,42 @@ const Recipes = () => {
     <div className="recipes-page">
       <h1 className="recipes-title">Discover Delicious Recipes</h1>
 
-      {/* Main layout for filters and recipes */}
-      <div className="layout">
-        <div className="filter-sidebar">
-          <h3>Filter</h3>
-          <div className="filter-section">
-            <h4>Ingredients</h4>
-            {/* Add your ingredient checkboxes */}
-            {['Milk', 'Eggs', 'Bread', 'Potatoes'].map(ingredient => (
-              <div key={ingredient}>
-                <input 
-                  type="checkbox" 
-                  value={ingredient} 
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedIngredients(prev => 
-                      prev.includes(value)
-                        ? prev.filter(item => item !== value)
-                        : [...prev, value]
-                    );
-                  }} 
-                />
-                {ingredient}
-              </div>
-            ))}
+      {/* Main Layout: Recipes on Left, Filters on Right */}
+      <div className="recipes-container">
+        {/* Recipes Section (Left) */}
+        <div className="recipes-content">
+          {/* Recipe Listing */}
+          <div className="recipe-grid">
+            {filteredRecipes.length > 0 ? (
+              filteredRecipes.map((recipe) => (
+                <div key={recipe._id} className="recipe-card">
+                  <img
+                    src={recipe.image}
+                    alt={recipe.title}
+                    className="recipe-image"
+                  />
+                  <h3 className="recipe-name">{recipe.title}</h3>
+                  <p className="recipe-meal_type">{recipe.meal_type}</p>
+                  <p className="recipe-total_time">⏱ {recipe.total_time}</p>
+                  
+                  {/* Pass recipe data using state */}
+                  <button 
+                    onClick={() => navigate("/recipe", { state: { recipe } })} 
+                    className="view-details"
+                  >
+                    View Details →
+                  </button>
+                </div>
+              ))
+            ) : (
+              <p className="no-results">No recipes found.</p>
+            )}
           </div>
-
-          <div className="filter-section">
-            <h4>Meal Type</h4>
-            {/* Add your meal type checkboxes */}
-            {['Appetizers', 'Beverages', 'Breads', 'Breakfast'].map(meal => (
-              <div key={meal}>
-                <input 
-                  type="checkbox" 
-                  value={meal} 
-                  onChange={(e) => {
-                    const value = e.target.value;
-                    setSelectedMealType(prev => 
-                      prev.includes(value)
-                        ? prev.filter(item => item !== value)
-                        : [...prev, value]
-                    );
-                  }} 
-                />
-                {meal}
-              </div>
-            ))}
-          </div>
-
-          {/* Add similar sections for Diet, Cook Time, Cuisine, and Nutrition */}
-
         </div>
 
-        {/* Recipe Listing */}
-        <div className="recipe-grid">
-          {filteredRecipes.length > 0 ? (
-            filteredRecipes.map((recipe) => (
-              <div key={recipe._id} className="recipe-card">
-                <img
-                  src={recipe.image} // Ensure your recipe model has an imageURL field
-                  alt={recipe.title}
-                  className="recipe-image"
-                />
-                <h3 className="recipe-name">{recipe.title}</h3>
-                <p className="recipe-cuisine">{recipe.cuisine}</p>
-                <p className="recipe-time">⏱ {recipe.cook_time}</p>
-                <Link to={`/recipe/${recipe._id}`} className="view-details">
-                  View Details →
-                </Link>
-              </div>
-            ))
-          ) : (
-            <p className="no-results">No recipes found.</p>
-          )}
+        {/* Filters Section (Right) */}
+        <div className="filters-column">
+          <Filters onFilterChange={setFilters} />
         </div>
       </div>
     </div>

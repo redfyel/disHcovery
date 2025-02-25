@@ -19,7 +19,7 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
     //get new user data from req obj
     const newUser = req.body;
 
-    newUser.recipies = []; 
+    newUser.recipes = []; 
 
     //verifying uniqueness
     let existingUser = await usersCollection.findOne({

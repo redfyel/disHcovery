@@ -2,6 +2,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom'
 import RootLayout from './RootLayout'
 import Home from './components/home/Home'
 import Recipes from './components/recipes/Recipes'
+import Recipe from './components/recipe/Recipe'
 import Auth from './components/auth/Auth'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
@@ -11,7 +12,7 @@ import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
 import CoolAI from './components/ai-ingredients/CoolAI'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
-import './App.css'
+//import './App.css'
 
 
 
@@ -44,9 +45,21 @@ function App() {
         //     },    
         //   ]
         // },
+           {
+               path : '/login',
+               element : <Login />
+             },
+             {
+              path : '/register',
+              element : <Register />
+            },
         {
           path : '/recipe-roulette',
           element : <RecipeRoulette/>
+        },
+        {
+          path: '/recipe', // Route for recipe details
+          element: <Recipe /> // Component to render for recipe details
         },
         {
           path : '/saved',

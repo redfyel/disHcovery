@@ -1,43 +1,39 @@
 import React, { useState } from 'react';
-// import './Auth.css';
+ import './auth.css';
 import Login from './Login';
 import Register from './Register';
 
 function Auth() {
-  const [activeTab, setActiveTab] = useState('login');
+  const [activeTab, setActiveTab] = useState("login");
 
   const handleTabSwitch = (tab) => {
     setActiveTab(tab);
   };
 
   const handleRegistrationSuccess = () => {
-    setActiveTab('login');
+    setActiveTab("login");
   };
-
-
 
   return (
     <div className="auth-wrapper">
-      
-
       <div className="auth-form-container">
         <div className="auth-tabs">
           <button
-            className={`auth-tab ${activeTab === 'login' ? 'active' : ''}`}
-            onClick={() => handleTabSwitch('login')}
+            className={`auth-tab ${activeTab === "login" ? "active" : ""}`}
+            onClick={() => handleTabSwitch("login")}
           >
             Login
           </button>
           <button
-            className={`auth-tab ${activeTab === 'register' ? 'active' : ''}`}
-            onClick={() => handleTabSwitch('register')}
+            className={`auth-tab ${activeTab === "register" ? "active" : ""}`}
+            onClick={() => handleTabSwitch("register")}
           >
             Register
           </button>
         </div>
 
         <div className="auth-forms">
-          {activeTab === 'login' ? (
+          {activeTab === "login" ? (
             <Login />
           ) : (
             <Register onRegisterSuccess={handleRegistrationSuccess} />

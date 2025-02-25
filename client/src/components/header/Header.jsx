@@ -25,6 +25,12 @@ function Header(){
             <li className="nav-item links">
                 <Link to ='/community'>Community</Link>
             </li>
+            <li className="nav-item links">
+                <Link to ='/login'>Login</Link>
+            </li>
+            <li className="nav-item links">
+                <Link to ='/register'>Register</Link>
+            </li>
         </ul>
 
         <Search/>
