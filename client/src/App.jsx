@@ -71,7 +71,7 @@ function App() {
         },
         {
           path : '/ai-ingredients',
-          element : <CoolAI/>
+          element : <CoolAIFull/>
         }
        
       ]

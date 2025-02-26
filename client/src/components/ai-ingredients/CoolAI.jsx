@@ -1,7 +1,7 @@
 import { useState } from "react";
 import "bootstrap/dist/css/bootstrap.min.css";
 
-export default function RecipeAI() {
+export default function CoolAI() {
   const [open, setOpen] = useState(false);
   const [stage, setStage] = useState(0);
   const [ingredients, setIngredients] = useState([]);
