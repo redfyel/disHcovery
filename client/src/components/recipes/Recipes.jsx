@@ -5,11 +5,18 @@ import "./Recipes.css"; // Import CSS file
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
-  const [filteredRecipes, setFilteredRecipes] = useState([]); // Stores recipes after filtering
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({}); // Holds selected filter options
-  const navigate = useNavigate(); // Used for navigation
+  const [filters, setFilters] = useState({
+    categories: [],
+    mealType: [],
+    diet: [],
+    cookTime: [],
+    cuisine: [],
+  });
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipes = async () => {
@@ -20,8 +27,8 @@ const Recipes = () => {
         }
         const data = await response.json();
         console.log("Fetched Recipes:", data.payload);
-        setRecipes(data.payload || []); // Store all recipes
-        setFilteredRecipes(data.payload || []); // Initially show all recipes
+        setRecipes(data.payload || []);
+        setFilteredRecipes(data.payload || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -32,43 +39,48 @@ const Recipes = () => {
     fetchRecipes();
   }, []);
 
-  // Function to check if filters are applied
-  const areFiltersApplied = () => {
-    return Object.values(filters).some((filter) => filter && filter.length > 0);
-  };
-
-  // Apply filters when filter state changes
   useEffect(() => {
     let updatedRecipes = recipes;
 
-    if (areFiltersApplied()) {
+    if (
+      filters.categories.length ||
+      filters.mealType.length ||
+      filters.diet.length ||
+      filters.cookTime.length ||
+      filters.cuisine.length
+    ) {
       updatedRecipes = updatedRecipes.filter((recipe) => {
-        const matchesCategories = filters.Categories
-          ? filters.Categories.every((category) =>
-              recipe.category?.includes(category)
-            )
-          : true;
-        const matchesMealType = filters.mealType
-          ? recipe.meal_type === filters.mealType
-          : true;
-        const matchesDiet = filters.diet ? recipe.diet_filters?.includes(filters.diet) : true;
-        const matchesCookTime = filters.cookTime
-          ? recipe.cook_time?.includes(filters.cookTime)
-          : true;
-        const matchesCuisine = filters.cuisine
-          ? recipe.cuisine === filters.cuisine
-          : true;
-        const matchesNutrition = filters.nutrition
-          ? recipe.nutrition_info?.includes(filters.nutrition)
-          : true;
+        const matchesCategories =
+          filters.categories.length > 0
+            ? filters.categories.includes(recipe.category)
+            : true;
+
+        const matchesMealType =
+          filters.mealType.length > 0
+            ? filters.mealType.includes(recipe.mealType)
+            : true;
+
+        const matchesDiet =
+          filters.diet.length > 0
+            ? recipe.dietFilters?.some((diet) => filters.diet.includes(diet))
+            : true;
+
+        const matchesCookTime =
+          filters.cookTime.length > 0
+            ? filters.cookTime.includes(recipe.cookingTime)
+            : true;
+
+        const matchesCuisine =
+          filters.cuisine.length > 0
+            ? filters.cuisine.includes(recipe.cuisine)
+            : true;
 
         return (
           matchesCategories &&
           matchesMealType &&
           matchesDiet &&
           matchesCookTime &&
-          matchesCuisine &&
-          matchesNutrition
+          matchesCuisine
         );
       });
     }
@@ -83,11 +95,8 @@ const Recipes = () => {
     <div className="recipes-page">
       <h1 className="recipes-title">Discover Delicious Recipes</h1>
 
-      {/* Main Layout: Recipes on Left, Filters on Right */}
       <div className="recipes-container">
-        {/* Recipes Section (Left) */}
         <div className="recipes-content">
-          {/* Recipe Listing */}
           <div className="recipe-grid">
             {filteredRecipes.length > 0 ? (
               filteredRecipes.map((recipe) => (
@@ -98,12 +107,11 @@ const Recipes = () => {
                     className="recipe-image"
                   />
                   <h3 className="recipe-name">{recipe.title}</h3>
-                  <p className="recipe-meal_type">{recipe.meal_type}</p>
-                  <p className="recipe-total_time">⏱ {recipe.total_time}</p>
-                  
-                  {/* Pass recipe data using state */}
-                  <button 
-                    onClick={() => navigate("/recipe", { state: { recipe } })} 
+                  <p className="recipe-meal_type">{recipe.mealType}</p>
+                  <p className="recipe-total_time">⏱ {recipe.totalTime}</p>
+
+                  <button
+                    onClick={() => navigate("/recipe", { state: { recipe } })}
                     className="view-details"
                   >
                     View Details →
@@ -116,7 +124,6 @@ const Recipes = () => {
           </div>
         </div>
 
-        {/* Filters Section (Right) */}
         <div className="filters-column">
           <Filters onFilterChange={setFilters} />
         </div>

@@ -24,11 +24,11 @@ const Recipe = () => {
         <img src={recipe.image} alt={recipe.title} className="recipe-image" />
         <div className="recipe-info">
           <p><strong>Cuisine:</strong> {recipe.cuisine}</p>
-          <p><strong>Meal Type:</strong> {recipe.meal_type}</p>
+          <p><strong>Meal Type:</strong> {recipe.mealType}</p>
           <p><strong>Category:</strong> {recipe.category}</p>
-          <p><strong>Prep Time:</strong> {recipe.prep_time}</p>
-          <p><strong>Cook Time:</strong> {recipe.cook_time}</p>
-          <p><strong>Total Time:</strong> {recipe.total_time}</p>
+          <p><strong>Prep Time:</strong> {recipe.preparationTime}</p>
+          <p><strong>Cook Time:</strong> {recipe.cookingTime}</p>
+          <p><strong>Total Time:</strong> {recipe.totalTime}</p>
           <p><strong>Servings:</strong> {recipe.servings}</p>
         </div>
       </div>
@@ -37,17 +37,17 @@ const Recipe = () => {
       <div className="recipe-extra">
         <h3>Dietary Filters:</h3>
         <ul>
-          {recipe.diet_filters?.map((filter, index) => (
+          {recipe.dietFilters?.map((filter, index) => (
             <li key={index}>{filter}</li>
           ))}
         </ul>
 
-        <h3>Ingredients:</h3>
+         <h3>Ingredients:</h3>
         <ul>
           {recipe.ingredients?.map((ingredient, index) => (
             <li key={index}>{ingredient}</li>
           ))}
-        </ul>
+        </ul>  
 
         <h3>Optional Mix-ins:</h3>
         <ul>
@@ -64,19 +64,19 @@ const Recipe = () => {
         </ol>
 
         <h3>Allergy Warnings:</h3>
-        <ul>
-          {recipe.allergy_warnings?.map((warning, index) => (
+         <ul>
+          {recipe.allergyWarnings?.map((warning, index) => (
             <li key={index}>{warning}</li>
           ))}
-        </ul>
+        </ul> 
 
-        {recipe.video_url && (
+        {recipe.videoURL && (
           <div className="recipe-video">
             <h3>Recipe Video:</h3>
             <iframe
               width="560"
               height="315"
-              src={recipe.video_url.replace("watch?v=", "embed/")}
+              src={recipe.videoURL.replace("watch?v=", "embed/")}
               title="Recipe Video"
               frameBorder="0"
               allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
