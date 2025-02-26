@@ -1,41 +1,32 @@
-import {Link} from 'react-router-dom'
-import Search from '../search-box/Search';
-import './Header.css'
+import { Link } from "react-router-dom";
+import Search from "../search-box/Search";
+import "./Header.css";
 
-function Header(){
-    return (
-       <div className="header d-flex justify-content-between align-items-center bg-info">
-        <Link to ='/'>
-        <img src="https://static.gamberorosso.it/dishcovery-logo.jpg" className='w-25' alt="logo" />
-        </Link>
+function Header() {
+  return (
+    <header className="header">
+      {/* Logo */}
+      <Link to="/" className="logo">
+        <img
+          src="https://static.gamberorosso.it/dishcovery-logo.jpg"
+          alt="Dishcovery Logo"
+        />
+      </Link>
 
-        <ul className="nav d-flex gap-3">
-            <li className="nav-item links">
-                <Link to ='/'>Home</Link>
-            </li>
+      {/* Navigation Menu */}
+      <nav className="nav-links">
+        <Link to="/">Home</Link>
+        <Link to="/explore">Explore</Link>
+        <Link to="/saved">Saved</Link>
+        <Link to="/community">Community</Link>
+        <Link to="/login">Login</Link>
+        <Link to="/register">Register</Link>
+      </nav>
 
-            <li className="nav-item links">
-                <Link to ='/'>Explore</Link>
-            </li>
-
-            <li className="nav-item links">
-                <Link to ='/saved'>Saved</Link>
-            </li>
-
-            <li className="nav-item links">
-                <Link to ='/community'>Community</Link>
-            </li>
-            <li className="nav-item links">
-                <Link to ='/login'>Login</Link>
-            </li>
-            <li className="nav-item links">
-                <Link to ='/register'>Register</Link>
-            </li>
-        </ul>
-
-        <Search/>
-       </div>
-    )
+      {/* Search Bar */}
+      <Search />
+    </header>
+  );
 }
 
 export default Header;

@@ -3,10 +3,8 @@ import './Footer.css'
 
 function Footer() {
   return (
-    <div>
-      <div>
-          <h1 id = "header-h1">Hello Footer</h1>
-        </div>
+    <div className='footer'>
+<h1>footer</h1>
     </div>
   )
 }

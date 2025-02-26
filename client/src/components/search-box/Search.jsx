@@ -1,38 +1,51 @@
-import React, { useState } from 'react';
-import RecipeRoulette from '../recipe-roulette/RecipeRoulette';
+import React, { useState } from "react";
+import RecipeRoulette from "../recipe-roulette/RecipeRoulette";
+import rouletteIcon from "../../assets/roulette-icon.png";
+import { FaSearch } from "react-icons/fa";
+import "./Search.css"; 
 
 function Search() {
   const [showRoulette, setShowRoulette] = useState(false);
+  const [query, setQuery] = useState("");
+  const [showTooltip, setShowTooltip] = useState(false);
 
   return (
-    <div>
-      {/* Floating Button to Open Modal */}
-      Search Box Here
-      <button
-        onClick={() => setShowRoulette(true)}
-        className="fixed bottom-10 right-10 p-3 bg-blue-500 text-white rounded-full shadow-lg z-50"
+    <div className="search-container">
+           {/* Search Bar with Icon */}
+           <div className="search-input-wrapper">
+        <FaSearch className="search-icon" />
+        <input
+          type="text"
+          className="search-input"
+          placeholder="Search recipes..."
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+        />
+      </div>
+
+
+      {/* Button with Tooltip */}
+      <div 
+        className="roulette-wrapper" 
+        onMouseEnter={() => setShowTooltip(true)}
+        onMouseLeave={() => setShowTooltip(false)}
       >
-        🎰
-      </button>
+        <button className="roulette-btn" onClick={() => setShowRoulette(true)}>
+          <img 
+            src={rouletteIcon} 
+            alt="Roulette Icon" 
+            style={{ width: "24px", height: "24px", marginRight: "2px" }} 
+          />
+        </button>
+        
+        {/* Tooltip */}
+        {showTooltip && (
+          <div className="tooltip">Spin the Roulette!</div>
+        )}
+      </div>
 
-      {/* Modal Overlay */}
-      {showRoulette && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
-          {/* Modal Box */}
-          <div className="bg-white p-6 rounded-lg shadow-lg w-3/4 md:w-1/2 lg:w-1/3 relative">
-            {/* Close Button */}
-            <button
-              onClick={() => setShowRoulette(false)}
-              className="absolute top-2 right-2 text-gray-500 text-xl"
-            >
-              ✖
-            </button>
-
-            {/* RecipeRoulette Component */}
-            <RecipeRoulette />
-          </div>
-        </div>
-      )}
+      {/* Recipe Roulette Modal */}
+      <RecipeRoulette isOpen={showRoulette} onClose={() => setShowRoulette(false)}  />
     </div>
   );
 }
