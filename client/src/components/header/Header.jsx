@@ -31,6 +31,9 @@ function Header(){
             <li className="nav-item links">
                 <Link to ='/register'>Register</Link>
             </li>
+            <li className="nav-item links">
+                <Link to ='/recipes'>Recipes</Link>
+            </li>
         </ul>
 
         <Search/>
