@@ -7,28 +7,7 @@ import "./Home.css";
 export default function HomePage() {
   return (
     <div className="min-vh-100 bg-light">
-      {/* Navbar */}
-      <motion.nav 
-        initial={{ y: -50, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.5 }}
-        className="navbar navbar-expand-lg navbar-light bg-white shadow-sm p-3"
-      >
-        <div className="container d-flex justify-content-between align-items-center">
-          <h1 className="navbar-brand fw-bold">disHcovery</h1>
-          <div className="d-flex align-items-center border rounded-pill px-3 py-1">
-            <FaSearch className="text-muted" />
-            <input
-              type="text"
-              placeholder="Search recipes..."
-              className="form-control border-0 ms-2"
-            />
-          </div>
-          <Button variant="outline-primary" className="d-flex align-items-center gap-2">
-            <FaUser /> Login / Signup
-          </Button>
-        </div>
-      </motion.nav>
+
 
       {/* Video Section */}
       <section className="position-relative w-100" style={{ height: "500px" }}>
@@ -101,16 +80,6 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-
-      {/* Footer */}
-      <motion.footer 
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 1 }}
-        className="bg-dark text-white text-center p-3 mt-5"
-      >
-        &copy; {new Date().getFullYear()} disHcovery. All Rights Reserved.
-      </motion.footer>
     </div>
   );
 }
