@@ -42,12 +42,14 @@ const Recipe = () => {
           ))}
         </ul>
 
-         <h3>Ingredients:</h3>
+        <h3>Ingredients:</h3>
         <ul>
           {recipe.ingredients?.map((ingredient, index) => (
-            <li key={index}>{ingredient}</li>
+            <li key={index}>
+              {ingredient.amount} {ingredient.unit} {ingredient.name}
+            </li>
           ))}
-        </ul>  
+        </ul>
 
         <h3>Optional Mix-ins:</h3>
         <ul>
@@ -63,12 +65,17 @@ const Recipe = () => {
           ))}
         </ol>
 
-        <h3>Allergy Warnings:</h3>
-         <ul>
-          {recipe.allergyWarnings?.map((warning, index) => (
-            <li key={index}>{warning}</li>
-          ))}
-        </ul> 
+        {Array.isArray(recipe.allergyWarnings) && recipe.allergyWarnings.length > 0 && (
+  <>
+    <h3>Allergy Warnings:</h3>
+    <ul>
+      {recipe.allergyWarnings.map((warning, index) => (
+        <li key={index}>{warning}</li>
+      ))}
+    </ul>
+  </>
+)}
+
 
         {recipe.videoURL && (
           <div className="recipe-video">
