@@ -1,26 +1,30 @@
-import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css";
+import { useState , useContext} from "react";
+import { HiSparkles } from "react-icons/hi";
+import { useNavigate } from "react-router-dom";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
+import './CoolAI.css'
+import { userLoginContext } from "../../contexts/UserLoginContext";
 
 export default function CoolAI() {
+  const {loginStatus, currentUser, setCurrentUser} = useContext(userLoginContext)
   const [open, setOpen] = useState(false);
-  const [stage, setStage] = useState(0);
-  const [ingredients, setIngredients] = useState([]);
   const [input, setInput] = useState("");
-  const [recipes, setRecipes] = useState([]);
 
-  const categories = {
-    Veggies: ["Onion", "Tomato", "Potato", "Spinach"],
-    Dairy: ["Paneer", "Milk", "Curd", "Butter"],
-    Spices: ["Turmeric", "Cumin", "Coriander", "Garam Masala"],
-  };
-
-  const toggleOpen = () => setOpen(!open);
+  const navigate = useNavigate(); 
 
   const handleInput = (e) => setInput(e.target.value);
 
   const handleSend = () => {
+
+    if (!loginStatus) {
+      navigate('/access-denied')
+      return;
+    }
+
+
     if (input.toLowerCase() === "hi") {
-      setStage(1);
+      setOpen(false); 
+      navigate("/ai-ingredients"); 
     }
     setInput("");
   };
@@ -31,105 +35,54 @@ export default function CoolAI() {
     }
   };
 
-  const selectIngredient = (item) => {
-    setIngredients((prev) =>
-      prev.includes(item) ? prev.filter((i) => i !== item) : [...prev, item]
-    );
-  };
-
-  const addCustomIngredient = () => {
-    if (input.trim() && !ingredients.includes(input)) {
-      setIngredients((prev) => [...prev, input.trim()]);
-      setInput("");
-    }
-  };
-
-  const fetchRecipes = () => {
-    setRecipes([
-      "Paneer Butter Masala",
-      "Aloo Jeera Fry",
-      "Spinach Dal Tadka",
-      "Tomato Rasam",
-    ]);
-  };
+  // Tooltip content
+  const renderTooltip = (props) => (
+    <Tooltip id="button-tooltip" {...props} className="custom-tooltip">
+      Get AI-powered recipe ideas based on your ingredients!
+    </Tooltip>
+  );
 
   return (
     <div className="position-fixed bottom-0 end-0 m-4">
       {!open ? (
-        <button className="btn btn-primary rounded-circle p-3" onClick={toggleOpen}>
-          🤖
-        </button>
+        <OverlayTrigger
+          placement="top"
+          delay={{ show: 250, hide: 400 }}
+          overlay={renderTooltip}
+        >
+          <button
+            className="ai-but rounded-circle p-3"
+            onClick={() => setOpen(!open)}
+          >
+            <HiSparkles size={30} />
+          </button>
+        </OverlayTrigger>
       ) : (
-        <div className="card p-4 shadow-lg" style={{ width: stage === 0 ? "22rem" : "26rem" }}>
-          <button className="btn-close position-absolute top-0 end-0 m-2" onClick={toggleOpen}></button>
-          <h4 className="text-center">AI Cooking Assistant</h4>
+        <div className="card p-4 shadow-lg" style={{ width: "22rem" }}>
+          <button
+            className="btn-close position-absolute top-0 end-0 m-2"
+            onClick={() => setOpen(false)}
+          ></button>
+          
+          {/* Title & Tagline */}
+          <h4 className="text-center fw-bold">✨ disHcovery</h4>
+          <p className="text-center text-muted">Turn your ingredients into a delicious surprise!</p>
 
-          {stage === 0 && (
-            <div className="d-flex align-items-center mt-3">
-              <input
-                type="text"
-                placeholder="Text 'hi' to get started"
-                value={input}
-                onChange={handleInput}
-                onKeyPress={handleKeyPress}
-                className="form-control"
-              />
-              <button className="btn btn-primary ms-2" onClick={handleSend}>
-                Send
-              </button>
-            </div>
-          )}
-
-          {stage === 1 && (
-            <div>
-              <h5 className="mt-3">Select Your Ingredients</h5>
-              {Object.entries(categories).map(([category, items]) => (
-                <div key={category} className="mt-2">
-                  <h6>{category}</h6>
-                  <div className="d-flex flex-wrap gap-2">
-                    {items.map((item) => (
-                      <button
-                        key={item}
-                        className={`btn btn-sm ${ingredients.includes(item) ? "btn-success" : "btn-outline-secondary"}`}
-                        onClick={() => selectIngredient(item)}
-                      >
-                        {item}
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              ))}
-
-              <div className="input-group mt-3">
-                <input
-                  type="text"
-                  placeholder="Add custom ingredient..."
-                  value={input}
-                  onChange={handleInput}
-                  className="form-control"
-                />
-                <button className="btn btn-success" onClick={addCustomIngredient}>
-                  Add
-                </button>
-              </div>
-              <button className="btn btn-primary w-100 mt-3" onClick={fetchRecipes}>
-                Get Recipes
-              </button>
-            </div>
-          )}
-
-          {recipes.length > 0 && (
-            <div className="mt-3">
-              <h5 className="fw-bold">Suggested Recipes:</h5>
-              <div className="d-flex overflow-auto gap-3 p-2">
-                {recipes.map((recipe, index) => (
-                  <div key={index} className="card shadow-sm p-3 text-center" style={{ minWidth: "150px" }}>
-                    {recipe}
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+          {/* Input Field */}
+          <div className="d-flex align-items-center mt-3">
+            <input
+              type="text"
+              placeholder="Text 'hi' to get started"
+              value={input}
+              onChange={handleInput}
+              onKeyPress={handleKeyPress}
+              className="form-control"
+              style={{ width: "85%", textAlign: "center" }}
+            />
+            <button className="btn w-25 ms-2" style={{backgroundColor : "#698F3F"}} onClick={handleSend}>
+              Send
+            </button>
+          </div>
         </div>
       )}
     </div>

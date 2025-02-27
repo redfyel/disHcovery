@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
+import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./auth.css";
 
 function Login() {
@@ -8,8 +9,11 @@ function Login() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
 
+  const {onLogin} = useContext(userLoginContext)
+
   function userLogin(userCred) {
     console.log("User Logged In", userCred);
+    onLogin(userCred)
   }
 
   return (

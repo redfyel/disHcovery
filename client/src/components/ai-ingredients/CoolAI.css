@@ -1,0 +1,28 @@
+/* Tooltip Background */
+.tooltip-inner {
+    background-color: #698F3F !important; /* Your green color */
+    color: white !important;
+    padding: 8px 12px;
+    border-radius: 5px;
+    font-size: 14px;
+    text-align: center;
+  }
+  
+  /* Fix for Bootstrap's Tooltip Arrow */
+  .tooltip .tooltip-arrow::before {
+    border-top-color: #698F3F !important;
+    border-bottom-color: #698F3F !important;
+  }
+  
+  /* Extra Fix for Some Bootstrap Versions */
+  .tooltip::before {
+    border-color: #698F3F !important;
+    background-color: #698F3F !important;
+  }
+  .ai-but{
+    border:none;
+}
+.ai-but:hover{
+    border: 1px solid #698F3F;
+}
+

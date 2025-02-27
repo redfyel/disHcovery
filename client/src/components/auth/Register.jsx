@@ -6,11 +6,26 @@ import "./auth.css";
 function Register() {
   const { register, handleSubmit, formState: { errors } } = useForm();
   const navigate = useNavigate();
+  const [err, setErr] = useState('');
 
   async function onUserRegister(newUser) {
-    console.log("User Registered", newUser);
+    try {
+      let res = await fetch(`http://localhost:4000/user-api/register`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(newUser),
+      });
+      let data = await res.json();
+      
+      if (data.message === "user created") {
+        onRegisterSuccess();
+      } else {
+        setErr(data.message);
+      }
+    } catch (err) {
+      setErr(err.message);
+    }
   }
-
   return (
     <div className="auth-wrapper">
       <form className="auth-form" onSubmit={handleSubmit(onUserRegister)}>
