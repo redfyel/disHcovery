@@ -1,10 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { Wheel } from "react-custom-roulette";
 import Confetti from "react-confetti";
 import { motion } from "framer-motion";
 import { FaUtensils } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import pointerIcon from "../../assets/pointer-icon.png";
+import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./RecipeRoulette.css";
 
 const RecipeRoulette = ({ isOpen, onClose }) => {
@@ -16,6 +17,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiOpacity, setConfettiOpacity] = useState(1);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
+  const {loginStatus, currentUser, setCurrentUser} = useContext(userLoginContext)
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -35,6 +37,11 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
 
     if (isOpen) fetchRecipes();
   }, [isOpen]);
+
+  if(!loginStatus){
+    navigate('/access-denied')
+    return;
+  }
 
   const onRecipeSelect = (recipe) => {
     if (!recipe) return;
