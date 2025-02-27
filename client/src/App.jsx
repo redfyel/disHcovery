@@ -12,6 +12,7 @@ import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
 import CoolAI from './components/ai-ingredients/CoolAI'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
+import AccessDenied from './components/protected/AccessDenied'
 
 
 
@@ -68,9 +69,12 @@ function App() {
         {
           path : '/ai-ingredients',
           element : <CoolAIFull/>
-        }
-       
-      ]
+        },
+      ],
+    },
+    {
+      path : '/access-denied',
+      element : <AccessDenied/>
     }
   ])
 
