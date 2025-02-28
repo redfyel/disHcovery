@@ -1,13 +1,19 @@
 import React, { useState } from "react";
 import RecipeRoulette from "../recipe-roulette/RecipeRoulette";
 import rouletteIcon from "../../assets/roulette-icon.png";
+import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import "./Search.css"; 
 
 function Search() {
   const [showRoulette, setShowRoulette] = useState(false);
   const [query, setQuery] = useState("");
-  const [showTooltip, setShowTooltip] = useState(false);
+
+  const renderTooltip = (props) => (
+    <Tooltip {...props} >
+      Can't decide what to cook? Spin for a surprise recipe!
+    </Tooltip>
+  )
 
   return (
     <div className="search-container">
@@ -25,27 +31,24 @@ function Search() {
 
 
       {/* Button with Tooltip */}
-      <div 
-        className="roulette-wrapper" 
-        onMouseEnter={() => setShowTooltip(true)}
-        onMouseLeave={() => setShowTooltip(false)}
-      >
-        <button className="roulette-btn" onClick={() => setShowRoulette(true)}>
+      {!showRoulette ? (
+        <OverlayTrigger
+          placement="bottom"
+          delay={{show : 250, hide: 400}}
+          overlay={renderTooltip}> 
+          
+          <button className="roulette-btn" onClick={() => setShowRoulette(true)}>
           <img 
             src={rouletteIcon} 
             alt="Roulette Icon" 
             style={{ width: "24px", height: "24px", marginRight: "2px" }} 
           />
         </button>
-        
-        {/* Tooltip */}
-        {showTooltip && (
-          <div className="tooltip">Spin the Roulette!</div>
-        )}
-      </div>
-
-      {/* Recipe Roulette Modal */}
-      <RecipeRoulette isOpen={showRoulette} onClose={() => setShowRoulette(false)}  />
+        </OverlayTrigger>
+      ): ( 
+        // Recipe Roulette Modal
+        <RecipeRoulette isOpen={showRoulette} onClose={() => setShowRoulette(false)}  />)}
+     
     </div>
   );
 }
