@@ -1,13 +1,36 @@
-import React from 'react';
-import { FaSearch, FaUser } from "react-icons/fa";
-import { Button, Card } from "react-bootstrap";
+import React, { useState, useEffect } from "react";
+import { FaMoon, FaSun } from "react-icons/fa";
+import { Button, Card, Container, Row, Col, Navbar, Nav } from "react-bootstrap";
 import { motion } from "framer-motion";
+import logo from "../../assets/disHcovery_logo.jpg"; 
+// import home from "../../assets/vdo.mp4";
+import breakfast from "../../assets/breakfast.jpg";
+import lunch from "../../assets/lunch.jpg";
+import dinner from "../../assets/dinner.jpg";
 import "./Home.css";
 
 export default function HomePage() {
-  return (
-    <div className="min-vh-100 bg-light">
+  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
 
+  // Toggle theme function
+  const toggleTheme = () => {
+    const newTheme = theme === "light" ? "dark" : "light";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
+  };
+
+  useEffect(() => {
+    document.body.className = theme; 
+  }, [theme]);
+
+  const meals = [
+    { id: 1, title: "Breakfast", image: breakfast },
+    { id: 2, title: "Lunch", image: lunch },
+    { id: 3, title: "Dinner", image: dinner },
+  ];
+
+  return (
+    <div className={`min-vh-100 bg-light ${theme}`}>
 
       {/* Video Section */}
       <section className="position-relative w-100" style={{ height: "500px" }}>
@@ -15,9 +38,9 @@ export default function HomePage() {
           className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
           autoPlay loop muted
         >
-          <source src="../../assets/home.mp4" type="video/mp4" />
+          {/* <source src={home} type="video/mp4" /> */}
         </video>
-        <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-center align-items-center text-white">
+        <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-center align-items-center text-white text-center">
           <h2 className="fs-1 fw-semibold">Discover Delicious Recipes</h2>
           <p className="mt-2 fs-5">Find, save, and share your favorite recipes with ease.</p>
           <Button variant="primary" className="mt-3">Get Started</Button>
@@ -32,54 +55,50 @@ export default function HomePage() {
         className="container text-center my-5"
       >
         <h3 className="fw-semibold fs-2">Why Choose disHcovery?</h3>
-        <div className="row mt-4">
+        <Row className="mt-4">
           {[
             { id: 1, title: "Explore Recipes", desc: "Discover a variety of global cuisines." },
             { id: 2, title: "Save & Share", desc: "Save recipes and share with your friends." },
             { id: 3, title: "Personalized Suggestions", desc: "Get meal recommendations tailored for you." },
           ].map((feature) => (
-            <motion.div 
-              key={feature.id}
-              className="col-md-4 p-3"
-              whileHover={{ scale: 1.05 }}
-            >
-              <Card className="shadow-sm p-3">
-                <Card.Body>
-                  <h4 className="fw-semibold">{feature.title}</h4>
-                  <p className="text-muted">{feature.desc}</p>
-                </Card.Body>
-              </Card>
-            </motion.div>
+            <Col md={4} key={feature.id} className="p-3">
+              <motion.div whileHover={{ scale: 1.05 }}>
+                <Card className={`shadow-sm p-3 ${theme}`}>
+                  <Card.Body>
+                    <h4 className="fw-semibold">{feature.title}</h4>
+                    <p className="text-muted">{feature.desc}</p>
+                  </Card.Body>
+                </Card>
+              </motion.div>
+            </Col>
           ))}
-        </div>
+        </Row>
       </motion.section>
 
-      {/* Meal Categories Section */}
+      {/* Meals Section */}
       <section className="container text-center my-5">
-        <h3 className="fw-semibold fs-3 mb-4">Explore Meals</h3>
-        <div className="row">
-          {[
-            { id: 1, title: "Breakfast", image: "/images/breakfast.jpg" },
-            { id: 2, title: "Lunch", image: "/images/lunch.jpg" },
-            { id: 3, title: "Dinner", image: "/images/dinner.jpg" },
-          ].map((meal, index) => (
-            <motion.div 
-              key={meal.id}
-              className="col-md-4 p-3"
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.2 }}
-            >
-              <Card className="shadow-sm overflow-hidden">
-                <Card.Img variant="top" src={meal.image} className="h-100 object-fit-cover" />
-                <Card.Body className="text-center">
-                  <h4 className="fw-semibold">{meal.title}</h4>
-                </Card.Body>
-              </Card>
-            </motion.div>
+        <h3 className="fw-semibold fs-2">Explore Meals</h3>
+        <Row className="mt-4">
+          {meals.map((meal, index) => (
+            <Col md={4} key={meal.id} className="p-3">
+              <motion.div 
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.2 }}
+                whileHover={{ scale: 1.05 }}
+              >
+                <Card className={`shadow-sm p-3 ${theme}`}>
+                  <Card.Img variant="top" src={meal.image} className="meal-image"/>
+                  <Card.Body className="text-center">
+                    <h4 className="fw-semibold">{meal.title}</h4>
+                  </Card.Body>
+                </Card>
+              </motion.div>
+            </Col>
           ))}
-        </div>
+        </Row>
       </section>
+
     </div>
   );
 }
