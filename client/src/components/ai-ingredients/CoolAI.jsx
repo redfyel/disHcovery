@@ -54,7 +54,7 @@ export default function CoolAI() {
             className="ai-but rounded-circle p-3"
             onClick={() => setOpen(!open)}
           >
-            <HiSparkles size={30} />
+            <HiSparkles size={30}/>
           </button>
         </OverlayTrigger>
       ) : (

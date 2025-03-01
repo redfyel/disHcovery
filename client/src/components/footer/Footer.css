@@ -1,5 +1,6 @@
 .footer {
-    position: relative; /* or absolute if needed */
-    z-index: 10; /* Must be LOWER than the modal */
+    position: relative; 
+    z-index: 10; 
   }
+  
   

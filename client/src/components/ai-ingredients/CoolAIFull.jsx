@@ -38,30 +38,51 @@ export default function CoolAIFull() {
     }
   };
 
-  const fetchRecipes = () => {
-    setIsTyping(true);
-    setAiMessages((prev) => [...prev, { text: "Generating recipes...", sender: "ai" }]);
+  const fetchRecipes = async () => {
+    if (ingredients.length === 0) {
+      setAiMessages((prev) => [
+        ...prev,
+        { text: "You haven't selected any ingredients yet! Try adding some.", sender: "ai" },
+      ]);
+      return;
+    }
 
-    setTimeout(() => {
-      const generatedRecipes = [
-        "Paneer Butter Masala",
-        "Aloo Jeera Fry",
-        "Spinach Dal Tadka",
-        "Tomato Rasam",
-        "Chole Bhature",
-        "Butter Chicken",
-        "Mutton Biryani",
-      ];
+    setIsTyping(true);
+    setAiMessages((prev) => [...prev, { text: "Let me think...", sender: "ai" }]);
+
+    try {
+      const response = await fetch("http://localhost:4000/airecipes-api/generate-recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ ingredients: ingredients }),
+      });
+
+      if (!response.ok) {
+        // Handle non-2xx HTTP responses
+        const errorText = await response.text(); // Get the error message from the server
+        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+      }
+
+      const data = await response.json();
+      const aiResponse = data.recipe;
 
       setIsTyping(false);
-      setRecipes(generatedRecipes);
-
       setAiMessages((prev) => [
-        ...prev.filter((msg) => msg.text !== "Generating recipes..."),
-        { text: "Here you go! Some recipes you can try:", sender: "ai" },
+        ...prev.filter((msg) => msg.text !== "Let me think..."),
+        { text: aiResponse, sender: "ai" },
       ]);
-    }, 2000);
+
+      setRecipes([aiResponse]); 
+
+    } catch (error) {
+      console.error("Error fetching AI response:", error);
+      setIsTyping(false);
+      setAiMessages((prev) => [...prev, { text: "Oops! Something went wrong. Try again later.", sender: "ai" }]);
+    }
   };
+
 
   const nextCategory = () => {
     setCurrentIndex((prev) => (prev + 1) % categories.length);

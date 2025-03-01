@@ -15,6 +15,17 @@ const Recipe = () => {
     );
   }
 
+
+const handlePrint = () => {
+  localStorage.setItem("recipeToPrint", JSON.stringify(recipe));
+  localStorage.setItem("recipeTitle", recipe.title); // Optional: Store title
+
+  // Use React Router to navigate within the same tab
+  navigate("/print");
+};
+
+
+
   return (
     <div className="recipe-details">
       <h1 className="recipe-title">{recipe.title}</h1>
@@ -66,16 +77,15 @@ const Recipe = () => {
         </ol>
 
         {Array.isArray(recipe.allergyWarnings) && recipe.allergyWarnings.length > 0 && (
-  <>
-    <h3>Allergy Warnings:</h3>
-    <ul>
-      {recipe.allergyWarnings.map((warning, index) => (
-        <li key={index}>{warning}</li>
-      ))}
-    </ul>
-  </>
-)}
-
+          <>
+            <h3>Allergy Warnings:</h3>
+            <ul>
+              {recipe.allergyWarnings.map((warning, index) => (
+                <li key={index}>{warning}</li>
+              ))}
+            </ul>
+          </>
+        )}
 
         {recipe.videoURL && (
           <div className="recipe-video">
@@ -94,6 +104,7 @@ const Recipe = () => {
       </div>
 
       <button onClick={() => navigate(-1)} className="back-button">Go Back</button>
+      <button onClick={handlePrint} className="print-button">Print Recipe</button> {/* Print Button */}
     </div>
   );
 };

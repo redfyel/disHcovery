@@ -8,7 +8,7 @@ require('dotenv').config()
 // middleware
 const cors = require('cors')
 app.use(cors())
-
+app.use(exp.json());
 // import MongoClient
 const {MongoClient} = require('mongodb')
 

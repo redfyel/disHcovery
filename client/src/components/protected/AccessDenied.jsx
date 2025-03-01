@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
-import Lottie from "lottie-react"; // ✅ Use lottie-react instead
-import cookingAnimation from "../../assets/animations/cooking.json"; // 🍳 Lottie JSON animation
+import Lottie from "lottie-react";
+import cookingAnimation from "../../assets/animations/cooking.json";
 
 export default function AccessDenied() {
   return (
@@ -11,7 +11,7 @@ export default function AccessDenied() {
       animate={{ opacity: 1, y: 0}}
       transition={{ duration: 0.6, ease: "easeOut" }}
     >
-      {/* 🔒 Lock + Cooking Animation */}
+      {/* Cooking Animation */}
       <div className="d-flex align-items-center">
         <i className="bi bi-lock-fill text-danger display-3"></i>
         <div style={{ width: "300px", height: "240px" }}> {/* Adjusted size */}
@@ -19,7 +19,7 @@ export default function AccessDenied() {
         </div>
       </div>
 
-      {/* 🔥 Access Denied Message */}
+      {/* Access Denied Message */}
       <motion.h1 
         className="display-4 fw-bold text-danger mt-4"
         initial={{ scale: 0.8 }}
@@ -33,9 +33,9 @@ export default function AccessDenied() {
         This kitchen is off-limits! Sign in to get a taste of what’s cooking. 🍕
       </p>
 
-      {/* 🔄 Smooth Button Hover Animation */}
+      {/*  Smooth Button Hover Animation */}
       <motion.div
-        whileHover={{ scale: 1.1 }}  // Slightly increase the button size on hover
+        whileHover={{ scale: 1.1 }}  
         transition={{ duration: 0.3 }}
       >
         <Link to="/login" className="btn btn-danger px-3 py-2 fw-semibold shadow-sm mt-3">

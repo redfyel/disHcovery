@@ -13,6 +13,7 @@ import RoutingError from './components/RoutingError'
 import CoolAI from './components/ai-ingredients/CoolAI'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
 import AccessDenied from './components/protected/AccessDenied'
+import Print from './components/print/Print'
 
 
 
@@ -70,6 +71,10 @@ function App() {
           path : '/ai-ingredients',
           element : <CoolAIFull/>
         },
+        {
+          path : '/print',
+          element: <Print/>
+        }
       ],
     },
     {

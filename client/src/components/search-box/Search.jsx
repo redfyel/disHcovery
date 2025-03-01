@@ -48,7 +48,6 @@ function Search() {
       ): ( 
         // Recipe Roulette Modal
         <RecipeRoulette isOpen={showRoulette} onClose={() => setShowRoulette(false)}  />)}
-     
     </div>
   );
 }

@@ -17,7 +17,8 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiOpacity, setConfettiOpacity] = useState(1);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const {loginStatus, currentUser, setCurrentUser} = useContext(userLoginContext)
+  const { loginStatus, currentUser, setCurrentUser } =
+    useContext(userLoginContext);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -38,8 +39,8 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
     if (isOpen) fetchRecipes();
   }, [isOpen]);
 
-  if(!loginStatus){
-    navigate('/access-denied')
+  if (!loginStatus) {
+    navigate("/access-denied");
     return;
   }
 
@@ -51,37 +52,35 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
 
   const handleSpinClick = () => {
     if (recipes.length > 0) {
-      setShowConfetti(false); // Hide confetti on new spin
+      setShowConfetti(false);
 
-
-      setSelectedRecipe(null); // Reset selected recipe
+      setSelectedRecipe(null);
       const randomIndex = Math.floor(Math.random() * recipes.length);
-      
+
       // Ensure state updates correctly before spinning
       setPrizeNumber(randomIndex);
-      
+
       // Slight delay before setting mustSpin to ensure state updates
       setTimeout(() => setMustSpin(true), 50);
     }
   };
-  
 
   const handleStopSpinning = () => {
-  setMustSpin(false);
-  
-  // Ensure prizeNumber is not null before setting the recipe
-  if (prizeNumber !== null && recipes[prizeNumber]) {
-    setShowConfetti(true);
-    setConfettiOpacity(1);
-    setSelectedRecipe(recipes[prizeNumber]);
-    setTimeout(() => {
-      setConfettiOpacity(0); // Reduce opacity
-      setTimeout(() => setShowConfetti(false), 2500); // Remove confetti after fade-out
-    }, 3000); // Show confetti for 2.5s before starting fade-out
-  } else {
-    console.error("Error: Invalid prizeNumber or missing recipe data.");
-  }
-};
+    setMustSpin(false);
+
+    // Ensure prizeNumber is not null before setting the recipe
+    if (prizeNumber !== null && recipes[prizeNumber]) {
+      setShowConfetti(true);
+      setConfettiOpacity(1);
+      setSelectedRecipe(recipes[prizeNumber]);
+      setTimeout(() => {
+        setConfettiOpacity(0);
+        setTimeout(() => setShowConfetti(false), 2500);
+      }, 3000);
+    } else {
+      console.error("Error: Invalid prizeNumber or missing recipe data.");
+    }
+  };
 
   return (
     <div
@@ -99,17 +98,16 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
             onClick={onClose}
             className="btn-close position-absolute top-0 end-0 m-3"
           ></button>
-          
-          {showConfetti && (
-  <motion.div
-    initial={{ opacity: 1 }}
-    animate={{ opacity: confettiOpacity }}
-    transition={{ duration: 0.5 }}
-  >
-    <Confetti width={500} height={500} numberOfPieces={230} />
-  </motion.div>
-)}
 
+          {showConfetti && (
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: confettiOpacity }}
+              transition={{ duration: 0.5 }}
+            >
+              <Confetti width={500} height={500} numberOfPieces={230} />
+            </motion.div>
+          )}
 
           <div className="text-center mb-3">
             <FaUtensils size={40} color="#804E49" />

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import "bootstrap/dist/css/bootstrap.min.css"; // Ensure Bootstrap is imported
+import { VscDebugRestart } from "react-icons/vsc";
 
 const Footer = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [isPlayerTurn, setIsPlayerTurn] = useState(true); // Player starts first
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true); 
   const [winner, setWinner] = useState(null);
 
   // Random disHcovery facts
@@ -57,6 +57,7 @@ const Footer = () => {
     const emptyIndices = newBoard
       .map((value, index) => (value === null ? index : -1))
       .filter((index) => index !== -1);
+    if (emptyIndices.length === 0) return; //If board is full AI can't make a move
     const randomIndex =
       emptyIndices[Math.floor(Math.random() * emptyIndices.length)];
     newBoard[randomIndex] = "🥗";
@@ -72,18 +73,18 @@ const Footer = () => {
   const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
   return (
-    <footer className="bg-gradient-to-r from-orange-600 via-red-500 to-yellow-500 text-white py-10 px-6">
+    <footer className="bg-gradient-to-r from-orange-600 via-red-500 to-yellow-500 text-white py-6 px-4">
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
-        <div className="d-flex flex-column align-items-center text-xl mb-4 mb-lg-0">
-          {winner ? (
-            <div className="text-xl font-semibold mb-4">
+        <div className="d-flex flex-column align-items-center text-xl mb-3 mb-lg-0">
+        {winner && (
+            <div className="text-lg font-semibold mb-2">
               {winner} wins! 🎉
-              <div className="mt-4 text-lg font-medium">
-                Fun Fact:{randomFact}
+              <div className="text-sm italic opacity-70 mt-1">
+                Fun Fact: {randomFact}
               </div>
             </div>
-          ) : null}
+          )}
 
           <div className="tic-tac-toe-grid">
             {/* Tic-Tac-Toe grid */}
@@ -91,12 +92,23 @@ const Footer = () => {
               <div
                 key={index}
                 onClick={() => handleClick(index)}
-                className={`cell ${cell ? "" : ""}`}
+                className={`cell ${cell ? "filled" : ""} ${
+                  index === 0 ? "no-top no-left no-bottom no-right" : ""
+                }
+                 ${index === 1 ? "no-top no-bottom " : ""}
+                 ${index === 2 ? "no-top no-left no-bottom no-right" : ""}
+                 ${index === 3 ? " no-left no-right" : ""}
+                  ${index === 5 ? " no-left no-right" : ""}
+                 ${index === 6 ? "no-top no-left no-bottom no-right" : ""}
+                  ${index === 7 ? "no-top no-bottom" : ""}
+                  ${index === 8 ? "no-top no-left no-bottom no-right" : ""}
+                `}
               >
                 {cell}
               </div>
             ))}
           </div>
+
           <button
             onClick={() => {
               setBoard(Array(9).fill(null));
@@ -105,45 +117,48 @@ const Footer = () => {
             }}
             className="restart-button"
           >
-            Restart Game
+<VscDebugRestart />
           </button>
         </div>
 
         {/* Right Side: disHcovery Links and Copyright */}
         <div className="d-flex flex-column align-items-center text-center">
-          <h2 className="text-3xl font-extrabold tracking-wide drop-shadow-lg mb-4">
-            🍽️ disHcovery – Discover, Create, Savor! 🍲
+          <h2 className="text-2xl font-extrabold tracking-wide drop-shadow-lg mb-3">
+            🍽️ disHcovery
           </h2>
+          <p className="text-sm mb-2">Discover, Create, Savor!</p>
 
           {/* Animated Ingredients */}
-          <div className="d-flex justify-content-center gap-4 text-4xl mb-4 fs-5">
+          <div className="d-flex justify-content-center gap-2 text-3xl mb-2">
             <span className="animate-wiggle">🥑</span>
             <span className="animate-wiggle">🍣</span>
             <span className="animate-wiggle">🍩</span>
             <span className="animate-wiggle">🍕</span>
             <span className="animate-wiggle">🥘</span>
-            <span className="animate-wiggle">🌮</span>
-            <span className="animate-wiggle">🍔</span>
           </div>
 
           {/* Links Section */}
-<div className="d-flex flex-column align-items-center mb-4 text-sm font-medium opacity-90">
-  <a href="#" className="link">Home</a>
-  <a href="#" className="link">Explore</a>
-  <a href="#" className="link">Community</a>
-  <a href="#" className="link">Recipe Roulette 🎲</a>
-  <a href="#" className="link">AI Recipe with Ingredients 🤖</a>
-</div>
+          <div className="d-flex flex-column align-items-center mb-2 text-xs font-medium opacity-90">
+            <a href="#" className="link">
+              Home
+            </a>
+            <a href="#" className="link">
+              Explore
+            </a>
+            <a href="#" className="link">
+              Community
+            </a>
+          </div>
+
 
           {/* Copyright */}
-          <p className="text-xs opacity-60">
-            © {new Date().getFullYear()} disHcovery. Cooked fresh with 🔥 & a
-            sprinkle of magic ✨.
+          <p className="text-xxs opacity-60">
+            © {new Date().getFullYear()} disHcovery.
           </p>
         </div>
       </div>
 
-      {/* Keyframe Animations */}
+      {/* Keyframe Animations and Styles */}
       <style jsx>{`
         @keyframes wiggle {
           0%,
@@ -151,25 +166,13 @@ const Footer = () => {
             transform: rotate(0deg);
           }
           25% {
-            transform: rotate(-10deg);
+            transform: rotate(-8deg);
           }
           75% {
-            transform: rotate(10deg);
+            transform: rotate(8deg);
           }
         }
 
-        .link {
-  color: #fff; /* White text color */
-  text-decoration: none; /* Remove underline */
-  padding: 10px 15px; /* Add padding for better click area */
-  border-radius: 5px; /* Rounded corners */
-  transition: background-color 0.3s, color 0.3s; /* Smooth transition for background and color */
-}
-
-.link:hover {
-  background-color: rgba(255, 255, 255, 0.2); /* Light background on hover */
-  color: #ffcc00; /* Change text color on hover */
-}
         .animate-wiggle {
           display: inline-block;
           animation: wiggle 1.5s infinite ease-in-out;
@@ -177,42 +180,76 @@ const Footer = () => {
 
         .tic-tac-toe-grid {
           display: grid;
-          grid-template-columns: repeat(3, 100px);
-          grid-template-rows: repeat(3, 100px);
-          gap: 0; /* Remove gap to make it look like a single board */
-          background-color: #000; /* Set the background color of the grid */
-          border: 2px solid #fff; /* Add a border around the grid */
+          grid-template-columns: repeat(3, 60px);
+          grid-template-rows: repeat(3, 60px);
+          gap: 4px;
+          background-color: #0A122A; 
+          // padding: 4px;
+          // width: 188px;
+          transform: rotate(-5deg);
         }
 
         .cell {
           display: flex;
           justify-content: center;
           align-items: center;
-          font-size: 2.5rem;
-          background-color: #000; /* Keep the cell background black */
-          border: 2px solid #fff; /* White border for each cell */
+          font-size: 1.8rem;
+          background-color: #0A122A;
+          border: 2px solid #fff;
           cursor: pointer;
-          color: #fff; /* Set text color to white for better visibility */
-          transition: background-color 0.3s; /* Add a transition effect */
+          user-select: none;
+          border-top: 2px solid #fff;
+          border-left: 2px solid #fff;
+          border-right: 2px solid #fff;
+          border-bottom: 2px solid #fff;
+          transition: background-color 0.2s;
+
+        }
+        .cell.no-top{
+          border-top: none;
+        }
+        .cell.no-left{
+          border-left: none;
+        }
+          .cell.no-right{
+          border-right: none;
+        }
+        .cell.no-bottom{
+          border-bottom: none;
+        }
+
+        .restart-button {
+          position: relative;
+          top: 20;
+          left : 50;
+          bottom : 50;
+          padding: 8px;
+          background-color: rgba(230, 203, 203, 0.3);
+          color: white;
+          font-size: 0.9rem;
+          border: none;
+          border-radius: 50%;
+          cursor: pointer;
+          display: flex;
+          justify-content: center;
+          align-items: center;
         }
 
         .cell:hover {
-          background-color: rgba(
-            255,
-            255,
-            255,
-            0.2
-          ); /* Lighten the cell on hover */
+         background-color: rgba(97, 96, 96, 0.91);
+       border: 2px solid #00-; 
         }
-        .restart-button {
-          padding: 10px 20px;
-          background-color: #698f3f;
-          color: white;
-          font-size: 1.2rem;
-          border: none;
-          border-radius: 5px;
-          cursor: pointer;
-          margin-top: 20px;
+
+        .link {
+          color: #fff;
+          text-decoration: none;
+          margin-bottom: 4px;
+          display: block;
+          transition: color 0.2s;
+        }
+
+        .link:hover {
+          color: #ffcc00;
         }
       `}</style>
     </footer>
