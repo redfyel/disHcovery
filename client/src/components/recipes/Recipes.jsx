@@ -1,3 +1,4 @@
+// Recipes.jsx
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Filters from "../filters/Filters"; // Import Filters component
@@ -14,6 +15,7 @@ const Recipes = () => {
     diet: [],
     cookTime: [],
     cuisine: [],
+    hasVideo: false, // Added hasVideo filter
   });
 
   const navigate = useNavigate();
@@ -47,7 +49,8 @@ const Recipes = () => {
       filters.mealType.length ||
       filters.diet.length ||
       filters.cookTime.length ||
-      filters.cuisine.length
+      filters.cuisine.length ||
+      filters.hasVideo //Check for hasVideo filter
     ) {
       updatedRecipes = updatedRecipes.filter((recipe) => {
         const matchesCategories =
@@ -75,12 +78,15 @@ const Recipes = () => {
             ? filters.cuisine.includes(recipe.cuisine)
             : true;
 
+        const matchesVideo = filters.hasVideo ? recipe.videoURL : true;  // Filter by video
+
         return (
           matchesCategories &&
           matchesMealType &&
           matchesDiet &&
           matchesCookTime &&
-          matchesCuisine
+          matchesCuisine &&
+          (filters.hasVideo ? recipe.videoURL != null && recipe.videoURL !== "" : true)
         );
       });
     }
@@ -107,8 +113,7 @@ const Recipes = () => {
                     className="recipe-image"
                   />
                   <h3 className="recipe-name">{recipe.title}</h3>
-                  <p className="recipe-meal_type">{recipe.mealType}</p>
-                  <p className="recipe-total_time">⏱ {recipe.totalTime}</p>
+
 
                   <button
                     onClick={() => navigate("/recipe", { state: { recipe } })}

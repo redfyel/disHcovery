@@ -1,18 +1,19 @@
-/* General filter container styles */
+/* filters.css - No changes needed */
+/* filters.css */
 .filter-container {
-  background: #fff;
+  background: #FBFAF8;
   padding: 20px;
   border-radius: 10px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  max-width: 400px;
+  max-width: 350px;
   margin: auto;
 }
 
 /* Filter title */
 .filter-container h2 {
   text-align: center;
-  font-size: 1.8rem;
-  color: #333;
+  font-size: 2rem;
+  color: #0A122A;
   margin-bottom: 15px;
 }
 
@@ -21,55 +22,56 @@
   margin-bottom: 20px;
 }
 
-/* Section headings (Categories, Meal Type, etc.) */
+/* Section headings */
 .filter-section h3 {
-  font-size: 1.4rem;
-  color: #444;
+  font-size: 1.5rem;
+  color: #698F3F;
   margin-bottom: 10px;
-  border-bottom: 2px solid #eee;
+  border-bottom: 2px solid #E7DECD;
   padding-bottom: 5px;
 }
 
-/* Styling for each filter option (checkboxes and radio buttons) */
-.filter-section label {
+/* Styling for filter tags */
+.filter-tags {
   display: flex;
-  align-items: center;
-  font-size: 1.1rem;
-  color: #555;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* Styles for each filter tag */
+.filter-tag {
+  background-color: #E7DECD;
+  border: 1px solid #ccc;
+  border-radius: 20px;
+  padding: 10px;
+  margin: 5px;
   cursor: pointer;
-  margin-bottom: 8px;
-  transition: 0.2s;
+  transition: all 0.2s ease;
 }
 
-/* Checkbox and radio button styles */
-.filter-section input[type="checkbox"],
-.filter-section input[type="radio"] {
-  margin-right: 10px;
-  transform: scale(1.2); /* Slightly larger for better accessibility */
+.filter-tag.selected {
+  background-color: #698F3F;
+  color: white;
+  border: 1px solid #698F3F;
 }
 
-/* Hover effect on labels */
-.filter-section label:hover {
-  color: #000;
-  font-weight: bold;
+/* Hover effect for filter tags */
+.filter-tag:hover {
+  background-color: #698F3F;
 }
 
-/* Responsive design: Adjust width on smaller screens */
+/* Responsive design */
 @media (max-width: 500px) {
   .filter-container {
-    max-width: 100%;
-    padding: 15px;
+      max-width: 90%;
+      padding: 15px;
   }
 
   .filter-container h2 {
-    font-size: 1.6rem;
+      font-size: 1.8rem;
   }
 
   .filter-section h3 {
-    font-size: 1.2rem;
-  }
-
-  .filter-section label {
-    font-size: 1rem;
+      font-size: 1.3rem;
   }
 }
