@@ -62,7 +62,7 @@
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px; /* Add space above the recipe card */
+  margin-top: 15px; 
 }
 
 /* Ingredient Selection Styles */
@@ -194,6 +194,7 @@
   background-color: #ddd;
   color: #666;
   display: flex;
+  border: 1px solid #000;
   justify-content: center;
   align-items: center;
   font-size: 1.2em;
@@ -210,17 +211,20 @@
 }
 
 /* Add Custom Ingredient Styles */
-#custom-ingredient-input.input-group {
-  margin-top: 20px;
-  display: flex;
-}
-
-.form-control {
+.inp-bar {
   flex: 1;
   padding: 10px;
-  border: 1px solid #000;
+  border: 1px solid #ccc  !important; 
   border-radius: 5px 0 0 5px;
+  font-size: 16px;
+  color: #333;
+  background-color: rgb(176, 104, 104); 
 }
+.inp-bar::placeholder {
+  color: #555; 
+  opacity: 1; 
+}
+
 
 .add-btn {
   background-color: #28a745;
@@ -244,6 +248,8 @@
   padding: 12px 20px;
   border-radius: 8px;
   cursor: pointer;
+  display: block;
+  margin: 0 auto;
   transition: background-color 0.3s, transform 0.2s;
 }
 
@@ -395,16 +401,4 @@
   font-style: italic;
   color: #888;
   margin-top: 10px;
-}
-/* toast while saving */
-.toast-message {
-  position: fixed;
-  top: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
-  color: white;
-  padding: 10px 20px;
-  border-radius: 5px;
-  z-index: 1000; /* Ensure it's on top */
 }

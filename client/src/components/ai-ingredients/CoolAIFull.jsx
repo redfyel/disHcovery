@@ -1,11 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaPlus,
-  FaTrash,
-  FaSave,
-} from "react-icons/fa";
+import {FaChevronLeft,FaChevronRight,FaPlus,FaTrash,FaSave,} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./CoolAiFull.css";
@@ -218,7 +212,7 @@ function CoolAIFull (){
       const ingredientsText = ingredientsMatch[1];
       ingredientsList = ingredientsText
         .split("\n")
-        .map((item) => item.trim().replace(/^\*/, "")) // Remove leading asterisk
+        .map((item) => item.trim().replace(/^\*/, ""))
         .filter((item) => item !== "")
         .map((item, index) => <li key={index}>{item}</li>);
     }
@@ -229,14 +223,14 @@ function CoolAIFull (){
       const instructionsText = instructionsMatch[1];
       instructionsList = instructionsText
         .split("\n")
-        .map((item) => item.trim().replace(/^\d+\.\s*/, "")) // Remove numbers
+        .map((item) => item.trim().replace(/^\d+\.\s*/, "")) 
         .filter((item) => item !== "");
     }
 
     return (
       <div className="formatted-recipe">
         <h3>{title}</h3>
-        <p className="description">{description}</p> {/* Add description */}
+        <p className="description">{description}</p> 
         <div className="ingredients">
           <h4>Ingredients:</h4>
           {ingredientsList.length > 0 ? (
@@ -370,7 +364,7 @@ function CoolAIFull (){
         </AnimatePresence>
       </motion.div>
 
-      {/* Ingredient Selection Section (Conditional Rendering) */}
+      {/* Ingredient Selection Section  */}
       <AnimatePresence>
         {showIngredientSelection && (
           <motion.div
@@ -501,13 +495,13 @@ function CoolAIFull (){
             </div>
 
             {/* Add Custom Ingredient */}
-            <div id="custom-ingredient-input" className="input-group mt-4 ">
+            <div id="custom-ingredient-input" className="mt-4 d-flex">
               <input
                 type="text"
                 placeholder="Add another ingredient..."
                 value={input}
                 onChange={(e) => setInput(e.target.value)}
-                className="form-control text-muted border-1"
+                className="inp-bar form-control "
                 aria-label="Add custom ingredient"
               />
               <button
@@ -527,7 +521,7 @@ function CoolAIFull (){
         {showGenerateButton && (
           <motion.button
             id="generate-recipes-button"
-            className="cool-ai-btn fetch-btn w-100 mt-4"
+            className="cool-ai-btn fetch-btn mt-4"
             onClick={fetchRecipes}
             disabled={isLoadingRecipe}
             whileHover={{ scale: 1.03 }}
@@ -563,7 +557,6 @@ function CoolAIFull (){
           >
             <div className="spinner"></div>
             <p>Getting some delicious ideas...</p>
-            {/* <p id="loading-message">This might take a moment</p> Added Loading Message */}
           </motion.div>
         )}
       </AnimatePresence>
