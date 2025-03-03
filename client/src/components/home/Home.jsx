@@ -2,11 +2,11 @@ import React, { useState, useEffect } from "react";
 import { FaMoon, FaSun } from "react-icons/fa";
 import { Button, Card, Container, Row, Col, Navbar, Nav } from "react-bootstrap";
 import { motion } from "framer-motion";
-import logo from "../../assets/disHcovery_logo.jpg"; 
+// import logo from "../../assets/disHcovery_logo.jpg"; 
 // import home from "../../assets/vdo.mp4";
-import breakfast from "../../assets/breakfast.jpg";
-import lunch from "../../assets/lunch.jpg";
-import dinner from "../../assets/dinner.jpg";
+import breakfast from "../../assets/images/breakfast.jpg";
+import lunch from "../../assets/images/lunch.jpg";
+import dinner from "../../assets/images/dinner.jpg";
 import "./Home.css";
 
 export default function HomePage() {

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import RecipeRoulette from "../recipe-roulette/RecipeRoulette";
-import rouletteIcon from "../../assets/roulette-icon.png";
+import rouletteIcon from "../../assets/images/roulette-icon.png";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
 import { FaSearch } from "react-icons/fa";
 import "./Search.css"; 

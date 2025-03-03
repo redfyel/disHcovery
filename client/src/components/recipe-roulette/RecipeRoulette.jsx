@@ -4,7 +4,7 @@ import Confetti from "react-confetti";
 import { motion } from "framer-motion";
 import { FaUtensils } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import pointerIcon from "../../assets/pointer-icon.png";
+import pointerIcon from "../../assets/images/pointer-icon.png";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./RecipeRoulette.css";
 
