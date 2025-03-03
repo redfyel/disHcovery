@@ -37,7 +37,7 @@ function UserLoginStatus({children}){
 
     function onLogout() {
         setCurrentUser(null)
-        loginStatus(false)
+        setLoginStatus(false)
         setError('')
         sessionStorage.removeItem('token')
     }

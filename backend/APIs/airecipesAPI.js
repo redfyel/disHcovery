@@ -25,21 +25,74 @@ airecipesApp.post("/generate-recipe", async (req, res) => {
     - IMPORTANT: The recipe MUST primarily use the ingredients provided. Minimize the use of entirely new ingredients. If a new ingredient is absolutely necessary, clearly indicate it as 'New Ingredient:' followed by the ingredient name and its purpose in the recipe.
     - Provide the recipe name.
     - Include a brief description of the recipe.
-    - List the ingredients, including quantities if possible.  Clearly mark any 'New Ingredient:' with its quantity.
+    - List the ingredients with no additional characters, including quantities if possible.  Clearly mark any 'New Ingredient:' with its quantity.
     - Provide step-by-step instructions.
     - IMPORTANT: Provide real, valid, and safe cooking instructions.  Do not suggest dangerous or impossible cooking methods or ingredient combinations.
     `;
 
     const result = await model.generateContent(prompt);
     const response = await result.response;
-    const text = response.text();
+    let recipeText = response.text();
 
-    res.json({ recipe: text });
+    // Basic cleaning to remove ** and leading/trailing whitespace
+    recipeText = recipeText.replace(/\*\*/g, "");  // Remove **
+    recipeText = recipeText.trim();  // Trim leading/trailing whitespace
+
+    res.json({ recipe: recipeText });
+    // console.log(recipeText);
   } catch (error) {
     console.error("Gemini API Error:", error);
     res.status(500).json({ error: "Failed to generate recipe.", details: error.message });
   }
 });
+
+
+airecipesApp.post('/save-recipe', async (req, res) => {
+  try {
+    const { username, title, ingredients, instructions, description } = req.body;
+
+    // Validate request body
+    if (!username || !title || !Array.isArray(ingredients) || !Array.isArray(instructions)) {
+      return res.status(400).json({ error: 'Missing or invalid required fields.' });
+    }
+
+    const AIcollection = req.app.get('aiRecipesCollection');
+    const usersCollection = req.app.get('usersCollection');
+
+    // Ensure the user exists in the database
+    const userExists = await usersCollection.findOne({ username: username });
+    if (!userExists) {
+      return res.status(404).json({ error: 'User not found.' });
+    }
+
+    // Create a new recipe document
+    const newRecipe = {
+      username, 
+      title,
+      ingredients,
+      instructions,
+      description: description || "", 
+      createdAt: new Date(),
+    };
+
+    // Insert the new recipe document
+    const result = await AIcollection.insertOne(newRecipe);
+
+    if (result.insertedId) {
+      res.status(201).json({ message: 'Recipe saved successfully!', recipe: newRecipe });
+    } else {
+      res.status(500).json({ error: 'Failed to save recipe.' });
+    }
+
+  } catch (error) {
+    console.error('Error saving recipe:', error);
+    res.status(500).json({ error: 'Internal Server Error.', details: error.message });
+  }
+});
+
+
+
+
 
 // scale recipes
 airecipesApp.post("/scale-recipe", async (req, res) => {

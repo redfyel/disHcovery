@@ -3,18 +3,14 @@ import RootLayout from './RootLayout'
 import Home from './components/home/Home'
 import Recipes from './components/recipes/Recipes'
 import Recipe from './components/recipe/Recipe'
-import Auth from './components/auth/Auth'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
-import RecipeRoulette from './components/recipe-roulette/RecipeRoulette'
 import Saved from './components/saved/Saved'
 import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
-import CoolAI from './components/ai-ingredients/CoolAI'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
 import AccessDenied from './components/protected/AccessDenied'
 import Print from './components/print/Print'
-
 
 
 function App() {

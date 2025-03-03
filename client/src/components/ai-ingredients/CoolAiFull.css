@@ -7,7 +7,7 @@
   background-color: #f9f9f9;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: relative; /* Ensure container is positioned to contain the absolute spinner */
+  position: relative; 
   min-height: 500px;
 }
 
@@ -218,7 +218,7 @@
 .form-control {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid #000;
   border-radius: 5px 0 0 5px;
 }
 
@@ -364,4 +364,47 @@
       width: 50px;
       height: 50px;
   }
+}
+/* Pagination dots */
+.category-pagination {
+  display: flex;
+  justify-content: center;
+  margin-top: 10px;
+}
+
+.category-pagination .dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background-color: #ddd;
+  margin: 0 5px;
+  cursor: pointer;
+  border: none;
+  outline: none;
+}
+
+.category-pagination .dot.active {
+  background-color: #aaa;
+}
+
+.category-pagination .dot:hover {
+  background-color: #bbb;
+}
+/* caution ai */
+.ai-disclaimer {
+  font-style: italic;
+  color: #888;
+  margin-top: 10px;
+}
+/* toast while saving */
+.toast-message {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent black */
+  color: white;
+  padding: 10px 20px;
+  border-radius: 5px;
+  z-index: 1000; /* Ensure it's on top */
 }
