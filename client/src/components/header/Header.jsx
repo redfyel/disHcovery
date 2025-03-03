@@ -8,7 +8,7 @@ function Header() {
       {/* Logo */}
       <Link to="/" className="logo">
         <img
-          src="https://static.gamberorosso.it/dishcovery-logo.jpg"
+          src="https://media.istockphoto.com/id/638708254/vector/cooking-process-vector-illustration-flipping-asian-food-in-a-pan.jpg?s=612x612&w=0&k=20&c=5CYIPce69zbyPaXpytKks_xLYIBdr3XN_RzDAQcn2Yw="
           alt="Dishcovery Logo"
         />
       </Link>

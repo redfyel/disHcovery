@@ -56,6 +56,10 @@ function App() {
           element: <Recipe /> 
         },
         {
+          path : '/recipe/:title',
+          element : <Recipe/>
+        },
+        {
           path : '/saved',
           element : <Saved />
         },
