@@ -134,6 +134,53 @@ function parseServings(servings) {
 // translate and Audio
 
 // suggest alternate ingredients
+airecipesApp.post("/get-ingredient-alternatives", async (req, res) => {
+  try {
+    const { recipe, ingredients } = req.body;
+
+    if (!recipe || !ingredients || ingredients.length === 0) {
+      return res.status(400).json({ error: "Recipe and ingredients are required." });
+    }
+
+    const prompt = `
+      Given this recipe:
+      Recipe Title: ${recipe.title}
+      Ingredients: ${recipe.ingredients.map(i => `${i.amount} ${i.unit} ${i.name}`).join("\n")}
+      Steps: ${recipe.steps.join("\n")}
+
+      Suggest a logical alternative ingredient for each of these selected ingredients: ${ingredients.join(", ")}.
+      Provide the alternatives in the following JSON format (without any extra text or code formatting):
+      {
+        "ingredient1": "alternative1",
+        "ingredient2": "alternative2",
+        ...
+      }
+    `;
+
+    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-pro-latest";
+    const model = genAI.getGenerativeModel({ model: modelName });
+
+    const result = await model.generateContent(prompt);
+    const response = await result.response;
+    let alternativesText = response.text(); // Changed to let for modification
+
+    // Remove Markdown code fences (if present)
+    alternativesText = alternativesText.replace(/```json\n/g, "");
+    alternativesText = alternativesText.replace(/```/g, "");
+
+    try {
+      const alternatives = JSON.parse(alternativesText);
+      res.json({ alternatives });
+    } catch (error) {
+      console.error("Error parsing AI response:", error);
+      res.status(500).json({ error: "Failed to parse AI response.", details: error.message });
+    }
+
+  } catch (error) {
+    console.error("Error fetching ingredient alternatives:", error);
+    res.status(500).json({ error: "Failed to get ingredient alternatives.", details: error.message });
+  }
+});
 
 // image to recipe 
 

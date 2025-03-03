@@ -13,7 +13,11 @@ const Recipe = () => {
   const [recipe, setRecipe] = useState(
     storedRecipe ? JSON.parse(storedRecipe) : originalRecipe
   );
-  
+
+  const [showIngredientSelection, setShowIngredientSelection] = useState(false);
+  const [selectedIngredients, setSelectedIngredients] = useState([]);
+  const [ingredientAlternatives, setIngredientAlternatives] = useState({}); // Store alternatives for each ingredient
+
 
   if (!originalRecipe) {
     return (
@@ -22,11 +26,6 @@ const Recipe = () => {
       </div>
     );
   }
-//   const openGoogleTranslate = (text) => {
-//   const encodedText = encodeURIComponent(text);
-//   window.open(`https://translate.google.com/?sl=en&tl=fr&text=${encodedText}&op=translate`);
-// };
-
 
   const handlePrint = () => {
     localStorage.setItem("recipeToPrint", JSON.stringify(recipe));
@@ -35,43 +34,52 @@ const Recipe = () => {
     // Use React Router to navigate within the same tab
     navigate("/print");
   };
-  // const loadGoogleTranslate = () => {
-  //   return new Promise((resolve) => {
-  //     if (window.google && window.google.translate) {
-  //       resolve(); // If already loaded, just resolve
-  //       return;
-  //     }
-  
-  //     const script = document.createElement("script");
-  //     script.src = "//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit";
-  //     script.async = true;
-  //     script.onload = resolve;
-  //     document.body.appendChild(script);
-  //   });
-  // };
-  
-  // const translatePage = async () => {
-  //   // Save recipe state before translation
-  //   if (recipe) {
-  //     localStorage.setItem("savedRecipe", JSON.stringify(recipe));
-  //   }
-  
-  //   await loadGoogleTranslate();
-  
-  //   window.googleTranslateElementInit = () => {
-  //     new window.google.translate.TranslateElement(
-  //       {
-  //         pageLanguage: "en",
-  //         includedLanguages: "fr,es,de,zh,hi,ja,ko",
-  //         layout: window.google.translate.TranslateElement.InlineLayout.SIMPLE,
-  //       },
-  //       "google_translate_element"
-  //     );
-  //   };
-  
-  //   window.googleTranslateElementInit();
-  // };
-  
+
+  const toggleIngredientSelection = () => {
+    setShowIngredientSelection(!showIngredientSelection);
+    setSelectedIngredients([]); // Clear selections when toggling
+    setIngredientAlternatives({}); // Clear alternative when toggling
+
+  };
+
+  const handleIngredientSelect = (ingredientName) => {
+    setSelectedIngredients((prevSelected) => {
+      if (prevSelected.includes(ingredientName)) {
+        return prevSelected.filter((name) => name !== ingredientName);
+      } else {
+        return [...prevSelected, ingredientName];
+      }
+    });
+  };
+
+  const fetchIngredientAlternatives = async () => {
+    if (selectedIngredients.length === 0) {
+      alert("Please select at least one ingredient.");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/airecipes-api/get-ingredient-alternatives", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ recipe: recipe, ingredients: selectedIngredients }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      setIngredientAlternatives(data.alternatives); // Store the alternative.
+      setShowIngredientSelection(false); // Close the selection
+    } catch (error) {
+      console.error("Error fetching ingredient alternatives:", error);
+      alert("Failed to get ingredient alternatives. Please try again.");
+    }
+  };
+
   return (
     <div className="recipe-details">
       <h1 className="recipe-title">{recipe.title}</h1>
@@ -118,6 +126,11 @@ const Recipe = () => {
           {recipe.ingredients?.map((ingredient, index) => (
             <li key={index}>
               {ingredient.amount} {ingredient.unit} {ingredient.name}
+              {ingredientAlternatives[ingredient.name] && (
+                <p className="alternative">
+                  Alternative: {ingredientAlternatives[ingredient.name]}
+                </p>
+              )}
             </li>
           ))}
         </ul>
@@ -166,11 +179,36 @@ const Recipe = () => {
           </div>
         )}
       </div>
-      {/* <button onClick={translatePage} className="translate-button">
-  🌍 Translate Page
-</button> */}
 
+      {/* Toggle for Ingredient Selection */}
+      <button onClick={toggleIngredientSelection} className="ai-button">
+        {showIngredientSelection ? "Hide Ingredient Selection" : "Get Ingredient Alternatives"}
+      </button>
 
+      {/* Ingredient Selection List (Conditionally Rendered) */}
+      {showIngredientSelection && (
+        <div className="ingredient-selection">
+          <h4>Select Ingredients for Alternatives:</h4>
+          <ul>
+            {recipe.ingredients?.map((ingredient, index) => (
+              <li key={index}>
+                <label>
+                  <input
+                    type="checkbox"
+                    value={ingredient.name}
+                    checked={selectedIngredients.includes(ingredient.name)}
+                    onChange={() => handleIngredientSelect(ingredient.name)}
+                  />
+                  {ingredient.amount} {ingredient.unit} {ingredient.name}
+                </label>
+              </li>
+            ))}
+          </ul>
+          <button onClick={fetchIngredientAlternatives} className="ai-button">
+            Get Alternatives
+          </button>
+        </div>
+      )}
 
       <button onClick={() => navigate(-1)} className="back-button">
         Go Back
