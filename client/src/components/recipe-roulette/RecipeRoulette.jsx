@@ -45,9 +45,10 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
   }
 
   const onRecipeSelect = (recipe) => {
-    if (!recipe) return;
+    if (!recipe || !recipe.title) return;
     onClose();
-    navigate("/recipe", { state: { recipe } });
+    const sanitizedTitle = recipe.title.toLowerCase().replace(/[^a-z0-9]+/g, "-");
+    navigate(`/recipe/${sanitizedTitle}`);
   };
 
   const handleSpinClick = () => {
