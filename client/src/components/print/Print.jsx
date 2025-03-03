@@ -73,7 +73,7 @@ function Print() {
       )}
 
       {/* Styles */}
-      <style jsx>{`
+      <style>{`
         .print-container {
           font-family: Arial, sans-serif;
           padding: 20px;

@@ -40,7 +40,7 @@ function RootLayout() {
       {!hideFooterCoolAI && !hideCoolAI && <CoolAI />}
 
       {/* Styles for full-screen loading */}
-      <style jsx>{`
+      <style>{`
         .loading-overlay {
           position: fixed;
           top: 0;

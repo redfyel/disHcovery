@@ -7,7 +7,7 @@ function Loading() {
       <Lottie animationData={LoadingAnimation} loop autoplay className="loading-animation" />
       <img className="logo" src="/path-to-your-logo.png" alt="Dishcovery Logo" />
 
-      <style jsx>{`
+      <style>{`
         .loading-container {
           display: flex;
           flex-direction: column;

@@ -159,7 +159,7 @@ const Footer = () => {
       </div>
 
       {/* Keyframe Animations and Styles */}
-      <style jsx>{`
+      <style>{`
         @keyframes wiggle {
           0%,
           100% {
