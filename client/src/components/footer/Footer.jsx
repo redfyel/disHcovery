@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
+import { Link } from "react-router-dom";
 
 const Footer = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
-  const [isPlayerTurn, setIsPlayerTurn] = useState(true); 
+  const [isPlayerTurn, setIsPlayerTurn] = useState(true);
   const [winner, setWinner] = useState(null);
 
   // Random disHcovery facts
@@ -77,7 +78,7 @@ const Footer = () => {
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
         <div className="d-flex flex-column align-items-center text-xl mb-3 mb-lg-0">
-        {winner && (
+          {winner && (
             <div className="text-lg font-semibold mb-2">
               {winner} wins! 🎉
               <div className="text-sm italic opacity-70 mt-1">
@@ -117,7 +118,7 @@ const Footer = () => {
             }}
             className="restart-button"
           >
-<VscDebugRestart />
+            <VscDebugRestart />
           </button>
         </div>
 
@@ -145,11 +146,10 @@ const Footer = () => {
             <a href="#" className="link">
               Explore
             </a>
-            <a href="#" className="link">
-              Community
-            </a>
+            <Link to = '/recipes' className="link">
+              Recipes
+            </Link>
           </div>
-
 
           {/* Copyright */}
           <p className="text-xxs opacity-60">
@@ -183,7 +183,7 @@ const Footer = () => {
           grid-template-columns: repeat(3, 60px);
           grid-template-rows: repeat(3, 60px);
           gap: 4px;
-          background-color: #0A122A; 
+          background-color: #0a122a;
           // padding: 4px;
           // width: 188px;
           transform: rotate(-5deg);
@@ -194,7 +194,7 @@ const Footer = () => {
           justify-content: center;
           align-items: center;
           font-size: 1.8rem;
-          background-color: #0A122A;
+          background-color: #0a122a;
           border: 2px solid #fff;
           cursor: pointer;
           user-select: none;
@@ -203,26 +203,25 @@ const Footer = () => {
           border-right: 2px solid #fff;
           border-bottom: 2px solid #fff;
           transition: background-color 0.2s;
-
         }
-        .cell.no-top{
+        .cell.no-top {
           border-top: none;
         }
-        .cell.no-left{
+        .cell.no-left {
           border-left: none;
         }
-          .cell.no-right{
+        .cell.no-right {
           border-right: none;
         }
-        .cell.no-bottom{
+        .cell.no-bottom {
           border-bottom: none;
         }
 
         .restart-button {
           position: relative;
           top: 20;
-          left : 50;
-          bottom : 50;
+          left: 50;
+          bottom: 50;
           padding: 8px;
           background-color: rgba(230, 203, 203, 0.3);
           color: white;
@@ -236,8 +235,8 @@ const Footer = () => {
         }
 
         .cell:hover {
-         background-color: rgba(97, 96, 96, 0.91);
-       border: 2px solid #00-; 
+          background-color: rgba(97, 96, 96, 0.91);
+          border: 2px solid #00-;
         }
 
         .link {

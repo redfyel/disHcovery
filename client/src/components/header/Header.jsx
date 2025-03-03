@@ -18,7 +18,7 @@ function Header() {
         <Link to="/">Home</Link>
         <Link to="/explore">Explore</Link>
         <Link to="/saved">Saved</Link>
-        <Link to="/community">Community</Link>
+        <Link to="/recipes">Recipes</Link>
         <Link to="/login">Login</Link>
         <Link to="/register">Register</Link>
       </nav>
