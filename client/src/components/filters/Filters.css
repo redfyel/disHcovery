@@ -9,6 +9,7 @@
   margin: auto;
 }
 
+
 /* Filter title */
 .filter-container h2 {
   text-align: center;
@@ -17,10 +18,12 @@
   margin-bottom: 15px;
 }
 
+
 /* Each section (Categories, Meal Type, etc.) */
 .filter-section {
   margin-bottom: 20px;
 }
+
 
 /* Section headings */
 .filter-section h3 {
@@ -31,6 +34,7 @@
   padding-bottom: 5px;
 }
 
+
 /* Styling for filter tags */
 .filter-tags {
   display: flex;
@@ -38,9 +42,10 @@
   justify-content: center;
 }
 
+
 /* Styles for each filter tag */
 .filter-tag {
-  background-color: #E7DECD;
+  background-color: #FBFAF8;
   border: 1px solid #ccc;
   border-radius: 20px;
   padding: 10px;
@@ -49,16 +54,17 @@
   transition: all 0.2s ease;
 }
 
+
 .filter-tag.selected {
   background-color: #698F3F;
   color: white;
   border: 1px solid #698F3F;
 }
-
 /* Hover effect for filter tags */
 .filter-tag:hover {
   background-color: #698F3F;
 }
+
 
 /* Responsive design */
 @media (max-width: 500px) {
@@ -67,9 +73,11 @@
       padding: 15px;
   }
 
+
   .filter-container h2 {
       font-size: 1.8rem;
   }
+
 
   .filter-section h3 {
       font-size: 1.3rem;

@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import Filters from "../filters/Filters";
 import "./Recipes.css";
 
-const Recipes = () => {
-    const [recipes, setRecipes] = useState([]);
+
+const Recipes = () => {   const [recipes, setRecipes] = useState([]);
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
@@ -17,7 +17,9 @@ const Recipes = () => {
         hasVideo: false,
     });
 
+
     const navigate = useNavigate();
+
 
     useEffect(() => {
         const fetchRecipes = async () => {
@@ -37,11 +39,14 @@ const Recipes = () => {
             }
         };
 
+
         fetchRecipes();
     }, []);
 
+
     useEffect(() => {
         let updatedRecipes = recipes;
+
 
         if (
             filters.categories.length ||
@@ -57,27 +62,33 @@ const Recipes = () => {
                         ? filters.categories.includes(recipe.category)
                         : true;
 
+
                 const matchesMealType =
                     filters.mealType.length > 0
                         ? filters.mealType.includes(recipe.mealType)
                         : true;
+
 
                 const matchesDiet =
                     filters.diet.length > 0
                         ? recipe.dietFilters?.some((diet) => filters.diet.includes(diet))
                         : true;
 
+
                 const matchesCookTime =
                     filters.cookTime.length > 0
                         ? filters.cookTime.includes(recipe.cookingTime)
                         : true;
+
 
                 const matchesCuisine =
                     filters.cuisine.length > 0
                         ? filters.cuisine.includes(recipe.cuisine)
                         : true;
 
+
                 const matchesVideo = filters.hasVideo ? recipe.videoURL : true;
+
 
                 return (
                     matchesCategories &&
@@ -90,18 +101,21 @@ const Recipes = () => {
             });
         }
 
+
         setFilteredRecipes(updatedRecipes);
     }, [filters, recipes]);
 
+
     if (loading) return <div className="loading">Loading recipes...</div>;
     if (error) return <div className="error">{error}</div>;
+
 
     return (
         <div className="recipes-page">
             <h1 className="recipes-title">Discover Delicious Recipes</h1>
 
-            <div className="recipes-container">
-                <div className="recipes-content">
+
+            <div className="recipes-container"> <div className="recipes-content">
                     <div className="recipe-grid">
                         {filteredRecipes.length > 0 ? (
                             filteredRecipes.map((recipe) => {
@@ -111,6 +125,7 @@ const Recipes = () => {
                                     .toLowerCase()
                                     .replace(/[^a-z0-9]+/g, "-");
                                 const encodedTitle = encodeURIComponent(sanitizedTitle);
+
 
                                 return (
                                     <div key={recipe._id} className="recipe-card">
@@ -135,6 +150,7 @@ const Recipes = () => {
                     </div>
                 </div>
 
+
                 <div className="filters-column">
                     <Filters onFilterChange={setFilters} />
                 </div>
@@ -143,4 +159,6 @@ const Recipes = () => {
     );
 };
 
+
 export default Recipes;
+
