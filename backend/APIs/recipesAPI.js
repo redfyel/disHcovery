@@ -18,37 +18,48 @@ recipesApp.get('/recipes', async (req, res) => {
 
 // fetch recipe by title
 recipesApp.get('/recipe/:title', async (req, res) => {
-    try {
+  try {
       const recipesCollection = req.app.get('recipesCollection');
       const recipeTitle = req.params.title;
       const decodedTitle = decodeURIComponent(recipeTitle);
-  
-      // Normalize the title extracted from the URL and convert to lowercase
-      const normalizedDecodedTitle = decodedTitle
-        .toLowerCase()
-        .replace(/[^a-z\s]/g, " ") // Keep only letters and spaces, converting other characters to space
-        .replace(/\s+/g, " ")       // Replace multiple spaces with single space
-        .trim(); // Remove all spaces
-  
-  
-    //   console.log("🔍 Searching for Recipe by Title:", normalizedDecodedTitle);
-  
-      //Search db with regex search since a match in name still means we want to query.
-          const recipe = await recipesCollection.findOne({
-              title: { $regex: new RegExp(`^${normalizedDecodedTitle.replace(/[-\/\\^$*+?.()|[\]{}]/g, '\\$&')}$`, 'i') }
-          });
-  
-      if (!recipe) {
-        // console.log("Recipe not found for title:", normalizedDecodedTitle);
-        return res.status(404).send({ message: "Recipe not found" });
+
+      // Normalize input title
+      const normalizeTitle = (title) =>
+          title
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "") // Remove accents
+              .toLowerCase()
+              .replace(/[^a-z0-9\s]/g, " ") // Keep only letters, numbers, spaces
+              .replace(/\s+/g, " ") // Replace multiple spaces with one
+              .trim(); // Trim spaces
+
+      const normalizedDecodedTitle = normalizeTitle(decodedTitle);
+      // console.log("🔍 Searching for Recipe by Normalized Title:", normalizedDecodedTitle);
+
+      // Fetch all recipes (only title field to optimize performance)
+      const allRecipes = await recipesCollection.find({}, { projection: { title: 1 } }).toArray();
+
+      // Find a match by normalizing database titles dynamically
+      const matchingRecipe = allRecipes.find(recipe => 
+          normalizeTitle(recipe.title) === normalizedDecodedTitle
+      );
+
+      if (!matchingRecipe) {
+          // console.log("❌ Recipe not found for title:", normalizedDecodedTitle);
+          return res.status(404).send({ message: "Recipe not found" });
       }
-  
-    //   console.log("Recipe found:", recipe.title, "for query", normalizedDecodedTitle);
-      res.send({ message: "Recipe found", payload: recipe });
-  
-    } catch (error) {
-      console.error("Error fetching recipe:", error);
+
+      // Fetch full recipe details now that we found a match
+      const fullRecipe = await recipesCollection.findOne({ _id: matchingRecipe._id });
+
+      // console.log("✅ Recipe found:", fullRecipe.title, "for query", normalizedDecodedTitle);
+      res.send({ message: "Recipe found", payload: fullRecipe });
+
+  } catch (error) {
+      console.error("❌ Error fetching recipe:", error);
       res.status(500).send({ message: "Error fetching recipe", error });
-    }
-  });
+  }
+});
+
+
 module.exports = recipesApp;

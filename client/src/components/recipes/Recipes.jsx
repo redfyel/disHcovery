@@ -121,10 +121,17 @@ const Recipes = () => {   const [recipes, setRecipes] = useState([]);
                             filteredRecipes.map((recipe) => {
                                 // Sanitize and then encode the title for the URL
                                 const titleBeforeBracket = recipe.title.split('(')[0].trim();
-                                const sanitizedTitle = titleBeforeBracket
-                                    .toLowerCase()
-                                    .replace(/[^a-z0-9]+/g, "-");
-                                const encodedTitle = encodeURIComponent(sanitizedTitle);
+
+// Normalize accents (é → e, ç → c, etc.)
+const sanitizedTitle = titleBeforeBracket
+    .normalize("NFD") // Decomposes characters (e.g., é → e +  ́)
+    .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric characters with hyphen
+    .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
+const encodedTitle = encodeURIComponent(sanitizedTitle);
+
 
 
                                 return (
