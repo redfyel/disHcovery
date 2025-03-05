@@ -24,7 +24,7 @@
   }
   
   .roulette-btn {
-    color: #333;
+    background-color: #F8F6F1;
     border: none;
     padding: 6px 10px;
     border-radius: 6px;
@@ -34,7 +34,7 @@
   }
   
   .roulette-btn:hover {
-    border: 1px solid #698F3F;
+    border: 2px solid #698F3F;
   }
   .roulette-wrapper {
     position: relative;
@@ -51,6 +51,7 @@
     padding: 6px 10px;
     border-radius: 4px;
     font-size: 12px;
+    font-weight: 800;
     white-space: nowrap;
     visibility: visible;
     opacity: 1;

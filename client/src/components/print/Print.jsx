@@ -1,6 +1,7 @@
 import React, { useEffect } from "react";
 import { FaUtensils, FaClock, FaConciergeBell, FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import logo from '../../assets/images/logoo.png'
 
 function Print() {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ function Print() {
 
     // After printing, return to the previous page
     const backTimeout = setTimeout(() => navigate(-1), 500);
-    
+
     return () => clearTimeout(backTimeout);
   }, [navigate]);
 
@@ -28,7 +29,7 @@ function Print() {
       {/* Header Section */}
       <div className="header">
         <h1>{recipe.title}</h1>
-        <img className="logo" src="https://static.gamberorosso.it/dishcovery-logo.jpg" alt="Dishcovery Logo" />
+        <img className="logo" src={logo} alt="Dishcovery Logo" />
       </div>
 
       {/* Recipe Image */}
@@ -78,7 +79,7 @@ function Print() {
           font-family: Arial, sans-serif;
           padding: 20px;
           text-align: left;
-          max-width: 600px;
+          max-width: 1200px;
           margin: auto;
         }
 
@@ -91,14 +92,15 @@ function Print() {
         }
 
         .logo {
-          width: 50px;
-          height: auto;
+          width: auto;
+          height: 100px;
           opacity: 0.7;
         }
 
         .recipe-image {
           width: 100%;
           max-width: 250px;
+          height : 100%;
           display: block;
           margin: 15px auto;
           border-radius: 10px;

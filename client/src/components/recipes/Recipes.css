@@ -6,6 +6,7 @@
   min-height: 100vh;
 }
 
+
 /* Page Title */
 .recipes-title {
   text-align: center;
@@ -14,7 +15,6 @@
   color: #0A122A; /* Dark Blue */
   margin-bottom: 20px;
 }
-
 /* Main Layout: Recipes on Left, Filters on Right */
 .recipes-container {
   display: flex;
@@ -23,10 +23,12 @@
   align-items: flex-start;
 }
 
+
 /* Recipes Section (Left) */
 .recipes-content {
   flex: 1; /* Takes available space */
 }
+
 
 /* Filters Section (Right) */
 .filters-column {
@@ -38,6 +40,7 @@
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
+
 /* Recipe Grid */
 .recipe-grid {
   display: grid;
@@ -45,6 +48,7 @@
   gap: 20px;
   justify-content: center;
 }
+
 
 /* Recipe Card */
 .recipe-card {
@@ -56,9 +60,11 @@
   text-align: center;
 }
 
+
 .recipe-card:hover {
   transform: scale(1);
 }
+
 
 /* Recipe Image */
 .recipe-image {
@@ -68,6 +74,7 @@
   border-radius: 8px;
 }
 
+
 /* Recipe Name */
 .recipe-name {
   font-size: 1.1rem;
@@ -75,6 +82,7 @@
   margin-top: 10px;
   color: #0A122A; /* Olive Green */
 }
+
 
 /* View Details Button */
 .view-details {
@@ -90,10 +98,10 @@
   width: 60%; /* Decreased width from 80% to 60% */
 }
 
+
 .view-details:hover {
   background-color: #5a7a2e; /* Darker shade for hover effect */
 }
-
 /* Loading & Error Messages */
 .loading,
 .error {
@@ -103,6 +111,7 @@
   color: #0A122A; /* Dark Blue */
 }
 
+
 /* No Recipes Found Message */
 .no-results {
   text-align: center;
@@ -110,15 +119,16 @@
   color: #6c757d;
 }
 
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .recipes-container {
     flex-direction: column-reverse; /* Filters move below recipes */
   }
-
   .filters-column {
     width: 100%;
   }
+
 
   .recipe-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

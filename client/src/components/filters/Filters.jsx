@@ -2,54 +2,59 @@
 import React, { useState, useEffect } from "react";
 import "./Filters.css"; // Import the updated CSS file
 
+
 const RecipeFilter = ({ onFilterChange }) => {
-  const [selectedFilters, setSelectedFilters] = useState({
-    categories: [],
-    mealType: [],
-    diet: [],
-    cookTime: [],
-    cuisine: [],
-    hasVideo: false, // Added hasVideo
-  });
+    const [selectedFilters, setSelectedFilters] = useState({
+        categories: [],
+        mealType: [],
+        diet: [],
+        cookTime: [],
+        cuisine: [],
+        hasVideo: false, // Added hasVideo
+    });
 
-  const categories = [
-    "Main Course",
-    "Appetizer",
-    "Salad",
-    "Soup",
-    "Sweet",
-    "Quick & Easy",
-  ];
-  const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"];
-  const diets = [
-    "Lacto Vegetarian",
-    "Ovo Vegetarian",
-    "Ovo-Lacto Vegetarian",
-    "Pescatarian",
-    "Vegan",
-    "Vegetarian",
-    "Low Carb",
-    "Mediterranean",
-    "Keto",
-    "Paleo",
-    "Dairy Free",
-    "Gluten Free",
-  ];
-  const cookTimes = ["Under 15 min", "Under 30 min", "Under 60 min"];
-  const cuisines = ["American", "British", "Italian", "Mexican", "Indian"];
 
-  useEffect(() => {
-    onFilterChange(selectedFilters);
-  }, [selectedFilters]);
+    const categories = [
+        "Main Course",
+        "Appetizer",
+        "Salad",
+        "Soup",
+        "Sweet",
+        "Quick & Easy",
+    ];
+    const mealTypes = ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"];
+    const diets = [
+        "Lacto Vegetarian",
+        "Ovo Vegetarian",
+        "Ovo-Lacto Vegetarian",
+        "Pescatarian",
+        "Vegan",
+        "Vegetarian",
+        "Low Carb",
+        "Mediterranean",
+        "Keto",
+        "Paleo",
+        "Dairy Free",
+        "Gluten Free",
+    ];
+    const cookTimes = ["Under 15 min", "Under 30 min", "Under 60 min"];
+    const cuisines = ["American", "British", "Italian", "Mexican", "Indian"];
 
-  const toggleFilter = (filterType, value) => {
-    setSelectedFilters((prev) => ({
-      ...prev,
-      [filterType]: prev[filterType].includes(value)
-        ? prev[filterType].filter((item) => item !== value)
-        : [...prev[filterType], value],
-    }));
-  };
+
+    useEffect(() => {
+        onFilterChange(selectedFilters);
+    }, [selectedFilters]);
+
+
+    const toggleFilter = (filterType, value) => {
+        setSelectedFilters((prev) => ({
+            ...prev,
+            [filterType]: prev[filterType].includes(value)
+                ? prev[filterType].filter((item) => item !== value)
+                : [...prev[filterType], value],
+        }));
+    };
+
 
     const handleVideoFilterChange = () => {
         setSelectedFilters((prev) => ({
@@ -58,8 +63,11 @@ const RecipeFilter = ({ onFilterChange }) => {
         }));
     };
 
+
     // Convert hasVideo to be handled like other filters
     const hasVideoOptions = ["Recipes with Videos"];
+
+
 
 
     const renderFilterSection = (filterType, items, isVideo = false) => {
@@ -90,9 +98,11 @@ const RecipeFilter = ({ onFilterChange }) => {
                         </span>
                     ))}
                 </div>
-            </div>
+                </div>
         );
     };
+
+
 
 
     return (
@@ -107,5 +117,6 @@ const RecipeFilter = ({ onFilterChange }) => {
         </div>
     );
 };
+
 
 export default RecipeFilter;
