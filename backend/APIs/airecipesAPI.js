@@ -91,9 +91,6 @@ airecipesApp.post('/save-recipe', async (req, res) => {
 });
 
 
-
-
-
 // scale recipes
 airecipesApp.post("/scale-recipe", async (req, res) => {
   try {
@@ -238,7 +235,52 @@ airecipesApp.post("/get-ingredient-alternatives", async (req, res) => {
 // image to recipe 
 
 // ingredients image to recipe
+airecipesApp.post("/generate-recipe-from-image", async (req, res) => {
+  try {
+    const { image } = req.body;
 
+    if (!image) {
+      return res.status(400).json({ error: "No image provided." });
+    }
+    const prompt = `Given the image, identify the ingredients and suggest a recipe. 
+    -The recipe MUST primarily use the ingredients provided.
+    -Minimize the use of entirely new ingredients.
+    -If a new ingredient is absolutely necessary, clearly indicate it as 'New Ingredient:' followed by the ingredient name and its purpose in the recipe.
+    -Provide the recipe name.
+    -Provide a brief description.
+    -List the ingredients with quantities if possible.  Clearly mark any 'New Ingredient:' with its quantity. Do not display extra characers.
+    -Provide concise step-by-step instructions. Instructions MUST NOT be repeated.
+    -The cooking instructions MUST be real, valid, and safe. Do not suggest dangerous or impossible cooking methods or ingredient combinations.
+`;
+
+    
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const parts = [
+      {text: prompt},
+      {
+        inlineData: {
+          data: image.split(',')[1],
+          mimeType: "image/jpeg"
+        },
+      },
+    ];
+     const result = await model.generateContent({
+          contents: [{ role: "user", parts: parts }],
+        });
+    const response = await result.response;
+    let text = response.text();
+
+     // Basic cleaning to remove ** and leading/trailing whitespace
+     text = text.replace(/\*\*/g, "");  // Remove **
+     text = text.trim();  // Trim leading/trailing whitespace
+    // console.log(text);
+    res.json({ recipe: text });
+   
+  } catch (error) {
+    console.error("Gemini API Error:", error);
+    res.status(500).json({ error: "Failed to generate recipe.", details: error.message });
+  }
+});
 
 
 module.exports = airecipesApp;
