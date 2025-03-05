@@ -15,28 +15,28 @@ const Share = ({ recipeTitle, recipeImage }) => {
 
     const websiteName = "disHcovery";
 
-const shareMessages = [
-  `🍽️ Just found a recipe that will make my taste buds do a happy dance! 💃✨ Try this delicious dish on ${websiteName}: ${shareUrl} 🚀 #${websiteName}`,
-  `🍕 This recipe is so good, I might just marry it. 😍💍 Try it now: ${shareUrl} #FoodieLove`,
-  `👩‍🍳 Cooking this might turn me into a MasterChef. Wanna try it too? 🔥 Check it out on ${websiteName}: ${shareUrl} 🍽️`,
-  `🍩 Warning: This recipe is dangerously delicious. Proceed with caution. 🚀 Discover it here: ${shareUrl} 😋`,
-  `🥑 AvocaDO try this recipe – it’s too good to miss! 🥑✨ Get it now: ${shareUrl} #HealthyEats`,
-  `🍫 Chocolate, spice, and everything nice! This recipe is a must-try. 🍰 Indulge here: ${shareUrl} 😍`,
-  `🌮 Life’s too short for bad food. This recipe = pure happiness! 😋 Taste it on ${websiteName}: ${shareUrl} #FoodieJoy`,
-  `🥢 I found foodie heaven & I’m sharing it with you! 🔥 Grab the recipe here: ${shareUrl} 🍜`
-];
-
-// console.log(shareMessages);
-
-
+    const shareMessages = [
+        `Discover an amazing recipe on ${websiteName}. A must-try dish: ${shareUrl}`,
+        `Found something delicious on ${websiteName}. Try this recipe: ${shareUrl}`,
+        `Bringing flavors to life! Try this recipe from ${websiteName}: ${shareUrl}`,
+        `A dish worth sharing! Explore this recipe on ${websiteName}: ${shareUrl}`,
+        `Cooking made better with this recipe from ${websiteName}. Check it out: ${shareUrl}`,
+        `Unlock a new favorite dish on ${websiteName}. Explore the recipe here: ${shareUrl}`,
+        `A perfect blend of taste and simplicity! Try this recipe on ${websiteName}: ${shareUrl}`
+    ];
 
     const randomMessage = shareMessages[Math.floor(Math.random() * shareMessages.length)];
 
     const socialLinks = [
-        { name: "WhatsApp", icon: <FaWhatsapp />, url: `https://wa.me/?text=${encodeURIComponent(`${randomMessage} 🍽️ Try this: ${shareUrl}`)}` },
+        { name: "WhatsApp", icon: <FaWhatsapp />, url: `https://wa.me/?text=${encodeURIComponent(randomMessage)}` },
         { name: "Instagram", icon: <FaInstagram />, url: `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}` },
         { name: "Snapchat", icon: <FaSnapchatGhost />, url: `https://www.snapchat.com/share?url=${encodeURIComponent(shareUrl)}` },
-        { name: "Pinterest", icon: <FaPinterest />, url: `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}&media=${encodeURIComponent(recipeImage)}&description=${encodeURIComponent(randomMessage)}` },
+        {
+            name: "Pinterest",
+            icon: <FaPinterest />,
+            url: `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.origin + "/recipe/" + encodedTitle)}&media=${encodeURIComponent(recipeImage)}&description=${encodeURIComponent("Check out this amazing recipe on disHcovery!")}`
+        },
+        
         { name: "Facebook", icon: <FaFacebookF />, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}` },
         { name: "Twitter", icon: <FaXTwitter />, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(randomMessage)}` }
     ];
@@ -52,19 +52,15 @@ const shareMessages = [
             try {
                 await navigator.share({
                     title: recipeTitle,
-                    text: `${randomMessage} 🍽️ Try this recipe:`,
+                    text: randomMessage,
                     url: shareUrl,
                 });
             } catch (error) {
                 console.error("Error sharing:", error);
             }
         } else {
-            alert("Web Share API not supported on this browser.");
+            alert("Sharing is not supported on this browser.");
         }
-    };
-
-    const toggleShareOptions = () => {
-        setShowShareOptions(!showShareOptions);
     };
 
     return (
@@ -79,7 +75,6 @@ const shareMessages = [
                     disabled={copied}
                 >
                     {copied ? <Check size={16} className="share-icon" /> : <Copy size={16} className="share-icon" />}
-                    {/* {copied ? "Copied!" : "Copy Link"} */}
                 </button>
                 <button
                     onClick={handleGenericShare}
@@ -95,7 +90,7 @@ const shareMessages = [
                 </button>
             </div>
 
-            {/* Social Media Icons with Animation */}
+            {/* Social Media Icons */}
             {showShareOptions && (
                 <div className="social-icons-grid">
                     {socialLinks.map(({ name, icon, url }) => (
