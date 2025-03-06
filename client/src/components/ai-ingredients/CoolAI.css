@@ -5,6 +5,7 @@
     padding: 8px 12px;
     border-radius: 5px;
     font-size: 14px;
+    font-weight: 600;
     text-align: center;
   }
   
@@ -20,9 +21,11 @@
     background-color: #698F3F !important;
   }
   .ai-but{
+    /* border:1px solid #698F3F; */
     border:none;
+    background-color: #F8F6F1;
 }
 .ai-but:hover{
-    border: 1px solid #698F3F;
+    border: 2px solid #698F3F;
 }
 
