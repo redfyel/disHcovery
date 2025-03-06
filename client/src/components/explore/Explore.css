@@ -1,0 +1,108 @@
+/* Dropdown Container */
+.dropdown-container {
+    position: relative;
+    display: inline-block;
+    font-size: 18px;
+    font-weight: 500;
+    cursor: pointer;
+  }
+  
+  .dropdown-container > a {
+    color: #000;
+    text-decoration: none;
+    padding: 10px 15px;
+    border-radius: 8px;
+    transition: color 0.3s ease-in-out;
+  }
+  
+  .dropdown-container > a:hover {
+    color: #ffd700; /* Gold hover effect */
+  }
+  
+  /* Wide Dropdown */
+  .dropdown {
+    position: absolute;
+    top: 50px;
+    left: 0;
+    background: rgba(15, 15, 15, 0.9); /* Dark glass effect */
+    backdrop-filter: blur(15px);
+    border-radius: 12px;
+    padding: 20px;
+    width: 750px; /* Wider layout */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 30px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    z-index: 100;
+  }
+  
+  .dropdown.show {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  
+  /* Dropdown category sections */
+  .dropdown-category {
+    flex: 1 1 250px; /* Responsive columns */
+    min-width: 200px;
+  }
+  
+  /* Category Headers */
+  .dropdown-category h4 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #ffd700; /* Gold elegance */
+    margin-bottom: 10px;
+    padding-bottom: 4px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  
+  /* Icons for category headers */
+  .dropdown-category h4 i {
+    font-size: 18px;
+    color: #ffcc00;
+  }
+  
+  /* Dropdown Items */
+  .dropdown-item {
+    padding: 8px 12px;
+    font-size: 14px;
+    color: #e0e0e0; /* High contrast */
+    transition: all 0.3s ease-in-out;
+    cursor: pointer;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .dropdown-item:hover {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    transform: translateX(5px);
+  }
+  
+  /* Item Icons */
+  .dropdown-item i {
+    color: #ffd700; /* Gold icon */
+    font-size: 16px;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .dropdown {
+      width: 100%;
+      flex-direction: column;
+    }
+    .dropdown-category {
+      flex: 1 1 100%;
+    }
+  }
+  
