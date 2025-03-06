@@ -1,104 +1,88 @@
-import React, { useState, useEffect } from "react";
-import { FaMoon, FaSun } from "react-icons/fa";
-import { Button, Card, Container, Row, Col, Navbar, Nav } from "react-bootstrap";
-import { motion } from "framer-motion";
-// import logo from "../../assets/disHcovery_logo.jpg"; 
-// import home from "../../assets/vdo.mp4";
-import breakfast from "../../assets/images/breakfast.jpg";
-import lunch from "../../assets/images/lunch.jpg";
-import dinner from "../../assets/images/dinner.jpg";
-import "./Home.css";
+import React from "react";
+import { Link } from "react-router-dom";
+import videoBg from "../../assets/videos/Homevideo.mp4";
+import Breakfast from "../../assets/images/breakfast.jpg";
+import Lunch from "../../assets/images/lunch.jpg";
+import Dinner from "../../assets/images/dinner.jpg";
+import Snacks from "../../assets/images/snacks.jpg";
+import Desserts from "../../assets/images/dessert.jpg";
+import Healthy from "../../assets/images/Healthy.jpg";
+import "./Home.css"; // Keep custom styles if needed
 
-export default function HomePage() {
-  const [theme, setTheme] = useState(localStorage.getItem("theme") || "light");
-
-  // Toggle theme function
-  const toggleTheme = () => {
-    const newTheme = theme === "light" ? "dark" : "light";
-    setTheme(newTheme);
-    localStorage.setItem("theme", newTheme);
-  };
-
-  useEffect(() => {
-    document.body.className = theme; 
-  }, [theme]);
-
-  const meals = [
-    { id: 1, title: "Breakfast", image: breakfast },
-    { id: 2, title: "Lunch", image: lunch },
-    { id: 3, title: "Dinner", image: dinner },
-  ];
-
+const Home = () => {
   return (
-    <div className={`min-vh-100 bg-light ${theme}`}>
-
-      {/* Video Section */}
-      <section className="position-relative w-100" style={{ height: "500px" }}>
-        <video 
-          className="position-absolute top-0 start-0 w-100 h-100 object-fit-cover"
-          autoPlay loop muted
-        >
-          {/* <source src={home} type="video/mp4" /> */}
-        </video>
-        <div className="position-absolute top-0 start-0 w-100 h-100 bg-dark bg-opacity-50 d-flex flex-column justify-content-center align-items-center text-white text-center">
-          <h2 className="fs-1 fw-semibold">Discover Delicious Recipes</h2>
-          <p className="mt-2 fs-5">Find, save, and share your favorite recipes with ease.</p>
-          <Button variant="primary" className="mt-3">Get Started</Button>
+    <div className="home-container"> {/*  Added a wrapper div */}
+      <div className="container-fluid p-0">
+        {/* Background Video Section */}
+        <div className="position-relative text-center">
+          <video autoPlay loop muted className="w-100 home-video" > {/* Added home-video class*/}
+            <source src={videoBg} type="video/mp4" />
+          </video>
+          <div className="position-absolute top-50 start-50 translate-middle text-white text-center">
+            <h1 className="display-4 fw-bold">Welcome to disHcovery</h1>
+            <p className="lead">Explore a world of delicious recipes tailored just for you!</p>
+            <Link to="/explore" className="btn btn-primary btn-lg mt-3">
+              Get Started
+            </Link>
+          </div>
         </div>
-      </section>
 
-      {/* Features Section */}
-      <motion.section 
-        initial={{ opacity: 0, y: 50 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8 }}
-        className="container text-center my-5"
-      >
-        <h3 className="fw-semibold fs-2">Why Choose disHcovery?</h3>
-        <Row className="mt-4">
-          {[
-            { id: 1, title: "Explore Recipes", desc: "Discover a variety of global cuisines." },
-            { id: 2, title: "Save & Share", desc: "Save recipes and share with your friends." },
-            { id: 3, title: "Personalized Suggestions", desc: "Get meal recommendations tailored for you." },
-          ].map((feature) => (
-            <Col md={4} key={feature.id} className="p-3">
-              <motion.div whileHover={{ scale: 1.05 }}>
-                <Card className={`shadow-sm p-3 ${theme}`}>
-                  <Card.Body>
-                    <h4 className="fw-semibold">{feature.title}</h4>
-                    <p className="text-muted">{feature.desc}</p>
-                  </Card.Body>
-                </Card>
-              </motion.div>
-            </Col>
-          ))}
-        </Row>
-      </motion.section>
+        {/* Features Section */}
+        <div className="container my-5">
+          <h2 className="text-center fw-bold mb-4">Why Choose disHcovery?</h2>
+          <div className="row text-center">
+            <div className="col-md-4">
+              <div className="p-4 border rounded shadow-sm">
+                <span className="fs-1">🤖</span>
+                <h3 className="fw-bold mt-3">AI-Powered Recipes</h3>
+                <p>Enter ingredients and let AI suggest amazing recipes!</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="p-4 border rounded shadow-sm">
+                <span className="fs-1">🌎</span>
+                <h3 className="fw-bold mt-3">Global Cuisine</h3>
+                <p>Explore dishes from different cultures and flavors.</p>
+              </div>
+            </div>
+            <div className="col-md-4">
+              <div className="p-4 border rounded shadow-sm">
+                <span className="fs-1">⚡</span>
+                <h3 className="fw-bold mt-3">Quick & Easy</h3>
+                <p>Find recipes that fit your time and taste preferences.</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-      {/* Meals Section */}
-      <section className="container text-center my-5">
-        <h3 className="fw-semibold fs-2">Explore Meals</h3>
-        <Row className="mt-4">
-          {meals.map((meal, index) => (
-            <Col md={4} key={meal.id} className="p-3">
-              <motion.div 
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.2 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <Card className={`shadow-sm p-3 ${theme}`}>
-                  <Card.Img variant="top" src={meal.image} className="meal-image"/>
-                  <Card.Body className="text-center">
-                    <h4 className="fw-semibold">{meal.title}</h4>
-                  </Card.Body>
-                </Card>
-              </motion.div>
-            </Col>
-          ))}
-        </Row>
-      </section>
-
+        {/* Explore Categories */}
+        <div className="container my-5">
+          <h2 className="text-center fw-bold mb-4">Explore Categories</h2>
+          <div className="row g-4">
+            {[
+              { name: "Breakfast", img: Breakfast },
+              { name: "Lunch", img: Lunch },
+              { name: "Dinner", img: Dinner },
+              { name: "Snacks", img: Snacks },
+              { name: "Desserts", img: Desserts },
+              { name: "Healthy", img: Healthy },
+            ].map((category, index) => (
+              <div className="col-md-4" key={index}>
+                <Link to={`/category/${category.name.toLowerCase()}`} className="text-decoration-none">
+                  <div className="card shadow border-0">
+                    <img src={category.img} alt={category.name} className="card-img-top" />
+                    <div className="card-body text-center">
+                      <h5 className="card-title fw-bold">{category.name}</h5>
+                    </div>
+                  </div>
+                </Link>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
     </div>
   );
-}
+};
+
+export default Home;

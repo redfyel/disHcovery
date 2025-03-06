@@ -1,90 +1,70 @@
-/* HomePage.css */
+/* Home.css */
 
-/* General styles */
-body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-  }
-  
-  /* Navbar */
-  nav {
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  /* Search Bar */
-  .search-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 999px;
-    padding: 5px 10px;
-  }
-  
-  .search-container input {
-    border: none;
-    outline: none;
-    padding: 5px;
-    width: 200px;
-  }
-  
-  /* Hero Section */
-  .hero-section {
-    text-align: center;
-    background: #38a169;
-    color: white;
-    padding: 4rem 2rem;
-  }
-  
-  .hero-section h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  
-  .hero-section p {
-    margin-top: 10px;
-    font-size: 1.2rem;
-  }
-  
-  /* Featured Recipes */
-  .featured-recipes {
-    padding: 2rem;
-  }
-  
-  .featured-recipes h3 {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-card {
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .recipe-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .recipe-card:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Footer */
-  footer {
-    background: #1a202c;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 2rem;
-  }
-  
+/* Add this to ensure content stays within bounds and doesn't overflow */
+.home-container {
+  overflow: hidden; /*  Prevent content from overflowing and interfering with the footer */
+}
+
+/* Background Video Section */
+.home-video {
+  height: 80vh;
+  object-fit: cover;
+  width: 100%; /* Ensure the video takes full width */
+  display: block; /* Removes extra bottom spacing */
+}
+
+/* Centered text over video */
+.position-absolute {
+  text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7);
+}
+
+/* Button Styling */
+.btn-primary {
+  background-color: #ff6347; /* Tomato color */
+  border: none;
+  padding: 10px 20px;
+  font-size: 1.2rem;
+  transition: background 0.3s ease;
+}
+
+.btn-primary:hover {
+  background-color: #ff3b20; /* Darker Tomato */
+}
+
+/* Features Section */
+.container .border {
+  background: #f9f9f9;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.container .border:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+/* Category Cards */
+.card {
+  border-radius: 15px;
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+  transform: scale(1.05);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.card img {
+  height: 200px;
+  object-fit: cover;
+}
+
+.card-body {
+  background: #fff;
+  padding: 15px;
+}
+
+.card-title {
+  font-weight: bold;
+  color: #333;
+}
