@@ -74,7 +74,7 @@ const Footer = () => {
   const randomFact = facts[Math.floor(Math.random() * facts.length)];
 
   return (
-    <footer className="bg-gradient-to-r from-orange-600 via-red-500 to-yellow-500 text-white py-6 px-4">
+    <footer className="w-full relative bg-[#0a122a] text-white py-6 px-4">
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
         <div className="d-flex flex-column align-items-center text-xl mb-3 mb-lg-0">
@@ -93,9 +93,8 @@ const Footer = () => {
               <div
                 key={index}
                 onClick={() => handleClick(index)}
-                className={`cell ${cell ? "filled" : ""} ${
-                  index === 0 ? "no-top no-left no-bottom no-right" : ""
-                }
+                className={`cell ${cell ? "filled" : ""} ${index === 0 ? "no-top no-left no-bottom no-right" : ""
+                  }
                  ${index === 1 ? "no-top no-bottom " : ""}
                  ${index === 2 ? "no-top no-left no-bottom no-right" : ""}
                  ${index === 3 ? " no-left no-right" : ""}
@@ -146,7 +145,7 @@ const Footer = () => {
             <a href="#" className="link">
               Explore
             </a>
-            <Link to = '/recipes' className="link">
+            <Link to='/recipes' className="link">
               Recipes
             </Link>
           </div>
@@ -178,16 +177,28 @@ const Footer = () => {
           animation: wiggle 1.5s infinite ease-in-out;
         }
 
-        .tic-tac-toe-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 60px);
-          grid-template-rows: repeat(3, 60px);
-          gap: 4px;
-          background-color: #0a122a;
-          // padding: 4px;
-          // width: 188px;
-          transform: rotate(-5deg);
-        }
+.tic-tac-toe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 60px);
+  grid-template-rows: repeat(3, 60px);
+  gap: 4px;
+  background-color:  #0a122a; 
+  transform: rotate(-5deg);
+  margin-top: 20px;
+}
+footer {
+  position: relative;
+  z-index: 10; 
+  background-color: #0a122a !important;
+}
+
+footer::after {
+  content: "";
+  display: block;
+  clear: both;
+}
+
+
 
         .cell {
           display: flex;
