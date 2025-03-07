@@ -1,9 +1,11 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Share from "../share/Share";
 import "./Recipe.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faPrint, faBookmark, faComment } from '@fortawesome/free-solid-svg-icons';
+import { userLoginContext } from "../../contexts/UserLoginContext";
+
 
 
 const Recipe = () => {
@@ -14,6 +16,9 @@ const Recipe = () => {
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [isSaved, setIsSaved] = useState(false);
+    const [saveError, setSaveError] = useState(null);
+    const { loginStatus, currentUser, token } = useContext(userLoginContext);
 
 
     const [showIngredientSelection, setShowIngredientSelection] = useState(false);
@@ -27,6 +32,42 @@ const Recipe = () => {
         { id: 2, author: "David L.", text: "I added a little extra spice and it turned out great." },
     ]);
 
+
+    const handleSaveRecipe = async () => {
+        if (!currentUser) {
+            alert("Please log in to save recipes.");
+            return;
+        }
+    
+        try {
+            if (!token) {
+                console.error("No token found in localStorage");
+                return;
+            }
+
+            const response = await fetch("http://localhost:4000/user-api/save-recipe", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    recipe : recipe
+                }),
+            });
+            
+            if (!response.ok) {
+                throw new Error("Failed to save recipe");
+            }
+            setIsSaved(true)
+    
+            alert("Recipe saved successfully!");
+        } catch (error) {
+            console.error("Error saving recipe:", error);
+            alert("Error saving recipe. Please try again later.");
+        }
+    };
+    
 
     const fetchRecipe = useCallback(async (recipeTitle) => {
         try {
@@ -133,9 +174,11 @@ const Recipe = () => {
                     <div className="recipe-left-column">
                         <img src={recipe?.image} alt={recipeTitle} className="recipe-image" />
                         <div className="save-print-area">
-                            <button className="icon-button">
-                                <FontAwesomeIcon icon={faBookmark} /> Save
-                            </button>
+                        <button onClick={handleSaveRecipe} className="icon-button">
+                    <FontAwesomeIcon icon={faBookmark} />
+                    {isSaved ? " Saved" : " Save"}
+                </button>
+
                             <button onClick={handlePrint} className="icon-button">
                             <FontAwesomeIcon icon={faPrint} /> Print
                         </button>

@@ -117,6 +117,44 @@ userApp.post("/spin", expressAsyncHandler(async (req, res) => {
   }
 }));
 
+userApp.post('/save-recipe', expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get('usersCollection');
+  const { recipe } = req.body;  
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try{
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = new ObjectId(decoded.userId); 
+
+    const user = await usersCollection.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $push: { recipes : recipe } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update user saved recipes" });
+    }
+
+    //console.log("Recipe successfully saved for user:", userId);
+    res.status(200).json({ message: "Recipe saved successfully!", updatedUser: user });
+
+
+  } catch (error) {
+    // console.error("Error saving recipe:", error);
+     res.status(401).json({ message: "Invalid or expired token", error });
+  }
+ 
+}))
 
 
 
