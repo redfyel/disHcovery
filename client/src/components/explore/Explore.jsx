@@ -1,21 +1,33 @@
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { FaUtensils, FaGlobe, FaClock, FaLeaf } from "react-icons/fa"; 
-import "./Explore.css"; 
+import ExploreDropdown from "./ExploreDropdown";
+import "./Explore.css";
 
+// Example categories with icons
 const categories = {
-  "Categories": { icon: <FaUtensils />, filters: ["Main Course", "Appetizer", "Salad"] },
-  "Cuisine": { icon: <FaGlobe />, filters: ["American", "British", "Italian", "Mexican", "Indian", "Mediterranean"] },
-  "Meal Type": { icon: <FaClock />, filters: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"] },
-  "Diet": { icon: <FaLeaf />, filters: [
-   "High Protien",
-    "Vegan", "Vegetarian", "Low Carb", "Keto", "Paleo", "Dairy Free", "Gluten Free",
-  ] },
+  Categories: {
+    icon: <FaUtensils />,
+    filters: ["Main Course", "Appetizer", "Salad"],
+  },
+  Cuisine: {
+    icon: <FaGlobe />,
+    filters: ["American", "British", "Italian", "Mexican", "Indian", "Mediterranean"],
+  },
+  MealType: {
+    icon: <FaClock />,
+    filters: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"],
+  },
+  Diet: {
+    icon: <FaLeaf />,
+    filters: ["Vegan", "Keto", "Paleo", "Gluten Free", "Ovo Vegetarian"],
+  },
 };
 
 function Explore() {
   const [showDropdown, setShowDropdown] = useState(false);
   const navigate = useNavigate();
+  const exploreButtonRef = useRef(null);
 
   const handleFilterClick = (category, filter) => {
     const query = new URLSearchParams({ [category]: filter }).toString();
@@ -23,30 +35,27 @@ function Explore() {
   };
 
   return (
-    <div
-      className="dropdown-container"
-      onMouseEnter={() => setShowDropdown(true)}
-      onMouseLeave={() => setShowDropdown(false)}
-    >
-      <Link to="#">Explore</Link>
-      {showDropdown && (
-        <div className="dropdown show">
-          {Object.entries(categories).map(([category, { icon, filters }]) => (
-            <div key={category} className="dropdown-category">
-              <h4>{icon} {category}</h4>
-              {filters.map((filter) => (
-                <div
-                  key={filter}
-                  className="dropdown-item"
-                  onClick={() => handleFilterClick(category, filter)}
-                >
-                  {filter}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
-      )}
+    <div>
+      {/* The "Explore" link (anchor) */}
+      <Link
+        to="#"
+        className="explore-button"
+        ref={exploreButtonRef}
+        onMouseEnter={() => setShowDropdown(true)}
+        onMouseLeave={() => setShowDropdown(false)}
+      >
+        Explore
+      </Link>
+
+      {/* The dropdown itself, rendered in a Portal */}
+      <ExploreDropdown
+        show={showDropdown}
+        anchorRef={exploreButtonRef}
+        onFilterClick={handleFilterClick}
+        onMouseEnter={() => setShowDropdown(true)}
+        onMouseLeave={() => setShowDropdown(false)}
+        categories={categories}
+      />
     </div>
   );
 }
