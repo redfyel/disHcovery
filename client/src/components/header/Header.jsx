@@ -10,7 +10,20 @@ function Header() {
   const navigate = useNavigate();
 
   const categories = {
-    Categories: ["Main Course", "Appetizer", "Salad"],
+    Categories: ["Quick & Easy","Healthy",
+      "Family-Friendly",
+      "Budget-Friendly",
+      "One-Pot",
+      "Comfort Food",
+      "Seasonal",
+      "Special Occasion",
+      "BBQ",
+      "Soup",
+      "Salad",
+      "Pasta",
+      "Baking",
+      "Grilling"
+      ],
     Cuisine: ["American", "British", "Italian", "Mexican", "Indian"],
     MealType: ["Breakfast", "Lunch", "Dinner", "Snack", "Dessert"],
     Diet: [
@@ -45,6 +58,29 @@ function Header() {
       return updatedFilters;
     });
   };
+ // Header component navigation functionality
+const handleClick = (navigate, category) => {
+  fetch(`http://localhost:4000/recipes/category/${encodeURIComponent(category)}`)
+      .then(response => {
+          if (!response.ok) {
+              throw new Error("Failed to fetch recipes");
+          }
+          return response.json();
+      })
+      .then(data => {
+          if (data.payload && data.payload.length > 0) {
+              navigate(`/recipes/category/${encodeURIComponent(category)}`, { state: { recipes: data.payload, category: category } });
+          } else {
+              console.error("No recipes found");
+              navigate(`/recipes/category/${encodeURIComponent(category)}`, { state: { recipes: [], category: category } });
+          }
+      })
+      .catch(error => {
+          console.error("Error fetching recipes:", error);
+          navigate(`/recipes/category/${encodeURIComponent(category)}`, { state: { recipes: [], category: category } });
+      });
+};
+
 
   return (
     <header className="header">
@@ -71,7 +107,7 @@ function Header() {
                     <div
                       key={filter}
                       className="dropdown-item"
-                      onClick={() => handleFilterClick(category, filter)}
+                      onClick={() => handleClick(navigate, filter)}
                     >
                       {filter}
                     </div>
