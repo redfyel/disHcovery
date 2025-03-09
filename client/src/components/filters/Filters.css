@@ -1,5 +1,3 @@
-/* filters.css - No changes needed */
-/* filters.css */
 .filter-container {
   background: #FBFAF8;
   padding: 20px;
@@ -7,44 +5,44 @@
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   max-width: 350px;
   margin: auto;
-}
-
-
-/* Filter title */
-.filter-container h2 {
+  border: 1px solid #F8F6F1;
+  }
+  
+  
+  /* Filter title */
+  .filter-container h2 {
   text-align: center;
   font-size: 2rem;
-  color: #0A122A;
+  color: #0a122a;
   margin-bottom: 15px;
-}
-
-
-/* Each section (Categories, Meal Type, etc.) */
-.filter-section {
+  }
+  
+  
+  /* Each section (Categories, Meal Type, etc.) */
+  .filter-section {
   margin-bottom: 20px;
-}
-
-
-/* Section headings */
-.filter-section h3 {
+  }
+  
+  
+  /* Section headings */
+  .filter-section h3 {
   font-size: 1.5rem;
-  color: #698F3F;
+  color: #698f3f;
   margin-bottom: 10px;
-  border-bottom: 2px solid #E7DECD;
+  border-bottom: 2px solid #F8F6F1;
   padding-bottom: 5px;
-}
-
-
-/* Styling for filter tags */
-.filter-tags {
+  }
+  
+  
+  /* Styling for filter tags */
+  .filter-tags {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-}
-
-
-/* Styles for each filter tag */
-.filter-tag {
+  }
+  
+  
+  .filter-tag {
   background-color: #FBFAF8;
   border: 1px solid #ccc;
   border-radius: 20px;
@@ -52,34 +50,37 @@
   margin: 5px;
   cursor: pointer;
   transition: all 0.2s ease;
-}
-
-
-.filter-tag.selected {
-  background-color: #698F3F;
+  color: #333;
+  }
+  
+  
+  .filter-tag.selected {
+  background-color: #698f3f;
   color: white;
-  border: 1px solid #698F3F;
-}
-/* Hover effect for filter tags */
-.filter-tag:hover {
-  background-color: #698F3F;
-}
-
-
-/* Responsive design */
-@media (max-width: 500px) {
+  border: 1px solid #698f3f;
+  }
+  /* Hover effect for filter tags */
+  .filter-tag:hover {
+  background-color: #698f3f;
+  color: white;
+  }
+  
+  
+  /* Responsive design */
+  @media (max-width: 500px) {
   .filter-container {
-      max-width: 90%;
-      padding: 15px;
+  max-width: 90%;
+  padding: 15px;
   }
-
-
+  
+  
   .filter-container h2 {
-      font-size: 1.8rem;
+  font-size: 1.8rem;
   }
-
-
+  
+  
   .filter-section h3 {
-      font-size: 1.3rem;
+  font-size: 1.3rem;
   }
-}
+  }
+  

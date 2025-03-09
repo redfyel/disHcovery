@@ -11,14 +11,12 @@ import "./RecipeRoulette.css";
 const RecipeRoulette = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const [recipes, setRecipes] = useState([]);
-  const [error, setError] = useState(null);
   const [mustSpin, setMustSpin] = useState(false);
   const [prizeNumber, setPrizeNumber] = useState(null);
   const [showConfetti, setShowConfetti] = useState(false);
   const [confettiOpacity, setConfettiOpacity] = useState(1);
   const [selectedRecipe, setSelectedRecipe] = useState(null);
-  const { loginStatus, currentUser, setCurrentUser } =
-    useContext(userLoginContext);
+  const { loginStatus, currentUser, setCurrentUser,token } = useContext(userLoginContext);
 
   useEffect(() => {
     async function fetchRecipes() {
@@ -26,13 +24,10 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
         const res = await fetch("http://localhost:4000/recipe-api/recipes");
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
-        const shuffled = data.payload
-          .sort(() => 0.5 - Math.random())
-          .slice(0, 8);
+        const shuffled = data.payload.sort(() => 0.5 - Math.random()).slice(0, 8);
         setRecipes(shuffled);
       } catch (err) {
-        console.error("Error fetching recipes...", err.message);
-        setError(err);
+        console.error("Error fetching recipes:", err.message);
       }
     }
 
@@ -54,26 +49,59 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
   const handleSpinClick = () => {
     if (recipes.length > 0) {
       setShowConfetti(false);
-
       setSelectedRecipe(null);
       const randomIndex = Math.floor(Math.random() * recipes.length);
-
-      // Ensure state updates correctly before spinning
       setPrizeNumber(randomIndex);
-
-      // Slight delay before setting mustSpin to ensure state updates
       setTimeout(() => setMustSpin(true), 50);
     }
   };
 
-  const handleStopSpinning = () => {
+  const handleStopSpinning = async () => {
     setMustSpin(false);
 
-    // Ensure prizeNumber is not null before setting the recipe
     if (prizeNumber !== null && recipes[prizeNumber]) {
+      const selected = recipes[prizeNumber];
       setShowConfetti(true);
       setConfettiOpacity(1);
-      setSelectedRecipe(recipes[prizeNumber]);
+      setSelectedRecipe(selected);
+
+      try {
+        // const token = localStorage.getItem("token");
+
+        if (!token) {
+          console.error("No token found in localStorage");
+          return;
+        }
+
+        console.log("Sending token:", token);
+        
+        const res = await fetch("http://localhost:4000/user-api/spin", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ recipe: selected }),
+        });
+
+        const data = await res.json();
+        
+        if (!res.ok) {
+          throw new Error(data.message || "Failed to save spun recipe");
+        }
+
+        console.log("Recipe successfully saved to user:", data);
+
+        // Update user state with new recipe
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          roulette_recipes: [...(prevUser.roulette_recipes || []), selected],
+        }));
+
+      } catch (error) {
+        console.error("Error saving spun recipe:", error.message);
+      }
+
       setTimeout(() => {
         setConfettiOpacity(0);
         setTimeout(() => setShowConfetti(false), 2500);
@@ -84,28 +112,13 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
   };
 
   return (
-    <div
-      className={`modal fade ${isOpen ? "show d-block" : ""}`}
-      tabIndex="-1"
-      role="dialog"
-    >
+    <div className={`modal fade ${isOpen ? "show d-block" : ""}`} tabIndex="-1" role="dialog">
       <div className="modal-dialog modal-dialog-centered">
-        <div
-          className="modal-content p-4"
-          style={{ backgroundColor: "#FBFAF8", color: "#0A122A" }}
-        >
-          {/* Close Button */}
-          <button
-            onClick={onClose}
-            className="btn-close position-absolute top-0 end-0 m-3"
-          ></button>
+        <div className="modal-content p-4" style={{ backgroundColor: "#FBFAF8", color: "#0A122A" }}>
+          <button onClick={onClose} className="btn-close position-absolute top-0 end-0 m-3"></button>
 
           {showConfetti && (
-            <motion.div
-              initial={{ opacity: 1 }}
-              animate={{ opacity: confettiOpacity }}
-              transition={{ duration: 0.5 }}
-            >
+            <motion.div initial={{ opacity: 1 }} animate={{ opacity: confettiOpacity }} transition={{ duration: 0.5 }}>
               <Confetti width={500} height={500} numberOfPieces={230} />
             </motion.div>
           )}
@@ -114,20 +127,13 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
             <FaUtensils size={40} color="#804E49" />
             {selectedRecipe ? (
               <>
-                <h1 className="mt-2" style={{ color: "#698F3F" }}>
-                  Ready to Cook {selectedRecipe.title}?
-                </h1>
+                <h1 className="mt-2" style={{ color: "#698F3F" }}>You got {selectedRecipe.title}!</h1>
                 <p className="text-muted">Your dinner fate is sealed!</p>
               </>
             ) : (
               <>
-                <h1 className="mt-2" style={{ color: "#698F3F" }}>
-                  Roll the Dice on Dinner
-                </h1>
-                <p className="text-muted">
-                  Spin the wheel, discover a dish, and let fate decide your next
-                  meal!
-                </p>
+                <h1 className="mt-2" style={{ color: "#698F3F" }}>Roll the Dice on Dinner</h1>
+                <p className="text-muted">Spin the wheel, discover a dish, and let fate decide your next meal!</p>
               </>
             )}
           </div>
@@ -137,15 +143,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
               <Wheel
                 mustStartSpinning={mustSpin}
                 prizeNumber={prizeNumber}
-                data={recipes.map((r) => {
-                  const cleanedTitle = r.title.replace(/\s*\(.*?\)\s*/g, "");
-                  return {
-                    option:
-                      cleanedTitle.length > 17
-                        ? cleanedTitle.substring(0, 20) + "..."
-                        : cleanedTitle,
-                  };
-                })}
+                data={recipes.map((r) => ({ option: r.title.length > 17 ? r.title.substring(0, 20) + "..." : r.title }))}
                 onStopSpinning={handleStopSpinning}
                 outerBorderColor="#804E49"
                 outerBorderWidth={8}
@@ -162,59 +160,18 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
           )}
 
           {!selectedRecipe ? (
-            <button
-              onClick={handleSpinClick}
-              className="btn w-100 mt-4"
-              style={{
-                backgroundColor: "#804E49",
-                color: "#FBFAF8",
-                fontSize: "20px",
-                padding: "10px",
-              }}
-            >
+            <button onClick={handleSpinClick} className="btn w-100 mt-4" style={{ backgroundColor: "#804E49", color: "#FBFAF8", fontSize: "20px", padding: "10px" }}>
               Spin & Feast!
             </button>
           ) : (
-            <motion.div
-              className="alert mt-3 text-center"
-              style={{ backgroundColor: "#E7DECD", color: "#0A122A" }}
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h2>You got: {selectedRecipe.title}!</h2>
-              <img
-                src={selectedRecipe.image}
-                alt={selectedRecipe.title}
-                className="rounded mt-2"
-                style={{ width: "120px" }}
-              />
-              <button
-                onClick={() => onRecipeSelect(selectedRecipe)}
-                className="btn w-100 mt-3"
-                style={{
-                  backgroundColor: "#698F3F",
-                  color: "#FBFAF8",
-                  fontSize: "18px",
-                  padding: "10px",
-                }}
-              >
+            <div className="d-flex flex-column">
+              <button onClick={() => onRecipeSelect(selectedRecipe)} className="btn w-100 mt-3" style={{ backgroundColor: "#698F3F", color: "#FBFAF8", fontSize: "18px", padding: "10px" }}>
                 Get Cooking
               </button>
-
-              <button
-                onClick={handleSpinClick}
-                className="btn w-100 mt-2"
-                style={{
-                  backgroundColor: "#804E49",
-                  color: "#FBFAF8",
-                  fontSize: "18px",
-                  padding: "10px",
-                }}
-              >
+              <button onClick={handleSpinClick} className="btn w-100 mt-2" style={{ backgroundColor: "#E7DECD", color: "#0A122A", fontSize: "18px", padding: "10px" }}>
                 Spin Again
               </button>
-            </motion.div>
+            </div>
           )}
         </div>
       </div>

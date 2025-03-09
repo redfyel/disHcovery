@@ -1,7 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import Search from "../search-box/Search";
-import { useState } from "react";
-import logo from '../../assets/images/logoo.png'
+import Explore from "../explore/Explore"; 
+import logo from "../../assets/images/logoo.png";
 import "./Header.css";
 
 function Header() {
@@ -85,10 +85,7 @@ const handleClick = (navigate, category) => {
   return (
     <header className="header">
       <Link to="/" className="logo">
-        <img
-          src={logo}
-          alt="disHcovery Logo"
-        />
+        <img src={logo} alt="disHcovery Logo" />
       </Link>
       <nav className="nav-links">
         <Link to="/">Home</Link>

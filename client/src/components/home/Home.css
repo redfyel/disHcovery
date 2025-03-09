@@ -1,90 +1,188 @@
-/* HomePage.css */
+/* Home Page Container */
+.homepage-container {
+  width: 100%;
+  overflow-x: hidden;
+  font-family: Arial, sans-serif;
+}
 
-/* General styles */
-body {
-    font-family: "Arial", sans-serif;
-    margin: 0;
-    padding: 0;
-    background-color: #f9f9f9;
-  }
-  
-  /* Navbar */
-  nav {
-    background: white;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    padding: 1rem 2rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  
-  /* Search Bar */
-  .search-container {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ddd;
-    border-radius: 999px;
-    padding: 5px 10px;
-  }
-  
-  .search-container input {
-    border: none;
-    outline: none;
-    padding: 5px;
-    width: 200px;
-  }
-  
-  /* Hero Section */
-  .hero-section {
-    text-align: center;
-    background: #38a169;
-    color: white;
-    padding: 4rem 2rem;
-  }
-  
-  .hero-section h2 {
-    font-size: 2.5rem;
-    font-weight: bold;
-  }
-  
-  .hero-section p {
-    margin-top: 10px;
-    font-size: 1.2rem;
-  }
-  
-  /* Featured Recipes */
-  .featured-recipes {
-    padding: 2rem;
-  }
-  
-  .featured-recipes h3 {
-    font-size: 2rem;
-    text-align: center;
-    margin-bottom: 1rem;
-  }
-  
-  .recipe-card {
-    border-radius: 12px;
-    overflow: hidden;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .recipe-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-  }
-  
-  .recipe-card:hover {
-    transform: scale(1.05);
-  }
-  
-  /* Footer */
-  footer {
-    background: #1a202c;
-    color: white;
-    text-align: center;
-    padding: 1rem;
-    margin-top: 2rem;
-  }
-  
+/* Background Video Section */
+.homepage-video-wrapper {
+  position: relative;
+  width: 100%;
+  height: 90vh;
+  overflow: hidden;
+}
+
+.homepage-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.homepage-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  color: white;
+  background: rgba(0, 0, 0, 0.5);
+  padding: 2rem;
+  border-radius: 10px;
+}
+
+.homepage-title {
+  font-size: 2.5rem;
+  font-weight: bold;
+}
+
+.homepage-subtitle {
+  font-size: 1.2rem;
+  margin-top: 0.5rem;
+}
+
+.homepage-button {
+  display: inline-block;
+  padding: 10px 20px;
+  margin-top: 15px;
+  font-size: 1rem;
+  color: white;
+  background-color: #007bff;
+  border-radius: 5px;
+  text-decoration: none;
+  transition: background 0.3s;
+}
+
+.homepage-button:hover {
+  background-color: #0056b3;
+}
+
+/* Features Section */
+.homepage-features {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.homepage-section-title {
+  font-size: 2rem;
+  font-weight: bold;
+  margin-bottom: 2rem;
+}
+
+.homepage-feature-grid {
+  display: flex;
+  justify-content: center;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+}
+
+.homepage-feature-card {
+  width: 300px;
+  padding: 1.5rem;
+  background: white;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  border-radius: 10px;
+  text-align: center;
+}
+
+.homepage-feature-icon {
+  font-size: 2.5rem;
+}
+
+.homepage-feature-card h3 {
+  margin-top: 1rem;
+  font-size: 1.5rem;
+}
+
+/* Categories Section */
+.homepage-categories {
+  padding: 3rem 1rem;
+  text-align: center;
+}
+
+.homepage-category-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1.5rem;
+  justify-content: center;
+  padding: 0 2rem;
+}
+
+.homepage-category-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  text-decoration: none;
+  transition: transform 0.3s;
+}
+
+.homepage-category-card:hover {
+  transform: scale(1.05);
+}
+
+.homepage-category-image {
+  width: 100%;
+  border-radius: 10px;
+  object-fit: cover;
+}
+
+.homepage-category-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  text-align: center;
+  padding: 0.8rem 0;
+  border-bottom-left-radius: 10px;
+  border-bottom-right-radius: 10px;
+}
+
+.homepage-category-overlay h5 {
+  font-size: 1.2rem;
+  font-weight: bold;
+}
+.homepage-category-grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px;
+}
+
+.homepage-category-card {
+  text-align: center;
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.homepage-category-circle {
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.3s ease-in-out;
+}
+
+.homepage-category-circle:hover {
+  transform: scale(1.1);
+}
+
+.homepage-category-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.homepage-category-name {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+}

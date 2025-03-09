@@ -1,21 +1,17 @@
-/* Recipes.css (No changes needed) */
-/* General Page Styling */
 .recipes-page {
-  background-color: #FBFAF8; /* Off-White Background */
+  background-color: #fbfaf8;
   padding: 20px;
   min-height: 100vh;
 }
 
-
-/* Page Title */
 .recipes-title {
   text-align: center;
   font-size: 2rem;
   font-weight: bold;
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
   margin-bottom: 20px;
 }
-/* Main Layout: Recipes on Left, Filters on Right */
+
 .recipes-container {
   display: flex;
   gap: 20px;
@@ -23,25 +19,19 @@
   align-items: flex-start;
 }
 
-
-/* Recipes Section (Left) */
 .recipes-content {
-  flex: 1; /* Takes available space */
+  flex: 1;
 }
 
-
-/* Filters Section (Right) */
 .filters-column {
-  width: 380px; /* Increased width */
+  width: 380px;
   min-width: 300px;
-  background: #E7DECD; /* Light Beige */
+  background: #F8F6F1;
   padding: 15px;
   border-radius: 10px;
   box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
 }
 
-
-/* Recipe Grid */
 .recipe-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
@@ -49,10 +39,8 @@
   justify-content: center;
 }
 
-
-/* Recipe Card */
 .recipe-card {
-  background-color: #ffffff; /* White */
+  background-color: #ffffff;
   border-radius: 12px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 10px;
@@ -60,13 +48,10 @@
   text-align: center;
 }
 
-
 .recipe-card:hover {
   transform: scale(1);
 }
 
-
-/* Recipe Image */
 .recipe-image {
   width: 100%;
   height: 150px;
@@ -74,61 +59,62 @@
   border-radius: 8px;
 }
 
-
-/* Recipe Name */
 .recipe-name {
   font-size: 1.1rem;
   font-weight: bold;
   margin-top: 10px;
-  color: #0A122A; /* Olive Green */
+  color: #0a122a;
 }
 
-
-/* View Details Button */
 .view-details {
-  display: inline-block; /* Change to inline-block for centering */
+  display: inline-flex; 
+  align-items: center;      
+  justify-content: center; 
   text-align: center;
-  background-color: #698F3F; /* Olive Green */
+  background-color: #698f3f;
   color: white;
-  padding: 6px 8px; /* Reduced padding for a smaller button */
+  padding: 6px 8px;       
   margin-top: 10px;
   border-radius: 8px;
   text-decoration: none;
-  font-weight: bold;
-  width: 60%; /* Decreased width from 80% to 60% */
+  font-size: 0.9rem; 
+  width: 50%;
+  border: none; 
+  cursor: pointer;
+  transition: background-color 0.2s ease;
 }
-
 
 .view-details:hover {
-  background-color: #5a7a2e; /* Darker shade for hover effect */
+  background-color: #5a7a2e;
 }
-/* Loading & Error Messages */
+
+.cooking-icon {
+  margin-right: 5px;  
+  font-size: 1em; 
+}
+
 .loading,
 .error {
   text-align: center;
   font-size: 18px;
   font-weight: bold;
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
 }
 
-
-/* No Recipes Found Message */
 .no-results {
   text-align: center;
   font-size: 18px;
   color: #6c757d;
 }
 
-
 /* Responsive Design */
 @media (max-width: 768px) {
   .recipes-container {
-    flex-direction: column-reverse; /* Filters move below recipes */
+    flex-direction: column-reverse;
   }
   .filters-column {
     width: 100%;
   }
-
 
   .recipe-grid {
     grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));

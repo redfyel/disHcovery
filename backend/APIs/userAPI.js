@@ -3,8 +3,9 @@ let exp = require("express");
 let userApp = exp.Router();
 const { Db } = require("mongodb");
 const bcryptjs = require("bcryptjs");
-const jwt = require('jsonwebtoken'); 
+//const jwt = require('jsonwebtoken'); 
 const expressAsyncHandler = require("express-async-handler");
+
 
 
 //add a body parser middleware
@@ -20,6 +21,7 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
     const newUser = req.body;
 
     newUser.recipes = []; 
+    newUser.roulette_recipes= []; 
 
     //verifying uniqueness
     let existingUser = await usersCollection.findOne({
@@ -67,6 +69,92 @@ userApp.post("/login", expressAsyncHandler(async (req, res) => {
   const { password: _, ...userInfo } = user; 
   res.status(200).json({ message: "login success", user: userInfo, token });
 }));
+
+const { ObjectId } = require("mongodb"); 
+const jwt = require("jsonwebtoken");
+
+userApp.post("/spin", expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { recipe } = req.body;
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = new ObjectId(decoded.userId); 
+
+    //console.log("Decoded JWT User ID:", userId);
+
+    const user = await usersCollection.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (!user.roulette_recipes) {
+      await usersCollection.updateOne({ _id: userId }, { $set: { roulette_recipes: [] } });
+    }
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $push: { roulette_recipes: recipe } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update user recipes" });
+    }
+
+    //console.log("Recipe successfully saved for user:", userId);
+    res.status(200).json({ message: "Recipe saved successfully", updatedUser: user });
+
+  } catch (error) {
+   // console.error("Error saving recipe:", error);
+    res.status(401).json({ message: "Invalid or expired token", error });
+  }
+}));
+
+userApp.post('/save-recipe', expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get('usersCollection');
+  const { recipe } = req.body;  
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+  try{
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = new ObjectId(decoded.userId); 
+
+    const user = await usersCollection.findOne({ _id: userId });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $push: { recipes : recipe } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update user saved recipes" });
+    }
+
+    //console.log("Recipe successfully saved for user:", userId);
+    res.status(200).json({ message: "Recipe saved successfully!", updatedUser: user });
+
+
+  } catch (error) {
+    // console.error("Error saving recipe:", error);
+     res.status(401).json({ message: "Invalid or expired token", error });
+  }
+ 
+}))
 
 
 

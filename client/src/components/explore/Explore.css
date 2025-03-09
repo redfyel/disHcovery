@@ -1,0 +1,78 @@
+/* Explore button styling */
+.explore-button {
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: 600;
+  padding: 10px 15px;
+  border-radius: 6px;
+  background: #698F3F;
+  color: #fff;
+  transition: background 0.3s ease;
+}
+
+.explore-button:hover {
+  background: #56782E;
+}
+
+/* The dropdown root element */
+.dropdown {
+  width: 700px; /* wide layout */
+  background: rgba(15, 15, 15, 0.95);
+  backdrop-filter: blur(12px);
+  border-radius: 12px;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 20px;
+  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transform: translateY(10px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  z-index: 9999; /* ensure it stays above other elements */
+}
+
+/* When the dropdown is shown, make it visible */
+.dropdown.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* Category sections */
+.dropdown-category {
+  flex: 1 1 180px;
+}
+
+.dropdown-category h4 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #f8f6f1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+/* Items container */
+.dropdown-items {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+/* Individual items */
+.dropdown-item {
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 14px;
+  font-weight: 500;
+  color: #ddd;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.2s, transform 0.2s;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}

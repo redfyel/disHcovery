@@ -29,7 +29,7 @@ const Recipes = () => {
           throw new Error("Failed to fetch recipes");
         }
         const data = await response.json();
-        // console.log("Fetched Recipes:", data.payload);
+
         setRecipes(data.payload || []);
         setFilteredRecipes(data.payload || []);
       } catch (err) {
@@ -66,7 +66,9 @@ const Recipes = () => {
 
         const matchesDiet =
           filters.diet.length > 0
-            ? recipe.dietFilters?.some((diet) => filters.diet.includes(diet))
+            ? recipe.dietFilters?.some((diet) =>
+                filters.diet.map(d => d.trim().toLowerCase()).includes(diet.trim().toLowerCase())
+              )
             : true;
 
         const matchesCookTime =
@@ -105,21 +107,17 @@ const Recipes = () => {
       <h1 className="recipes-title">Discover Delicious Recipes</h1>
 
       <div className="recipes-container">
-        {" "}
         <div className="recipes-content">
           <div className="recipe-grid">
             {filteredRecipes.length > 0 ? (
               filteredRecipes.map((recipe) => {
-                // Sanitize and then encode the title for the URL
                 const titleBeforeBracket = recipe.title.split("(")[0].trim();
-
-                // Normalize accents
                 const sanitizedTitle = titleBeforeBracket
-                  .normalize("NFD") // Decomposes characters
-                  .replace(/[\u0300-\u036f]/g, "") // Remove diacritical marks
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")
                   .toLowerCase()
-                  .replace(/[^a-z0-9]+/g, "-") // Replace non-alphanumeric characters with hyphen
-                  .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+                  .replace(/[^a-z0-9]+/g, "-")
+                  .replace(/^-+|-+$/g, "");
 
                 const encodedTitle = encodeURIComponent(sanitizedTitle);
 
@@ -133,9 +131,9 @@ const Recipes = () => {
                     <h3 className="recipe-name">{recipe.title}</h3>
                     <button
                       onClick={() => navigate(`/recipe/${encodedTitle}`)}
-                      className="view-details"
+                      className="view-details get-cooking-button"  // Added class for styling
                     >
-                      View Details →
+                      <i className="fas fa-utensils cooking-icon"></i> Get Cooking!
                     </button>
                   </div>
                 );

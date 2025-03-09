@@ -61,5 +61,54 @@ recipesApp.get('/recipe/:title', async (req, res) => {
   }
 });
 
+// fetch saved recipes
+recipesApp.get("/saved-recipes/:userId", async (req, res) => {
+    const { userId } = req.params;
+    const usersCollection = req.app.get('usersCollection')
+    try {
+      // Find the user and populate saved recipes
+      const user = await usersCollection.findById(userId).populate("savedRecipes");
+  
+      if (!user) {
+        return res.status(404).json({ success: false, message: "User not found" });
+      }
+  
+      res.status(200).json({ success: true, payload: user.savedRecipes });
+    } catch (error) {
+      console.error("Error fetching saved recipes:", error);
+      res.status(500).json({ success: false, message: "Internal Server Error" });
+    }
+  });
+
+
+// save a recipe
+recipesApp.post("/save-recipe", async (req, res) => {
+    try {
+        console.log("Incoming save request:", req.body); // Log incoming request
+        
+        const { userId, recipeId } = req.body;
+        const usersCollection = req.app.get('usersCollection');
+
+        if (!userId || !recipeId) {
+            return res.status(400).json({ error: "userId and recipeId are required" });
+        }
+
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        if (!user) {
+            return res.status(404).json({ error: "User not found" });
+        }
+
+        await usersCollection.updateOne(
+            { _id: new ObjectId(userId) },
+            { $addToSet: { savedRecipes: new ObjectId(recipeId) } } // Ensures no duplicates
+        );
+
+        res.json({ message: "Recipe saved successfully" });
+    } catch (error) {
+        console.error("Error saving recipe:", error);
+        res.status(500).json({ error: "Failed to save recipe", details: error.message });
+    }
+});
 
 module.exports = recipesApp;

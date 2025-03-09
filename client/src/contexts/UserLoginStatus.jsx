@@ -4,6 +4,7 @@ import { useState } from "react";
 function UserLoginStatus({children}){
     let [currentUser, setCurrentUser] = useState({})
     let [loginStatus, setLoginStatus] = useState(false)
+    let [token,setToken]=useState("")
     let [error, setError] = useState("")
 
 
@@ -23,6 +24,7 @@ function UserLoginStatus({children}){
                 setLoginStatus(true)
                 setError("")
                 sessionStorage.setItem("token", result.token)
+                setToken(result.token)
             } 
             else {
                 setError(result.message)
@@ -40,12 +42,13 @@ function UserLoginStatus({children}){
         setLoginStatus(false)
         setError('')
         sessionStorage.removeItem('token')
+        setToken('')
     }
 
 
     return(
         <userLoginContext.Provider
-        value = {{onLogin, onLogout, loginStatus, error, currentUser, setCurrentUser}}>
+        value = {{onLogin, onLogout, loginStatus, error, currentUser, setCurrentUser,token,setToken}}>
             {children}
         </userLoginContext.Provider>
     )
