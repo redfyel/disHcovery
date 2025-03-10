@@ -1,37 +1,40 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
 import "./Recipes.css";
+
 
 const Recipes = () => {
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({
+
+
+  const navigate = useNavigate();
+
+
+ const [filters, setFilters] = useState({
     categories: [],
     mealType: [],
-    diet: [],
-    cookTime: [],
     cuisine: [],
+    dietFilters: [],
     hasVideo: false,
   });
 
-  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
-        const response = await fetch(
-          "http://localhost:4000/recipe-api/recipes"
-        );
+        const response = await fetch("http://localhost:4000/recipe-api/recipes");
         if (!response.ok) {
           throw new Error("Failed to fetch recipes");
         }
         const data = await response.json();
 
+
         setRecipes(data.payload || []);
-        setFilteredRecipes(data.payload || []);
       } catch (err) {
         setError(err.message);
       } finally {
@@ -39,72 +42,64 @@ const Recipes = () => {
       }
     };
 
+
     fetchRecipes();
   }, []);
 
-  useEffect(() => {
-    let updatedRecipes = recipes;
 
-    if (
-      filters.categories.length ||
-      filters.mealType.length ||
-      filters.diet.length ||
-      filters.cookTime.length ||
-      filters.cuisine.length ||
-      filters.hasVideo
-    ) {
-      updatedRecipes = updatedRecipes.filter((recipe) => {
-        const matchesCategories =
-          filters.categories.length > 0
-            ? filters.categories.includes(recipe.category)
-            : true;
+  useEffect(() => {
+    const filterRecipes = () => {
+      if (!recipes) return [];
+
+
+      return recipes.filter((recipe) => {
+          const matchesCategories =
+          !filters?.categories?.length || filters?.categories?.includes(recipe.category);
+
 
         const matchesMealType =
-          filters.mealType.length > 0
-            ? filters.mealType.includes(recipe.mealType)
-            : true;
+          !filters?.mealType?.length || filters?.mealType?.includes(recipe.mealType);
 
-        const matchesDiet =
-          filters.diet.length > 0
-            ? recipe.dietFilters?.some((diet) =>
-                filters.diet.map(d => d.trim().toLowerCase()).includes(diet.trim().toLowerCase())
-              )
-            : true;
-
-        const matchesCookTime =
-          filters.cookTime.length > 0
-            ? filters.cookTime.includes(recipe.cookingTime)
-            : true;
 
         const matchesCuisine =
-          filters.cuisine.length > 0
-            ? filters.cuisine.includes(recipe.cuisine)
-            : true;
+          !filters?.cuisine?.length || filters?.cuisine?.includes(recipe.cuisine);
 
-        const matchesVideo = filters.hasVideo ? recipe.videoURL : true;
+
+        const matchesDietFilters =
+          !filters?.dietFilters?.length ||
+          recipe.dietFilters?.some((diet) => filters?.dietFilters?.includes(diet));
+
+
+        const matchesVideo = !filters.hasVideo || recipe.videoURL;
+
 
         return (
           matchesCategories &&
           matchesMealType &&
-          matchesDiet &&
-          matchesCookTime &&
           matchesCuisine &&
-          (filters.hasVideo
-            ? recipe.videoURL != null && recipe.videoURL !== ""
-            : true)
+          matchesDietFilters &&
+          matchesVideo
         );
       });
-    }
+    };
 
-    setFilteredRecipes(updatedRecipes);
-  }, [filters, recipes]);
+
+    setFilteredRecipes(filterRecipes());
+  }, [recipes, filters]);
+
+
+
+
+
 
   if (loading) return <div className="loading">Loading recipes...</div>;
   if (error) return <div className="error">{error}</div>;
 
+
   return (
     <div className="recipes-page">
       <h1 className="recipes-title">Discover Delicious Recipes</h1>
+
 
       <div className="recipes-container">
         <div className="recipes-content">
@@ -119,21 +114,19 @@ const Recipes = () => {
                   .replace(/[^a-z0-9]+/g, "-")
                   .replace(/^-+|-+$/g, "");
 
+
                 const encodedTitle = encodeURIComponent(sanitizedTitle);
+
 
                 return (
                   <div key={recipe._id} className="recipe-card">
-                    <img
-                      src={recipe.image}
-                      alt={recipe.title}
-                      className="recipe-image"
-                    />
+                    <img src={recipe.image} alt={recipe.title} className="recipe-image" />
                     <h3 className="recipe-name">{recipe.title}</h3>
                     <button
                       onClick={() => navigate(`/recipe/${encodedTitle}`)}
-                      className="view-details get-cooking-button"  // Added class for styling
+                      className="get-cooking-button"
                     >
-                      <i className="fas fa-utensils cooking-icon"></i> Get Cooking!
+                     <PiCookingPotLight size={17}/> Get Cooking!
                     </button>
                   </div>
                 );
@@ -144,11 +137,13 @@ const Recipes = () => {
           </div>
         </div>
         <div className="filters-column">
+        <h2>Filters</h2>
           <Filters onFilterChange={setFilters} />
         </div>
       </div>
     </div>
   );
 };
+
 
 export default Recipes;

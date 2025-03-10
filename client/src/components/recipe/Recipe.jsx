@@ -172,7 +172,7 @@ const Recipe = () => {
     
                 <div className="recipe-grid-container">
                     <div className="recipe-left-column">
-                        <img src={recipe?.image} alt={recipeTitle} className="recipe-image" />
+                        <img src={recipe?.image} alt={recipeTitle} className="rrecipe-image" />
                         <div className="save-print-area">
                         <button onClick={handleSaveRecipe} className="icon-button">
                     <FontAwesomeIcon icon={faBookmark} />
