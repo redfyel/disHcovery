@@ -3,15 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import Share from "../share/Share";
 import "./Recipe.css";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart, faPrint, faBookmark, faComment } from '@fortawesome/free-solid-svg-icons';
+import { HiSparkles } from "react-icons/hi";
+import { faHeart, faPrint, faBookmark, faComment } from '@fortawesome/free-solid-svg-icons'; 
 import { userLoginContext } from "../../contexts/UserLoginContext";
-
-
+import Loading from '../loading/Loading'; // Import your loading component
 
 const Recipe = () => {
     const { title } = useParams();
     const navigate = useNavigate();
-
 
     const [recipe, setRecipe] = useState(null);
     const [loading, setLoading] = useState(true);
@@ -20,25 +19,22 @@ const Recipe = () => {
     const [saveError, setSaveError] = useState(null);
     const { loginStatus, currentUser, token } = useContext(userLoginContext);
 
-
     const [showIngredientSelection, setShowIngredientSelection] = useState(false);
     const [selectedIngredients, setSelectedIngredients] = useState([]);
     const [ingredientAlternatives, setIngredientAlternatives] = useState({});
     const [showShareOptions, setShowShareOptions] = useState(false);
-
-
+    const [isFetchingAlternatives, setIsFetchingAlternatives] = useState(false); // Add state for loading
     const [comments, setComments] = useState([
         { id: 1, author: "Emily R.", text: "This recipe is amazing! So easy to follow." },
         { id: 2, author: "David L.", text: "I added a little extra spice and it turned out great." },
     ]);
-
 
     const handleSaveRecipe = async () => {
         if (!currentUser) {
             alert("Please log in to save recipes.");
             return;
         }
-    
+
         try {
             if (!token) {
                 console.error("No token found in localStorage");
@@ -55,19 +51,19 @@ const Recipe = () => {
                     recipe : recipe
                 }),
             });
-            
+
             if (!response.ok) {
                 throw new Error("Failed to save recipe");
             }
             setIsSaved(true)
-    
+
             alert("Recipe saved successfully!");
         } catch (error) {
             console.error("Error saving recipe:", error);
             alert("Error saving recipe. Please try again later.");
         }
     };
-    
+
 
     const fetchRecipe = useCallback(async (recipeTitle) => {
         try {
@@ -131,6 +127,7 @@ const Recipe = () => {
             return;
         }
 
+        setIsFetchingAlternatives(true); // Start loading
 
         try {
             const response = await fetch(
@@ -138,48 +135,51 @@ const Recipe = () => {
                 {
                     method: "POST",
                     headers: {
-                        "Content-Type": "application/json", },
-                        body: JSON.stringify({ recipe, ingredients: selectedIngredients }),
-                    }
-                );
-    
-    
-                if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
-    
-    
-                const data = await response.json();
-                setIngredientAlternatives(data.alternatives);
-                setShowIngredientSelection(false);
-            } catch (error) {
-                console.error("Error fetching ingredient alternatives:", error);
-                alert("Failed to get ingredient alternatives. Please try again.");
-            }
-        };
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({ recipe, ingredients: selectedIngredients }),
+                }
+            );
 
 
-        const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
-    
-    
-        const recipeId = recipe?._id;
-        const recipeTitle = recipe?.title;
-        const nutrition = recipe?.nutritionInformation; // Access nutrition information
-    
-    
-        return (
-            <div className="recipe-details">
-                <h1 className="recipe-title">{recipeTitle}</h1>
-    
-    
-                <div className="recipe-grid-container">
-                    <div className="recipe-left-column">
-                        <img src={recipe?.image} alt={recipeTitle} className="rrecipe-image" />
-                        <div className="save-print-area">
+            if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+
+            const data = await response.json();
+            setIngredientAlternatives(data.alternatives);
+            setShowIngredientSelection(false);
+        } catch (error) {
+            console.error("Error fetching ingredient alternatives:", error);
+            alert("Failed to get ingredient alternatives. Please try again.");
+        } finally {
+            setIsFetchingAlternatives(false); // End loading
+        }
+    };
+
+
+    const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
+
+
+    const recipeId = recipe?._id;
+    const recipeTitle = recipe?.title;
+    const nutrition = recipe?.nutritionInformation; // Access nutrition information
+
+
+    return (
+        <div className="recipe-details">
+            <h1 className="recipe-title">{recipeTitle}</h1>
+
+
+            <div className="recipe-grid-container">
+                <div className="recipe-left-column">
+                    <img src={recipe?.image} alt={recipeTitle} className="rrecipe-image" />
+                    <div className="save-print-area">
                         <button onClick={handleSaveRecipe} className="icon-button">
-                    <FontAwesomeIcon icon={faBookmark} />
-                    {isSaved ? " Saved" : " Save"}
-                </button>
+                            <FontAwesomeIcon icon={faBookmark} />
+                            {isSaved ? " Saved" : " Save"}
+                        </button>
 
-                            <button onClick={handlePrint} className="icon-button">
+                        <button onClick={handlePrint} className="icon-button">
                             <FontAwesomeIcon icon={faPrint} /> Print
                         </button>
                     </div>
@@ -189,43 +189,51 @@ const Recipe = () => {
                     <div className="ingredients-section">
                         <div className="ingredients-header">
                             <h3>Ingredients:</h3>
-                            <button onClick={toggleIngredientSelection} className="ai-button ingredient-alternatives-button">
-                                {showIngredientSelection ? "Hide" : "Alternatives"}
+                            <button
+                                onClick={toggleIngredientSelection}
+                                className="ai-button ingredient-alternatives-button"
+                                disabled={isFetchingAlternatives} // Disable button while loading
+                            >
+                                <HiSparkles style={{ marginRight: '5px' }} />
+                                {showIngredientSelection ? "Close" : "Alternatives"}
                             </button>
                         </div>
                         <ul>
                             {recipe?.ingredients?.map((ingredient, index) => (
- <li key={index}>
- {ingredient.amount} {ingredient.unit} {ingredient.name}
- {ingredientAlternatives[ingredient.name] && (
-     <p className="alternative">Alternative: {ingredientAlternatives[ingredient.name]}</p>
- )}
-</li>
-))}
-</ul>
+                                <li key={index}>
+                                    <div className="ingredient-text">
+                                        {ingredient.amount} {ingredient.unit} {ingredient.name}
+                                    </div>
+                                    {ingredientAlternatives[ingredient.name] && (
+                                        <p className={`alternative ${selectedIngredients.includes(ingredient.name) ? 'highlighted' : ''}`}>
+                                            Alternative: {ingredientAlternatives[ingredient.name]}
+                                        </p>
+                                    )}
+                                </li>
+                            ))}
+                        </ul>
 
-
-{showIngredientSelection && (
-<div className="ingredient-selection">
-<h4>Select Ingredients for Alternatives:</h4>
-<ul>
- {recipe?.ingredients?.map((ingredient, index) => (
-     <li key={index}>
-         <label>
-             <input
-                 type="checkbox"
-                 value={ingredient.name}
-                 checked={selectedIngredients.includes(ingredient.name)}
-                 onChange={() => handleIngredientSelect(ingredient.name)}
-             />
-             {ingredient.amount} {ingredient.unit} {ingredient.name}
-         </label>
-     </li>
- ))}
-</ul>
-<button onClick={fetchIngredientAlternatives} className="ai-button">
- Get Alternatives
- </button>
+                        {showIngredientSelection && (
+                            <div className={`ingredient-selection ${showIngredientSelection ? '' : 'hidden'}`}>
+                                <h4>Select Ingredients for Alternatives:</h4>
+                                <ul>
+                                    {recipe?.ingredients?.map((ingredient, index) => (
+                                        <li key={index}>
+                                            <label>
+                                                <input
+                                                    type="checkbox"
+                                                    value={ingredient.name}
+                                                    checked={selectedIngredients.includes(ingredient.name)}
+                                                    onChange={() => handleIngredientSelect(ingredient.name)}
+                                                />
+                                                {ingredient.amount} {ingredient.unit} {ingredient.name}
+                                            </label>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <button onClick={fetchIngredientAlternatives} className="ai-button" disabled={isFetchingAlternatives}>
+                                    {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
+                                </button>
                             </div>
                         )}
                     </div>
@@ -263,7 +271,7 @@ const Recipe = () => {
                     {/* Recipe Video Section */}
                     {recipe?.videoURL && (
                         <div className="recipe-video recipe-section">
- <h3>Recipe Video:</h3>
+                            <h3>Recipe Video:</h3>
                             <iframe
                                 width="560"
                                 height="315"
@@ -292,7 +300,6 @@ const Recipe = () => {
 
                     <div className="nutrition-info">
                         <h3>Nutrition</h3>
-                        {/* Display nutrition information here */}
                         {nutrition ? (
                             <>
                                 <p><strong>Calories:</strong> {nutrition.Calories}</p>
