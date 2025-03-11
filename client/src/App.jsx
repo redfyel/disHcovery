@@ -60,6 +60,10 @@ function App() {
           element : <Recipe/>
         },
         {
+          path:'/recipes/category/:category',
+          element: <Recipes/>
+        },
+        {
           path : '/saved',
           element : <Saved />
         },

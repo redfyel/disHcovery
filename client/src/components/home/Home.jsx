@@ -1,6 +1,6 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import "./Home.css"; // Keep all styles isolated to this file
+import "./Home.css";
 import videoBg from "../../assets/videos/Homevideo.mp4";
 import Breakfast from "../../assets/images/breakfast.jpg";
 import Lunch from "../../assets/images/lunch.jpg";
@@ -14,11 +14,34 @@ const Home = () => {
     { name: "Breakfast", img: Breakfast },
     { name: "Lunch", img: Lunch },
     { name: "Dinner", img: Dinner },
-    { name: "Snacks", img: Snacks },
-    { name: "Desserts", img: Desserts },
+    { name: "Snack", img: Snacks },
+    { name: "Dessert", img: Desserts },
     { name: "Healthy", img: Healthy },
   ];
 
+  const [expandedFeature, setExpandedFeature] = useState(null);
+
+  const toggleFeature = (index) => {
+    setExpandedFeature(expandedFeature === index ? null : index);
+  };
+  const fetchRecipes = async () => {
+    try {
+      const query = filters.categories.length
+        ? `?category=${filters.categories.join(",")}`
+        : "";
+      const response = await fetch(`http://localhost:4000/recipe-api/recipes${query}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch recipes");
+      }
+      const data = await response.json();
+      setRecipes(data.payload || []);
+      setFilteredRecipes(data.payload || []);
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading(false);
+    }
+  };  
   return (
     <div className="homepage-container">
       {/* Background Video Section */}
@@ -39,21 +62,29 @@ const Home = () => {
       <div className="homepage-features">
         <h2 className="homepage-section-title">Why Choose disHcovery?</h2>
         <div className="homepage-feature-grid">
-          <div className="homepage-feature-card">
-            <span className="homepage-feature-icon">🤖</span>
-            <h3>AI-Powered Recipes</h3>
-            <p>Enter ingredients and let AI suggest amazing recipes!</p>
-          </div>
-          <div className="homepage-feature-card">
-            <span className="homepage-feature-icon">🌎</span>
-            <h3>Global Cuisine</h3>
-            <p>Explore dishes from different cultures and flavors.</p>
-          </div>
-          <div className="homepage-feature-card">
-            <span className="homepage-feature-icon">⚡</span>
-            <h3>Quick & Easy</h3>
-            <p>Find recipes that fit your time and taste preferences.</p>
-          </div>
+          {["AI-Powered Recipes", "Global Cuisine", "Quick & Easy", "Recipe Roulette"].map((feature, index) => (
+            <div
+              key={index}
+              className={`homepage-feature-card ${expandedFeature === index ? "expanded" : ""}`}
+              onClick={() => toggleFeature(index)}
+            >
+              <span className="homepage-feature-icon">{index === 0 ? "🤖" : index === 1 ? "🌎" : index === 2 ? "⚡" : "🎲"}</span>
+              <h3>{feature}</h3>
+              {expandedFeature === index && (
+                <div className="homepage-feature-expanded">
+                  <p className="homepage-feature-details">
+                    {index === 0 && "Enter ingredients and let AI suggest amazing recipes! Discover how our AI bot can make cooking easy."}
+                    {index === 1 && "Explore dishes from different cultures and flavors. Find traditional and modern recipes from around the world!"}
+                    {index === 2 && "Find recipes that fit your time and taste preferences. Quick, easy, and delicious!"}
+                    {index === 3 && "Not sure what to cook? Spin the Recipe Roulette and get a surprise meal idea!"}
+                  </p>
+                  <span className="homepage-feature-minimize" onClick={(e) => { e.stopPropagation(); toggleFeature(index); }}>
+                    &minus;
+                  </span>
+                </div>
+              )}
+            </div>
+          ))}
         </div>
       </div>
 
@@ -61,14 +92,14 @@ const Home = () => {
       <div className="homepage-categories">
         <h2 className="homepage-section-title">Explore Categories</h2>
         <div className="homepage-category-grid">
-          {categories.map((category, index) => (
-            <Link to={`/category/${category.name.toLowerCase()}`} className="homepage-category-card" key={index}>
-              <div className="homepage-category-circle">
-                <img src={category.img} alt={category.name} className="homepage-category-image" />
-              </div>
-              <h5 className="homepage-category-name">{category.name}</h5>
-            </Link>
-          ))}
+        {categories.map((category, index) => (
+  <Link to={`/recipes/category/${category.name.toLowerCase()}`} className="homepage-category-card" key={index}>
+    <div className="homepage-category-circle">
+      <img src={category.img} alt={category.name} className="homepage-category-image" />
+    </div>
+    <h5 className="homepage-category-name">{category.name}</h5>
+  </Link>
+))}
         </div>
       </div>
     </div>

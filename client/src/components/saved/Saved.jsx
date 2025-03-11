@@ -13,7 +13,7 @@ const SavedRecipes = () => {
 
     async function fetchSavedRecipes() {
       try {
-        const res = await fetch(`http://localhost:4000/recipe-api/saved-recipes/${currentUser.id}`);
+        const res = await fetch(`http://localhost:4000/recipe-api/saved-recipes/${currentUser._id}`);
         if (!res.ok) throw new Error("Failed to fetch saved recipes");
         const data = await res.json();
         setSavedRecipes(data.payload || []);
