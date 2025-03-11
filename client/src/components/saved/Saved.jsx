@@ -34,15 +34,15 @@ const SavedRecipes = () => {
     <div className="saved-recipes-container">
       <h2>Saved Recipes</h2>
 
-      {error && <p className="error-message">{error}</p>}
+      {error && <p className="saved-error-message">{error}</p>}
 
       {savedRecipes.length === 0 ? (
-        <p className="no-recipes">No saved recipes yet. Start saving your favorites!</p>
+        <p className="saved-no-recipes">No saved recipes yet. Start saving your favorites!</p>
       ) : (
-        <div className="recipe-grid">
+        <div className="saved-recipe-grid">
           {savedRecipes.map((recipe) => (
-            <div key={recipe._id} className="recipe-card">
-              <img src={recipe.image} alt={recipe.title} className="recipe-image" />
+            <div key={recipe._id} className="saved-recipe-card">
+              <img src={recipe.image} alt={recipe.title} className="saved-recipe-image" />
               <h3>{recipe.title}</h3>
               <Link to={`/recipe/${recipe._id}`} className="view-button">View Recipe</Link>
             </div>

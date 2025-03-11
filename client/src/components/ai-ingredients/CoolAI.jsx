@@ -1,41 +1,41 @@
-import { useState , useContext} from "react";
+import { useState, useContext } from "react";
 import { HiSparkles } from "react-icons/hi";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Tooltip, OverlayTrigger } from "react-bootstrap";
-import './CoolAI.css'
+import "./CoolAI.css";
 import { userLoginContext } from "../../contexts/UserLoginContext";
+import AccessDenied from "../protected/AccessDenied";
 
 export default function CoolAI() {
-  const {loginStatus, currentUser, setCurrentUser} = useContext(userLoginContext)
+  const { loginStatus } = useContext(userLoginContext);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-
-  const navigate = useNavigate(); 
-
+  
+  const navigate = useNavigate();
+  const location = useLocation(); 
   const handleInput = (e) => setInput(e.target.value);
 
   const handleSend = () => {
-
     if (!loginStatus) {
-      navigate('/access-denied')
+      // Store return path and redirect to login
+      sessionStorage.setItem("returnAfterLogin", location.pathname);
+      navigate("/login");
       return;
     }
 
-
-    if (input.toLowerCase() === "hi") {
-      setOpen(false); 
-      navigate("/ai-ingredients"); 
+    if (input.trim().toLowerCase() === "hi") {
+      setOpen(false);
+      navigate("/ai-ingredients");
     }
     setInput("");
   };
 
-  const handleKeyPress = (e) => {
+  const handleKeyDown = (e) => {
     if (e.key === "Enter") {
       handleSend();
     }
   };
 
-  // Tooltip content
   const renderTooltip = (props) => (
     <Tooltip id="button-tooltip" {...props} className="custom-tooltip">
       Get AI-powered recipe ideas based on your ingredients!
@@ -50,23 +50,25 @@ export default function CoolAI() {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip}
         >
-          <button
-            className="ai-but rounded-circle p-3"
-            onClick={() => setOpen(!open)}
-          >
-            <HiSparkles size={30}/>
+          <button className="ai-but rounded-circle p-3" onClick={() => setOpen(true)}>
+            <HiSparkles size={30} />
           </button>
         </OverlayTrigger>
       ) : (
         <div className="card p-4 shadow-lg" style={{ width: "22rem" }}>
-          <button
-            className="btn-close position-absolute top-0 end-0 m-2"
-            onClick={() => setOpen(false)}
-          ></button>
-          
+          <button className="btn-close position-absolute top-0 end-0 m-2" onClick={() => setOpen(false)}></button>
+
           {/* Title & Tagline */}
           <h4 className="text-center fw-bold">✨ disHcovery</h4>
           <p className="text-center text-muted">Turn your ingredients into a delicious surprise!</p>
+
+          {/* Show login warning if user is not logged in */}
+          {!loginStatus && (
+            <div className="alert alert-warning text-center" role="alert">
+              <AccessDenied compact/>
+              {/* Please <a href="/login" className="fw-bold">log in</a> to use AI recipes! */}
+            </div>
+          )}
 
           {/* Input Field */}
           <div className="d-flex align-items-center mt-3">
@@ -75,11 +77,17 @@ export default function CoolAI() {
               placeholder="Text 'hi' to get started"
               value={input}
               onChange={handleInput}
-              onKeyPress={handleKeyPress}
-              className="form-control"
-              style={{ width: "85%", textAlign: "center" }}
+              onKeyDown={handleKeyDown}
+              className="form-control text-center"
+              style={{ width: "85%" }}
+              disabled={!loginStatus}
             />
-            <button className="btn w-25 ms-2" style={{backgroundColor : "#698F3F"}} onClick={handleSend}>
+            <button
+              className="btn w-25 ms-2"
+              style={{ backgroundColor: "#698F3F" }}
+              onClick={handleSend}
+              disabled={!loginStatus}
+            >
               Send
             </button>
           </div>

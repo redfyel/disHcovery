@@ -6,7 +6,6 @@ import Recipe from './components/recipe/Recipe'
 import Login from './components/auth/Login'
 import Register from './components/auth/Register'
 import Saved from './components/saved/Saved'
-import Community from './components/community/Community'
 import RoutingError from './components/RoutingError'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
 import AccessDenied from './components/protected/AccessDenied'
@@ -66,10 +65,6 @@ function App() {
         {
           path : '/saved',
           element : <Saved />
-        },
-        {
-          path : '/community',
-          element : <Community />
         },
         {
           path : '/ai-ingredients',
