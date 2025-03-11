@@ -11,11 +11,8 @@ const Recipes = () => {
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-
   const navigate = useNavigate();
-
-
+  
  const [filters, setFilters] = useState({
     categories: [],
     mealType: [],
@@ -24,7 +21,6 @@ const Recipes = () => {
     hasVideo: false,
   });
 
-  const navigate = useNavigate();
   useEffect(() => {
     const fetchRecipes = async () => {
         try {
