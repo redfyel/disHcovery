@@ -9,12 +9,18 @@ const Footer = () => {
 
   // Random disHcovery facts
   const facts = [
-    "Did you know? disHcovery helps you discover new recipes based on ingredients you already have!",
-    "Explore the world of flavors with disHcovery and find unique dishes from various cuisines.",
-    "disHcovery is your ultimate kitchen companion, helping you create delicious meals with ease!",
-    "Did you know? disHcovery's AI Recipe Creator generates recipes based on your ingredients!",
-    "Cooking with disHcovery means never running out of meal ideas again!",
+    "Did you know? disHcovery lets you explore recipes by cuisine, meal type, and even dietary preferences!",
+    "Spin the disHcovery Recipe Roulette and save all your spun recipes for later!",
+    "With disHcovery AI, you can generate recipes by selecting ingredients, typing them in, or even uploading a photo!",
+    "Your personalized dashboard stores all your saved recipes, spins, and ingredient-based dishes in one place!",
+    "Did you know? You can get alternate ingredient suggestions for any recipe with disHcovery AI!",
+    "Use our quick search bar and smart filters to find the perfect recipe in seconds!",
+    "Like, comment, make notes, and share recipes with friends—disHcovery keeps cooking interactive!",
+    "Find essential recipe details like nutrition, allergy warnings, and step-by-step guides in every dish!",
+    "Cooking has never been easier—print your favorite recipes directly from disHcovery with a single click!",
+    "Get inspired with disHcovery and never run out of meal ideas again!"
   ];
+  
 
   // Function to handle cell click
   const handleClick = (index) => {
@@ -77,15 +83,19 @@ const Footer = () => {
     <footer className="w-full relative bg-[#0a122a] text-white py-6 px-4">
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
-        <div className="d-flex flex-column align-items-center text-xl mb-3 mb-lg-0">
-          {winner && (
-            <div className="text-lg font-semibold mb-2">
-              {winner} wins! 🎉
-              <div className="text-sm italic opacity-70 mt-1">
-                Fun Fact: {randomFact}
-              </div>
-            </div>
-          )}
+        <div className="d-flex flex-column align-items-center text-xl mb-1 mb-lg-0">
+        {winner && (
+  <div className="text-center mt-2">
+    <div className="text-2xl font-bold text-yellow-300 animate-bounce">
+      {winner} wins! 🎉
+    </div>
+    <div className="text-sm italic text-gray-200 bg-gray-900/70 backdrop-blur-md p-3 rounded-lg mt-0 shadow-lg animate-fade-in">
+  🌟 Fun Fact: <span className="font-semibold text-white">{randomFact}</span>
+</div>
+
+  </div>
+)}
+
 
           <div className="tic-tac-toe-grid">
             {/* Tic-Tac-Toe grid */}
@@ -159,6 +169,21 @@ const Footer = () => {
 
       {/* Keyframe Animations and Styles */}
       <style>{`
+      @keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.8s ease-in-out;
+}
+
         @keyframes wiggle {
           0%,
           100% {
@@ -197,8 +222,6 @@ footer::after {
   display: block;
   clear: both;
 }
-
-
 
         .cell {
           display: flex;
