@@ -124,7 +124,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
       <div className="modal-dialog modal-dialog-centered">
         <div
           className="modal-content p-4"
-          style={{ backgroundColor: "#FBFAF8", color: "#0A122A" }}
+          style={{ backgroundColor: "#F8F6F1", color: "#0A122A" }}
         >
           <button
             onClick={onClose}
@@ -142,7 +142,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
           )}
 
           <div className="text-center mb-3">
-            <FaUtensils size={40} color="#804E49" />
+            <FaUtensils size={40} color="#0A122A" />
             {selectedRecipe ? (
               <>
                 <h1 className="mt-2" style={{ color: "#698F3F" }}>
@@ -183,7 +183,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
                       : r.title,
                 }))}
                 onStopSpinning={handleStopSpinning}
-                outerBorderColor="#804E49"
+                outerBorderColor="#0A122A"
                 outerBorderWidth={8}
                 innerBorderColor="#698F3F"
                 radiusLineColor="#fff"
@@ -202,7 +202,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
               onClick={handleSpinClick}
               className="btn w-100 mt-4"
               style={{
-                backgroundColor: "#804E49",
+                backgroundColor: "#0A122A",
                 color: "#FBFAF8",
                 fontSize: "20px",
                 padding: "10px",
@@ -228,8 +228,8 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
                 onClick={handleSpinClick}
                 className="btn w-100 mt-2"
                 style={{
-                  backgroundColor: "#E7DECD",
-                  color: "#0A122A",
+                  backgroundColor: "#0A122A",
+                  color: "#F8F6F1",
                   fontSize: "18px",
                   padding: "10px",
                 }}
