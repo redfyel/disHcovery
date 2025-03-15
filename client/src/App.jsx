@@ -49,11 +49,6 @@ function App() {
               path : '/register',
               element : <Register />
             },
-       
-        {
-          path: '/recipe',
-          element: <Recipe /> 
-        },
         {
           path : '/recipe/:title',
           element : <Recipe/>

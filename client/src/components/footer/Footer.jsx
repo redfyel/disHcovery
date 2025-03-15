@@ -18,9 +18,8 @@ const Footer = () => {
     "Like, comment, make notes, and share recipes with friends—disHcovery keeps cooking interactive!",
     "Find essential recipe details like nutrition, allergy warnings, and step-by-step guides in every dish!",
     "Cooking has never been easier—print your favorite recipes directly from disHcovery with a single click!",
-    "Get inspired with disHcovery and never run out of meal ideas again!"
+    "Get inspired with disHcovery and never run out of meal ideas again!",
   ];
-  
 
   // Function to handle cell click
   const handleClick = (index) => {
@@ -84,18 +83,17 @@ const Footer = () => {
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
         <div className="d-flex flex-column align-items-center text-xl mb-1 mb-lg-0">
-        {winner && (
-  <div className="text-center mt-2">
-    <div className="text-2xl font-bold text-yellow-300 animate-bounce">
-      {winner} wins! 🎉
-    </div>
-    <div className="text-sm italic text-gray-200 bg-gray-900/70 backdrop-blur-md p-3 rounded-lg mt-0 shadow-lg animate-fade-in">
-  🌟 Fun Fact: <span className="font-semibold text-white">{randomFact}</span>
-</div>
-
-  </div>
-)}
-
+          {winner && (
+            <div className="text-center mt-2">
+              <div className="text-2xl font-bold text-yellow-300 animate-bounce">
+                {winner} wins! 🎉
+              </div>
+              <div className="text-sm italic text-gray-200 bg-gray-900/70 backdrop-blur-md p-3 rounded-lg mt-0 shadow-lg animate-fade-in">
+                🌟 Fun Fact:{" "}
+                <span className="font-semibold text-white">{randomFact}</span>
+              </div>
+            </div>
+          )}
 
           <div className="tic-tac-toe-grid">
             {/* Tic-Tac-Toe grid */}
@@ -103,8 +101,9 @@ const Footer = () => {
               <div
                 key={index}
                 onClick={() => handleClick(index)}
-                className={`cell ${cell ? "filled" : ""} ${index === 0 ? "no-top no-left no-bottom no-right" : ""
-                  }
+                className={`cell ${cell ? "filled" : ""} ${
+                  index === 0 ? "no-top no-left no-bottom no-right" : ""
+                }
                  ${index === 1 ? "no-top no-bottom " : ""}
                  ${index === 2 ? "no-top no-left no-bottom no-right" : ""}
                  ${index === 3 ? " no-left no-right" : ""}
@@ -155,7 +154,7 @@ const Footer = () => {
             <a href="#" className="link">
               Explore
             </a>
-            <Link to='/recipes' className="link">
+            <Link to="/recipes" className="link">
               Recipes
             </Link>
           </div>
@@ -169,20 +168,20 @@ const Footer = () => {
 
       {/* Keyframe Animations and Styles */}
       <style>{`
-      @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
+        @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
   }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
-}
 
-.animate-fade-in {
-  animation: fade-in 0.8s ease-in-out;
-}
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-in-out;
+  }
 
         @keyframes wiggle {
           0%,
@@ -202,26 +201,26 @@ const Footer = () => {
           animation: wiggle 1.5s infinite ease-in-out;
         }
 
-.tic-tac-toe-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 60px);
-  grid-template-rows: repeat(3, 60px);
-  gap: 4px;
-  background-color:  #0a122a; 
-  transform: rotate(-5deg);
-  margin-top: 20px;
-}
-footer {
-  position: relative;
-  z-index: 10; 
-  background-color: #0a122a !important;
-}
+        .tic-tac-toe-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 60px);
+          grid-template-rows: repeat(3, 60px);
+          gap: 4px;
+          background-color:  #0a122a; 
+          transform: rotate(-5deg);
+          margin-top: 20px;
+        }
+        footer {
+          position: relative;
+          z-index: 10; 
+          background-color: #0a122a !important;
+        }
 
-footer::after {
-  content: "";
-  display: block;
-  clear: both;
-}
+        footer::after {
+          content: "";
+          display: block;
+          clear: both;
+        }
 
         .cell {
           display: flex;

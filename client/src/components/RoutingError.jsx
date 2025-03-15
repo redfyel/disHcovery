@@ -14,7 +14,7 @@ export default function RoutingError() {
       style={{ backgroundColor: "#F8F6F1" }}
     >
       <div className="position-relative d-flex flex-column align-items-center justify-content-center">
-        {/* Fork & Spoon - Positioned just outside the plate */}
+        {/* Fork & Spoon  */}
         <GiKnifeFork
           size={70}
           color="#698F3F"
