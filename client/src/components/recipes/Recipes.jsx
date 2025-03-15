@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
 import Loading from "../loading/Loading"; // Import the Loading Component
 import "./Recipes.css";
 
 const Recipes = () => {
+  const { category } = useParams(); 
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,23 +23,37 @@ const Recipes = () => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/recipe-api/recipes");
-        if (!response.ok) {
-          throw new Error("Failed to fetch recipes");
-        }
-        const data = await response.json();
+        try {
+            let url = "http://localhost:4000/recipe-api/recipes";
+            if (category) {
+                url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+            }
 
-        setRecipes(data.payload || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
+            //console.log("Fetching recipes from:", url);
+
+            const response = await fetch(url);
+            // console.log("Response status:", response.status);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch recipes. Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            // console.log("Fetched recipes data:", data);
+
+            setRecipes(data.payload || []);
+            setFilteredRecipes(data.payload || []);
+        } catch (err) {
+            console.error("Error fetching recipes:", err.message);
+            setError(err.message);
+        } finally {
+            setLoading(false);
+        }
     };
 
     fetchRecipes();
-  }, []);
+}, [category]);
+
 
   useEffect(() => {
     const filterRecipes = () => {

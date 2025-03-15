@@ -10,9 +10,9 @@ export default function CoolAI() {
   const { loginStatus } = useContext(userLoginContext);
   const [open, setOpen] = useState(false);
   const [input, setInput] = useState("");
-  
+
   const navigate = useNavigate();
-  const location = useLocation(); 
+  const location = useLocation();
   const handleInput = (e) => setInput(e.target.value);
 
   const handleSend = () => {
@@ -50,26 +50,41 @@ export default function CoolAI() {
           delay={{ show: 250, hide: 400 }}
           overlay={renderTooltip}
         >
-          <button className="ai-but rounded-circle p-3" onClick={() => setOpen(true)}>
-            <HiSparkles size={30} />
+          <button
+            className="ai-but rounded-circle p-3"
+            onClick={() => setOpen(true)}
+          >
+            <HiSparkles size={30} color="#0A122A" /> {/* Dark icon */}
           </button>
         </OverlayTrigger>
       ) : (
-        <div className="card p-4 shadow-lg" style={{ width: "22rem" }}>
-          <button className="btn-close position-absolute top-0 end-0 m-2" onClick={() => setOpen(false)}></button>
-
+        <div
+          className="card p-4 shadow-lg"
+          style={{
+            width: "22rem",
+            backgroundColor: "#FBFAF8", /* Light background */
+            color: "#0A122A", /* Dark text */
+          }}
+        >
+          <button
+            className="btn-close position-absolute top-0 end-0 m-2"
+            onClick={() => setOpen(false)}
+            style={{ color: "#0A122A" }}
+          ></button>
           {/* Title & Tagline */}
-          <h4 className="text-center fw-bold">✨ disHcovery</h4>
-          <p className="text-center text-muted">Turn your ingredients into a delicious surprise!</p>
-
+          <h4 className="text-center fw-bold" style={{ color: "#0A122A" }}>
+            ✨ disHcovery
+          </h4>
+          <p className="text-center text-muted" style={{ color: "#698F3F" }}>
+            Turn your ingredients into a delicious surprise!
+          </p>
           {/* Show login warning if user is not logged in */}
           {!loginStatus && (
-            <div className="alert alert-warning text-center" role="alert">
-              <AccessDenied compact/>
+            <div className="alert alert-warning text-center" role="alert" style={{ backgroundColor: "#E7DECD", color: "#0A122A"}}>
+              <AccessDenied compact />
               {/* Please <a href="/login" className="fw-bold">log in</a> to use AI recipes! */}
             </div>
           )}
-
           {/* Input Field */}
           <div className="d-flex align-items-center mt-3">
             <input
@@ -79,12 +94,17 @@ export default function CoolAI() {
               onChange={handleInput}
               onKeyDown={handleKeyDown}
               className="form-control text-center"
-              style={{ width: "85%" }}
+              style={{
+                width: "85%",
+                backgroundColor: "#F8F6F1",
+                color: "#0A122A",
+                borderColor: "#E7DECD"
+              }}
               disabled={!loginStatus}
             />
             <button
               className="btn w-25 ms-2"
-              style={{ backgroundColor: "#698F3F" }}
+              style={{ backgroundColor: "#698F3F", color: "#FBFAF8" }}
               onClick={handleSend}
               disabled={!loginStatus}
             >

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import logo from "../../assets/images/logoo.png"; 
 
 const Footer = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
@@ -9,11 +10,16 @@ const Footer = () => {
 
   // Random disHcovery facts
   const facts = [
-    "Did you know? disHcovery helps you discover new recipes based on ingredients you already have!",
-    "Explore the world of flavors with disHcovery and find unique dishes from various cuisines.",
-    "disHcovery is your ultimate kitchen companion, helping you create delicious meals with ease!",
-    "Did you know? disHcovery's AI Recipe Creator generates recipes based on your ingredients!",
-    "Cooking with disHcovery means never running out of meal ideas again!",
+    "Did you know? disHcovery lets you explore recipes by cuisine, meal type, and even dietary preferences!",
+    "Spin the disHcovery Recipe Roulette and save all your spun recipes for later!",
+    "With disHcovery AI, you can generate recipes by selecting ingredients, typing them in, or even uploading a photo!",
+    "Your personalized dashboard stores all your saved recipes, spins, and ingredient-based dishes in one place!",
+    "Did you know? You can get alternate ingredient suggestions for any recipe with disHcovery AI!",
+    "Use our quick search bar and smart filters to find the perfect recipe in seconds!",
+    "Like, comment, make notes, and share recipes with friends—disHcovery keeps cooking interactive!",
+    "Find essential recipe details like nutrition, allergy warnings, and step-by-step guides in every dish!",
+    "Cooking has never been easier—print your favorite recipes directly from disHcovery with a single click!",
+    "Get inspired with disHcovery and never run out of meal ideas again!",
   ];
 
   // Function to handle cell click
@@ -77,12 +83,15 @@ const Footer = () => {
     <footer className="w-full relative bg-[#0a122a] text-white py-6 px-4">
       <div className="container d-flex justify-content-between items-center flex-wrap">
         {/* Left Side: Food Tic-Tac-Toe */}
-        <div className="d-flex flex-column align-items-center text-xl mb-3 mb-lg-0">
+        <div className="d-flex flex-column align-items-center text-xl mb-1 mb-lg-0">
           {winner && (
-            <div className="text-lg font-semibold mb-2">
-              {winner} wins! 🎉
-              <div className="text-sm italic opacity-70 mt-1">
-                Fun Fact: {randomFact}
+            <div className="text-center mt-2">
+              <div className="text-2xl font-bold text-yellow-300 animate-bounce">
+                {winner} wins! 🎉
+              </div>
+              <div className="text-sm italic text-gray-200 bg-gray-900/70 backdrop-blur-md p-3 rounded-lg mt-0 shadow-lg animate-fade-in">
+                🌟 Fun Fact:{" "}
+                <span className="font-semibold text-white">{randomFact}</span>
               </div>
             </div>
           )}
@@ -93,8 +102,9 @@ const Footer = () => {
               <div
                 key={index}
                 onClick={() => handleClick(index)}
-                className={`cell ${cell ? "filled" : ""} ${index === 0 ? "no-top no-left no-bottom no-right" : ""
-                  }
+                className={`cell ${cell ? "filled" : ""} ${
+                  index === 0 ? "no-top no-left no-bottom no-right" : ""
+                }
                  ${index === 1 ? "no-top no-bottom " : ""}
                  ${index === 2 ? "no-top no-left no-bottom no-right" : ""}
                  ${index === 3 ? " no-left no-right" : ""}
@@ -123,9 +133,7 @@ const Footer = () => {
 
         {/* Right Side: disHcovery Links and Copyright */}
         <div className="d-flex flex-column align-items-center text-center">
-          <h2 className="text-2xl font-extrabold tracking-wide drop-shadow-lg mb-3">
-            🍽️ disHcovery
-          </h2>
+        <img src={logo} alt="Dishcovery Logo" style={{ width: '250px', height: 'auto', filter: 'brightness(1.1)' }}/>
           <p className="text-sm mb-2">Discover, Create, Savor!</p>
 
           {/* Animated Ingredients */}
@@ -145,7 +153,7 @@ const Footer = () => {
             <a href="#" className="link">
               Explore
             </a>
-            <Link to='/recipes' className="link">
+            <Link to="/recipes" className="link">
               Recipes
             </Link>
           </div>
@@ -159,6 +167,21 @@ const Footer = () => {
 
       {/* Keyframe Animations and Styles */}
       <style>{`
+        @keyframes fade-in {
+    from {
+      opacity: 0;
+      transform: translateY(10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fade-in {
+    animation: fade-in 0.8s ease-in-out;
+  }
+
         @keyframes wiggle {
           0%,
           100% {
@@ -177,28 +200,26 @@ const Footer = () => {
           animation: wiggle 1.5s infinite ease-in-out;
         }
 
-.tic-tac-toe-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 60px);
-  grid-template-rows: repeat(3, 60px);
-  gap: 4px;
-  background-color:  #0a122a; 
-  transform: rotate(-5deg);
-  margin-top: 20px;
-}
-footer {
-  position: relative;
-  z-index: 10; 
-  background-color: #0a122a !important;
-}
+        .tic-tac-toe-grid {
+          display: grid;
+          grid-template-columns: repeat(3, 60px);
+          grid-template-rows: repeat(3, 60px);
+          gap: 4px;
+          background-color:  #0a122a; 
+          transform: rotate(-5deg);
+          margin-top: 20px;
+        }
+        footer {
+          position: relative;
+          z-index: 10; 
+          background-color: #0a122a !important;
+        }
 
-footer::after {
-  content: "";
-  display: block;
-  clear: both;
-}
-
-
+        footer::after {
+          content: "";
+          display: block;
+          clear: both;
+        }
 
         .cell {
           display: flex;
@@ -234,7 +255,7 @@ footer::after {
           left: 50;
           bottom: 50;
           padding: 8px;
-          background-color: rgba(230, 203, 203, 0.3);
+          background-color:#698F3F;
           color: white;
           font-size: 0.9rem;
           border: none;
@@ -259,7 +280,7 @@ footer::after {
         }
 
         .link:hover {
-          color: #ffcc00;
+          color: #698F3F;
         }
       `}</style>
     </footer>

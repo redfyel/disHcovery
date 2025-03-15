@@ -1,4 +1,5 @@
 const express = require('express');
+const { ObjectId } = require("mongodb");
 
 let recipesApp = express.Router();
 
@@ -63,22 +64,24 @@ recipesApp.get('/recipe/:title', async (req, res) => {
 
 // fetch saved recipes
 recipesApp.get("/saved-recipes/:userId", async (req, res) => {
-    const { userId } = req.params;
-    const usersCollection = req.app.get('usersCollection')
     try {
-      // Find the user and populate saved recipes
-      const user = await usersCollection.findById(userId).populate("savedRecipes");
-  
-      if (!user) {
-        return res.status(404).json({ success: false, message: "User not found" });
-      }
-  
-      res.status(200).json({ success: true, payload: user.savedRecipes });
+        const { userId } = req.params;
+        const usersCollection = req.app.get('usersCollection');
+
+        // Find the user
+        const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+        if (!user) {
+            return res.status(404).json({ success: false, message: "User not found" });
+        }
+
+        // Return the saved recipes from the user object
+        res.status(200).json({ success: true, payload: user.recipes || [] });
     } catch (error) {
-      console.error("Error fetching saved recipes:", error);
-      res.status(500).json({ success: false, message: "Internal Server Error" });
+        console.error("Error fetching saved recipes:", error);
+        res.status(500).json({ success: false, message: "Internal Server Error" });
     }
-  });
+});
 
 
 // save a recipe
@@ -110,5 +113,31 @@ recipesApp.post("/save-recipe", async (req, res) => {
         res.status(500).json({ error: "Failed to save recipe", details: error.message });
     }
 });
+// fetch recipes by category
+// Fetch recipes by category (case-insensitive, partial match)
+recipesApp.get("/recipes/category/:category", async (req, res) => {
+    try {
+        const recipesCollection = req.app.get("recipesCollection");
+        const category = req.params.category.trim();
+        // console.log("Fetching recipes for category:", category);
+
+        // Query to match category as a part of mealType (case-insensitive)
+        const recipes = await recipesCollection.find({
+            mealType: { $regex: new RegExp(`\\b${category}\\b`, "i") }
+        }).toArray();
+
+        if (recipes.length === 0) {
+            // console.log("No recipes found for category:", category);
+            return res.status(404).json({ message: "No recipes found for this category." });
+        }
+
+        res.status(200).json({ payload: recipes });
+    } catch (error) {
+        // console.error("Error fetching recipes by category:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 
 module.exports = recipesApp;
