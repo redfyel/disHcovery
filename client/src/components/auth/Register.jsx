@@ -18,7 +18,8 @@ function Register() {
       let data = await res.json();
       
       if (data.message === "user created") {
-        onRegisterSuccess();
+        //onRegisterSuccess();
+        navigate("/login")
       } else {
         setErr(data.message);
       }

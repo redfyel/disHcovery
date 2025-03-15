@@ -15,7 +15,9 @@ function Login() {
 
   function userLogin(userCred) {
     console.log("User Logged In", userCred);
+    
     onLogin(userCred);
+    navigate("/dashboard");
   }
 
   return (
