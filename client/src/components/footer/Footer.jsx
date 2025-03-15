@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
 import { Link } from "react-router-dom";
+import logo from "../../assets/images/logoo.png"; 
 
 const Footer = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
@@ -132,9 +133,7 @@ const Footer = () => {
 
         {/* Right Side: disHcovery Links and Copyright */}
         <div className="d-flex flex-column align-items-center text-center">
-          <h2 className="text-2xl font-extrabold tracking-wide drop-shadow-lg mb-3">
-            🍽️ disHcovery
-          </h2>
+        <img src={logo} alt="Dishcovery Logo" style={{ width: '250px', height: 'auto', filter: 'brightness(1.1)' }}/>
           <p className="text-sm mb-2">Discover, Create, Savor!</p>
 
           {/* Animated Ingredients */}
@@ -256,7 +255,7 @@ const Footer = () => {
           left: 50;
           bottom: 50;
           padding: 8px;
-          background-color: rgba(230, 203, 203, 0.3);
+          background-color:#698F3F;
           color: white;
           font-size: 0.9rem;
           border: none;
@@ -281,7 +280,7 @@ const Footer = () => {
         }
 
         .link:hover {
-          color: #ffcc00;
+          color: #698F3F;
         }
       `}</style>
     </footer>
