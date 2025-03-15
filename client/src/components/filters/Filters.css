@@ -1,31 +1,35 @@
-/* 🌟 General Filter Container */
 .filter-container {
   background: #FBFAF8;
-  padding: 20px;
+  padding: 10px;
   border-radius: 10px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
   max-width: 100%;
   width: 100%;
-  margin: 30px auto;
   border: none;
   transition: transform 0.3s ease-in-out;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  top: 0px;
 }
 
 .filter-container:hover {
   transform: translateY(-5px);
 }
 
-.filter-container h2 {
-  text-align: center;
-  font-size: 1.9rem;
-  color: #0A122A;
-  margin-bottom: 20px;
+.filters-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 5%;
 }
 
-/* 🔹 Each Filter Section */
 .filter-section {
   margin-bottom: 25px;
 }
+
 
 .filter-section h3 {
   font-size: 1.2rem;
@@ -37,14 +41,24 @@
   letter-spacing: 0.7px;
 }
 
-/* 🔸 Filter Options Layout */
+
+/* ✅ Custom HR Styling */
+.custom-hr {
+  border: none;
+  border-top: 1.6px solid #0A122A; /* Dark line color */
+  width: 90%;
+  text-align: center;
+  align-self:center; /* Force HR to stretch in the flex container */
+  margin: 15px 0;
+}
+
+
 .filter-options {
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
 }
 
-/* ✅ Filter Buttons (Used for Categories & Cuisines) */
 .filter-button {
   background-color: #F8F6F1;
   border: 1px solid #698F3F;
@@ -57,43 +71,108 @@
   outline: none;
 }
 
+
 .filter-button.selected {
   background-color: #698F3F;
   color: white;
 }
+
+
 .filter-button.selected:hover {
   background-color: #698F3F;
   color: white;
 }
 
 .filter-button:hover {
-  background-color: rgb(105, 143, 63,0.5);
- 
+  background-color: rgba(105, 143, 63, 0.5);
 }
 
-/* 🥗 Radio & Checkbox Inputs */
 .filter-option {
   display: flex;
   align-items: center;
-  gap: 25px;
+  gap: 10px;
   margin-bottom: 10px;
   font-size: 0.9rem;
   border-radius: 20px;
   padding: 5px 8px;
   cursor: pointer;
   color: #0A122A;
-  /* border: 2px solid #0A122A; */
   background-color: #F8F6F1;
   transition: 0.3s;
 }
-/* Override default focus styles to remove blue outline */
-.filter-option input[type="radio"]:focus,
-.filter-option input[type="checkbox"]:focus {
-    outline: none;
-    box-shadow: none; /* Remove any default focus box-shadow */
+
+/* ✅ Custom Radio Buttons */
+.filter-option input[type="radio"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #698F3F;
+  border-radius: 50%;
+  outline: none;
+  transition: 0.3s;
+  position: relative;
+  cursor: pointer;
 }
 
-/* 🎥 Video Toggle Switch */
+.filter-option input[type="radio"]:checked {
+  background-color: #698F3F;
+  border-color: #698F3F;
+}
+
+.filter-option input[type="radio"]::before {
+  content: "";
+  width: 8px;
+  height: 8px;
+  background-color: white;
+  border-radius: 50%;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.filter-option input[type="radio"]:checked::before {
+  display: block;
+}
+
+/* ✅ Custom Checkbox */
+.filter-option input[type="checkbox"] {
+  appearance: none;
+  width: 16px;
+  height: 16px;
+  border: 2px solid #698F3F;
+  border-radius: 4px;
+  outline: none;
+  transition: 0.3s;
+  position: relative;
+  cursor: pointer;
+}
+
+.filter-option input[type="checkbox"]:checked {
+  background-color: #698F3F;
+  border-color: #698F3F;
+}
+
+.filter-option input[type="checkbox"]::before {
+  content: "✓";
+  font-size: 10px;
+  color: #FBFAF8;
+  font-weight: bold;
+  position: absolute;
+  align-items: center;
+  justify-content: center;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: none;
+}
+
+.filter-option input[type="checkbox"]:checked::before {
+  display: block;
+}
+
+/* ✅ Toggle Switch */
 .toggle-switch {
   position: relative;
   display: inline-block;
@@ -131,6 +210,7 @@
   transition: 0.3s;
 }
 
+
 input:checked + .slider {
   background-color: #698F3F;
 }
@@ -139,11 +219,16 @@ input:checked + .slider:before {
   transform: translateX(25px);
 }
 
-/* 📱 Responsive Design */
-@media (max-width: 500px) {
+
+/* ✅ Responsive Design */
+@media (max-width: 768px) {
+  .filters-wrapper {
+    flex-direction: column;
+    align-items: center;
+  }
+
   .filter-container {
-    max-width: 90%;
-    padding: 15px;
+    top: 0;
   }
 
   .filter-container h2 {
@@ -158,5 +243,4 @@ input:checked + .slider:before {
     font-size: 0.9rem;
     padding: 8px 10px;
   }
-  
 }
