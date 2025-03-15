@@ -1,21 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate,useParams } from "react-router-dom";
 import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
+import Loading from "../loading/Loading"; // Import the Loading Component
 import "./Recipes.css";
 
-
 const Recipes = () => {
+  const { category } = useParams(); 
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-
   const navigate = useNavigate();
 
-
- const [filters, setFilters] = useState({
+  const [filters, setFilters] = useState({
     categories: [],
     mealType: [],
     cuisine: [],
@@ -23,55 +21,59 @@ const Recipes = () => {
     hasVideo: false,
   });
 
-
   useEffect(() => {
     const fetchRecipes = async () => {
-      try {
-        const response = await fetch("http://localhost:4000/recipe-api/recipes");
-        if (!response.ok) {
-          throw new Error("Failed to fetch recipes");
+        try {
+            let url = "http://localhost:4000/recipe-api/recipes";
+            if (category) {
+                url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+            }
+
+            //console.log("Fetching recipes from:", url);
+
+            const response = await fetch(url);
+            // console.log("Response status:", response.status);
+
+            if (!response.ok) {
+                throw new Error(`Failed to fetch recipes. Status: ${response.status}`);
+            }
+
+            const data = await response.json();
+            // console.log("Fetched recipes data:", data);
+
+            setRecipes(data.payload || []);
+            setFilteredRecipes(data.payload || []);
+        } catch (err) {
+            console.error("Error fetching recipes:", err.message);
+            setError(err.message);
+        } finally {
+            setLoading(false);
         }
-        const data = await response.json();
-
-
-        setRecipes(data.payload || []);
-      } catch (err) {
-        setError(err.message);
-      } finally {
-        setLoading(false);
-      }
     };
 
-
     fetchRecipes();
-  }, []);
+}, [category]);
 
 
   useEffect(() => {
     const filterRecipes = () => {
       if (!recipes) return [];
 
-
       return recipes.filter((recipe) => {
-          const matchesCategories =
+        const matchesCategories =
           !filters?.categories?.length || filters?.categories?.includes(recipe.category);
-
 
         const matchesMealType =
           !filters?.mealType?.length || filters?.mealType?.includes(recipe.mealType);
 
-
         const matchesCuisine =
           !filters?.cuisine?.length || filters?.cuisine?.includes(recipe.cuisine);
-
 
         const matchesDietFilters =
           !filters?.dietFilters?.length ||
           recipe.dietFilters?.some((diet) => filters?.dietFilters?.includes(diet));
 
-
         const matchesVideo = !filters.hasVideo || recipe.videoURL;
-
 
         return (
           matchesCategories &&
@@ -83,23 +85,18 @@ const Recipes = () => {
       });
     };
 
-
     setFilteredRecipes(filterRecipes());
   }, [recipes, filters]);
 
-
-
-
-
-
-  if (loading) return <div className="loading">Loading recipes...</div>;
+  if (loading) return <Loading />;
   if (error) return <div className="error">{error}</div>;
-
 
   return (
     <div className="recipes-page">
-      <h1 className="recipes-title">Discover Delicious Recipes</h1>
-
+      <div className="recipes-header d-flex justify-content-between align-items-center">
+        <h1 className="recipes-title">Discover Delicious Recipes</h1>
+        <h2 className="filters-title">Taste Tuner</h2>
+      </div>
 
       <div className="recipes-container">
         <div className="recipes-content">
@@ -114,9 +111,7 @@ const Recipes = () => {
                   .replace(/[^a-z0-9]+/g, "-")
                   .replace(/^-+|-+$/g, "");
 
-
                 const encodedTitle = encodeURIComponent(sanitizedTitle);
-
 
                 return (
                   <div key={recipe._id} className="recipe-card">
@@ -126,7 +121,7 @@ const Recipes = () => {
                       onClick={() => navigate(`/recipe/${encodedTitle}`)}
                       className="get-cooking-button"
                     >
-                     <PiCookingPotLight size={17}/> Get Cooking!
+                      <PiCookingPotLight size={17} /> Get Cooking!
                     </button>
                   </div>
                 );
@@ -137,13 +132,11 @@ const Recipes = () => {
           </div>
         </div>
         <div className="filters-column">
-        <h2>Filters</h2>
           <Filters onFilterChange={setFilters} />
         </div>
       </div>
     </div>
   );
 };
-
 
 export default Recipes;

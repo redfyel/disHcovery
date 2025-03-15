@@ -1,7 +1,7 @@
 /* Tooltip Background */
 .tooltip-inner {
     background-color: #698F3F !important; 
-    color: white !important;
+    color: #fbfaf8 !important;
     padding: 8px 12px;
     border-radius: 5px;
     font-size: 14px;

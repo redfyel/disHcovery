@@ -4,7 +4,7 @@
   max-width: 900px;
   margin: 20px auto;
   padding: 20px;
-  background-color: #f9f9f9;
+  background-color: #F0ECE5;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   position: relative; 
@@ -38,13 +38,13 @@
 }
 
 .chat-bubble.ai {
-  background-color: #e2f0ff;
-  color: #333;
+  background-color: #698F3F;
+  color: #FBFAF8;
   align-self: flex-start;
 }
 
 .chat-bubble.user {
-  background-color: #d4edda;
+  background-color: #FBFAF8;
   color: #333;
   align-self: flex-end;
 }
@@ -67,6 +67,7 @@
 
 /* Ingredient Selection Styles */
 .ingredient-selection {
+  margin-top: 10px;
   position: relative;
   width: 100%;
 }
@@ -89,7 +90,7 @@
 }
 
 .arrow-btn:hover {
-  color: #007bff;
+  color: #698F3F;
 }
 
 #category-card.category-card {
@@ -112,10 +113,11 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  background-color: #f0f0f0;
+  background-color: #FBFAF8;
   border-radius: 10px;
   padding: 10px;
   text-align: center;
+  border: 1px solid #698F3F;;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -126,8 +128,8 @@
 }
 
 .ingredient-card.selected {
-  background-color: #cce5ff;
-  border: 2px solid #007bff;
+  background-color: rgb(105, 143, 63, 0.5);
+  border: 2px solid #698F3F;
 }
 
 .ingredient-image {
@@ -150,8 +152,8 @@
 
 .toggle-edit-btn {
   background-color: #fff;
-  color: #007bff;
-  border: 1px solid #007bff;
+  color: #698F3F;
+  border: 1px solid #698F3F;
   border-radius: 5px;
   padding: 5px 10px;
   cursor: pointer;
@@ -159,7 +161,7 @@
 }
 
 .toggle-edit-btn:hover {
-  background-color: #007bff;
+  background-color:rgb(105, 143, 63, 0.5);
   color: #fff;
 }
 
@@ -173,7 +175,8 @@
 .ingredient-item {
   display: flex;
   align-items: center;
-  background-color: #fff;
+  background-color: #F8F6F1;
+  border: 1px solid #698F3F;
   border-radius: 8px;
   padding: 8px 12px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
@@ -191,10 +194,10 @@
   width: 30px;
   height: 30px;
   border-radius: 50%;
-  background-color: #ddd;
+  background-color: #F8F6F1;
   color: #666;
   display: flex;
-  border: 1px solid #000;
+  border: 1px solid #698F3F;
   justify-content: center;
   align-items: center;
   font-size: 1.2em;
@@ -218,7 +221,7 @@
   border-radius: 5px 0 0 5px;
   font-size: 16px;
   color: #333;
-  background-color: rgb(176, 104, 104); 
+  /* background-color:rgb(105, 143, 63, 0.5)!important;   */
 }
 .inp-bar::placeholder {
   color: #555; 
@@ -227,7 +230,7 @@
 
 
 .add-btn {
-  background-color: #28a745;
+  background-color: #698F3F;
   color: white;
   border: none;
   padding: 10px 15px;
@@ -236,13 +239,9 @@
   transition: background-color 0.3s;
 }
 
-.add-btn:hover {
-  background-color: #218838;
-}
-
 /* Fetch Recipes Button Styles */
 #generate-recipes-button.fetch-btn {
-  background-color: #007bff;
+  background-color: #698F3F;
   color: white;
   border: none;
   padding: 12px 20px;
@@ -254,7 +253,7 @@
 }
 
 #generate-recipes-button.fetch-btn:hover {
-  background-color: #0056b3;
+  background-color: #698F3F;
   transform: translateY(-2px);
 }
 
@@ -267,19 +266,24 @@
 .formatted-recipe {
   padding: 15px;
   text-align: left;
+  color: #F0ECE5;
+  background-color: #0A122A;
+  border-radius: 10px;
 }
 
 .formatted-recipe h3 {
   font-size: 1.5em;
   margin-bottom: 10px;
-  color: #28a745;
+  color: #F0ECE5;
+  text-align: center;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .formatted-recipe h4 {
   font-size: 1.1em;
   margin-top: 15px;
   margin-bottom: 5px;
-  color: #555;
+  color: #698F3F;
 }
 
 .formatted-recipe .ingredients ul,
@@ -290,7 +294,7 @@
 .formatted-recipe .ingredients li,
 .formatted-recipe .instructions li {
   line-height: 1.7;
-  color: #666;
+  color: #F0ECE5;
 }
 
 .formatted-recipe .recipe-actions {
@@ -308,24 +312,26 @@
 }
 
 .formatted-recipe .recipe-actions .save-recipe-btn {
-  background-color: #28a745;
+  background-color: #0A122A;
   color: white;
+  border: 1px solid #698F3F;
 }
 
 .formatted-recipe .recipe-actions .save-recipe-btn:hover {
-  background-color: #218838;
+  background-color: #698F3F;
 }
 
 .formatted-recipe .recipe-actions .back-btn {
-  background-color: #007bff;
+  background-color: #0A122A;
   color: white;
+  border: 1px solid #698F3F;
 }
 
 .formatted-recipe .recipe-actions .back-btn:hover {
-  background-color: #0056b3;
+  background-color: #698F3F;
 }
 
-/* Loading Spinner Styles */
+/* Loading Spinner Styles
 #loading-spinner-container.loading-spinner {
   position: absolute;
   top: 50%;
@@ -338,7 +344,7 @@
 }
 
 #loading-message {
-  /* margin-top: 5px; */
+  /* margin-top: 5px;
   font-size: 0.8em;
   color: #777;
 }
@@ -351,7 +357,7 @@
   height: 50px;
   animation: spin 2s linear infinite;
   margin-bottom: 10px;
-}
+} */
 
 @keyframes spin {
   0% { transform: rotate(0deg); }

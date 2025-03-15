@@ -3,12 +3,22 @@
   text-align: center;
 }
 
-
-.recipes-title {
-  font-size: 2rem;
+.recipes-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  padding: 0 5%;
   margin-bottom: 20px;
 }
 
+.recipes-title {
+  font-size: 1.8rem;
+  color: #0A122A;
+  margin: 0 auto;  
+  text-align: center;
+  flex: 1; 
+}
 
 .recipes-container {
   display: flex;
@@ -16,52 +26,46 @@
   justify-content: center;
 }
 
-
 .recipes-content {
   flex: 3;
 }
 
-
 .recipe-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Increased min-width for better image display */
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
   gap: 20px;
 }
 
-
 .recipe-card {
-  background: #fff;
-  padding: 10px; /* Reduced padding */
+  background: #FBFAF8;
+  padding: 10px; 
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   text-align: center;
 }
 
-
 .recipe-image {
   width: 100%;
-  height: 240px; /* Increased image height */
+  height: 240px; 
   object-fit: cover;
   border-radius: 8px;
 }
 
-
 .recipe-name {
   font-size: 1.15rem;
-  margin: 8px 0; /* Adjusted spacing */
+  margin: 8px 0; 
   color: #333;
 }
 
-
 .get-cooking-button {
-  width: 65%; /* Slightly reduced width for a thinner look */
+  width: 65%; 
   max-width: 140px;
-  padding: 6px 12px; /* Reduced height to make it thinner */
+  padding: 6px 12px; 
   background-color: #698F3F;
   color: #fff;
   border: none;
   border-radius: 5px;
-  font-size: 0.9rem; /* Reduced font size */
+  font-size: 0.9rem; 
   font-weight: normal;
   cursor: pointer;
   display: flex;
@@ -69,20 +73,17 @@
   justify-content: center;
   gap: 6px;
   transition: background 0.3s ease;
-  margin: 8px auto; /* Centered the button */
+  margin: 8px auto; 
 }
-
 
 .get-cooking-button:hover {
   background-color: #5a7d36;
 }
 
-
 .cooking-icon {
-  font-size: 1rem; /* Reduced icon size */
+  font-size: 1rem; 
   color: #0A122A;
 }
-
 
 .no-results {
   font-size: 1.2rem;
@@ -90,8 +91,18 @@
   margin-top: 20px;
 }
 
-
 .filters-column {
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+  text-align: center;
   flex: 1;
   max-width: 300px;
+}
+
+.filters-title {
+  font-size: 1.8rem;
+  color: #0A122A;
+  margin: 0 auto; 
+  text-align: center;
 }
