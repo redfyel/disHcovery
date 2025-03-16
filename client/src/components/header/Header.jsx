@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Search from "../search-box/Search";
 import Explore from "../explore/Explore"; 
+import SearchBox from "../search-box/SearchBox";
 import logo from "../../assets/images/logoo.png";
 import "./Header.css";
 
@@ -17,8 +18,10 @@ function Header() {
         <Link to="/recipes">Recipes</Link>
         <Link to="/login">Login</Link>
         <Link to="/register">Register</Link>
+        <Link to="/dashboard">Dashboard</Link>
       </nav>
-      <Search />
+      <Search /> 
+      {/* <SearchBox /> */}
     </header>
   );
 }

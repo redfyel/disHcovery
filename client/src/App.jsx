@@ -10,6 +10,7 @@ import RoutingError from './components/RoutingError'
 import CoolAIFull from './components/ai-ingredients/CoolAIFull'
 import AccessDenied from './components/protected/AccessDenied'
 import Print from './components/print/Print'
+import Dashboard from './components/dashboard/Dashboard'
 
 
 
@@ -46,15 +47,11 @@ function App() {
                path : '/login',
                element : <Login />
              },
+            
              {
               path : '/register',
               element : <Register />
             },
-       
-        {
-          path: '/recipe',
-          element: <Recipe /> 
-        },
         {
           path : '/recipe/:title',
           element : <Recipe/>
@@ -74,7 +71,12 @@ function App() {
         {
           path : '/print',
           element: <Print/>
-        }
+        },
+        {
+        path : '/dashboard',
+        element : <Dashboard />
+      }
+    
       ],
     },
     {

@@ -1,7 +1,14 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import { FaChevronLeft, FaChevronRight, FaPlus, FaTrash, FaSave } from "react-icons/fa";
+import {
+  FaChevronLeft,
+  FaChevronRight,
+  FaPlus,
+  FaTrash,
+  FaSave,
+} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { userLoginContext } from "../../contexts/UserLoginContext";
+import Loading from "../loading/Loading"; // Import the Loading component
 import "./CoolAiFull.css";
 
 const CoolAIFull = () => {
@@ -12,17 +19,21 @@ const CoolAIFull = () => {
   const [recipes, setRecipes] = useState([]);
   const [showRemove, setShowRemove] = useState(false);
   const [aiMessages, setAiMessages] = useState([
-    { text: "Hey there! 👋 What deliciousness is hiding in your fridge? Select ingredients below or add your own!", sender: "ai" },
+    {
+      text:
+        "Hey there! 👋 What deliciousness is hiding in your fridge? Select ingredients below or add your own!   Or upload an image of ingredients you have to get recipes!",
+      sender: "ai",
+    },
   ]);
   const [isTyping, setIsTyping] = useState(false);
   const [isLoadingRecipe, setIsLoadingRecipe] = useState(false);
-  const [showIngredientSelection, setShowIngredientSelection] = useState(true);
+  const [showIngredientSelection, setShowIngredientSelection] =
+    useState(true);
   const [showGenerateButton, setShowGenerateButton] = useState(true);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [imagePreview, setImagePreview] = useState(null);  
-  const [imageError, setImageError] = useState(null); 
+  const [imagePreview, setImagePreview] = useState(null);
+  const [imageError, setImageError] = useState(null);
   const [showUploadImage, setShowUploadImage] = useState(true);
-
 
   const { loginStatus, currentUser } = useContext(userLoginContext);
 
@@ -50,39 +61,41 @@ const CoolAIFull = () => {
     }
   };
 
-  
   const handleImageUpload = (event) => {
     const file = event.target.files[0];
     if (file) {
-        // Check if it's a valid image type
-        if (!file.type.startsWith('image/')) {
-            setImageError("Please select a valid image file.");
-            setSelectedImage(null);
-            setImagePreview(null);
-            return;
-        }
+      // Check if it's a valid image type
+      if (!file.type.startsWith("image/")) {
+        setImageError("Please select a valid image file.");
+        setSelectedImage(null);
+        setImagePreview(null);
+        return;
+      }
 
-        const reader = new FileReader();
-        reader.onloadend = () => {
-            setSelectedImage(reader.result); // Store base64 encoded image
-            setImagePreview(reader.result);
-            setImageError(null)
-        };
-        reader.onerror = () => {
-            setImageError("Failed to read image. Please try again.");
-            setSelectedImage(null);
-            setImagePreview(null);
-        };
-        reader.readAsDataURL(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setSelectedImage(reader.result); // Store base64 encoded image
+        setImagePreview(reader.result);
+        setImageError(null);
+      };
+      reader.onerror = () => {
+        setImageError("Failed to read image. Please try again.");
+        setSelectedImage(null);
+        setImagePreview(null);
+      };
+      reader.readAsDataURL(file);
     }
-};
-
+  };
 
   const fetchRecipes = async () => {
-    if (ingredients.length === 0 && !selectedImage) { // Modified condition
+    if (ingredients.length === 0 && !selectedImage) {
+      // Modified condition
       setAiMessages((prev) => [
         ...prev,
-        { text: "Oops! You need to add ingredients or upload an image! 😅", sender: "ai" },
+        {
+          text: "Oops! You need to add ingredients or upload an image! 😅",
+          sender: "ai",
+        },
       ]);
       return;
     }
@@ -91,34 +104,42 @@ const CoolAIFull = () => {
     setIsLoadingRecipe(true);
     setShowIngredientSelection(false);
     setShowGenerateButton(false);
-    setShowUploadImage(false)
+    setShowUploadImage(false);
 
     setAiMessages([{ text: "Thinking... 🤔", sender: "ai" }]);
 
     try {
       let response;
       if (selectedImage) {
-         // API call for image-based recipe generation 
-        response = await fetch("http://localhost:4000/airecipes-api/generate-recipe-from-image", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ image: selectedImage }), 
-        });
+        // API call for image-based recipe generation
+        response = await fetch(
+          "http://localhost:4000/airecipes-api/generate-recipe-from-image",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ image: selectedImage }),
+          }
+        );
       } else {
-        response = await fetch("http://localhost:4000/airecipes-api/generate-recipe", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ ingredients: ingredients }),
-        });
+        response = await fetch(
+          "http://localhost:4000/airecipes-api/generate-recipe",
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ ingredients: ingredients }),
+          }
+        );
       }
 
       if (!response.ok) {
         const errorText = await response.text();
-        throw new Error(`HTTP error! Status: ${response.status}, Message: ${errorText}`);
+        throw new Error(
+          `HTTP error! Status: ${response.status}, Message: ${errorText}`
+        );
       }
 
       const data = await response.json();
@@ -126,20 +147,25 @@ const CoolAIFull = () => {
 
       setIsTyping(false);
       setIsLoadingRecipe(false);
-      
+
       setAiMessages([
         { text: formatRecipe(aiResponse), sender: "ai", type: "recipe" },
       ]);
 
       setRecipes([aiResponse]);
     } catch (error) {
-        console.error("Error fetching AI response:", error);
+      console.error("Error fetching AI response:", error);
       setIsTyping(false);
       setIsLoadingRecipe(false);
       setShowIngredientSelection(true);
       setShowGenerateButton(true);
-      setShowUploadImage(true)
-      setAiMessages([{ text: "Uh oh! Something went wrong. Let's try again later. 🥺", sender: "ai" }]);
+      setShowUploadImage(true);
+      setAiMessages([
+        {
+          text: "Uh oh! Something went wrong. Let's try again later. 🥺",
+          sender: "ai",
+        },
+      ]);
     }
   };
 
@@ -265,17 +291,17 @@ const CoolAIFull = () => {
       <div className="formatted-recipe">
         <h3>{title}</h3>
         <p className="description">{description}</p>
-         {selectedImage && (
-              <div className="recipe-image-preview">
-                <img
-                  src={selectedImage}
-                  alt="Uploaded Ingredients"
-                  style={{ maxWidth: "300px", maxHeight: "200px" }}
-                />
-              </div>
-            )}
+        {selectedImage && (
+          <div className="recipe-image-preview">
+            <img
+              src={selectedImage}
+              alt="Uploaded Ingredients"
+              style={{ maxWidth: "300px", maxHeight: "200px" }}
+            />
+          </div>
+        )}
         <div className="ingredients">
-          <h4>Ingredients:</h4>
+          <h3>Ingredients:</h3>
           {ingredientsList.length > 0 ? (
             <ul>{ingredientsList}</ul>
           ) : (
@@ -283,12 +309,11 @@ const CoolAIFull = () => {
           )}
         </div>
         <div className="instructions">
-          <h4>Instructions:</h4>
+          <h3>Instructions:</h3>
           <ol>
             {instructionsList.map((step, index) => (
               <li key={index}>{step}</li>
             ))}{" "}
-      
           </ol>
         </div>
         <div className="recipe-actions">
@@ -304,10 +329,11 @@ const CoolAIFull = () => {
             onClick={() => {
               setShowIngredientSelection(true);
               setShowGenerateButton(true);
-              setShowUploadImage(true)
+              setShowUploadImage(true);
               setAiMessages([
                 {
-                  text: "Hey there! 👋 What deliciousness is hiding in your fridge? Select ingredients below or add your own!",
+                  text:
+                    "Hey there! 👋 What deliciousness is hiding in your fridge? Select ingredients below or add your own!  Or upload an image of ingredients you have to get recipes!",
                   sender: "ai",
                 },
               ]);
@@ -408,31 +434,28 @@ const CoolAIFull = () => {
         </AnimatePresence>
       </motion.div>
 
-      {/* Add Image Upload Section */}{
-        showUploadImage && (
-      <div id="image-upload-section" className="mt-4">
-        <p className="text-center text-muted">
-          Or upload an image of ingredients you have to get recipes!
-        </p>
-        <input
-          type="file"
-          accept="image/*"
-          onChange={handleImageUpload}
-          className="form-control"
-          aria-label="Upload ingredient image"
-        />
-         {/* Display Image Preview */}
-            {selectedImage && (
-              <div className="image-preview mt-3">
-                <img
-                  src={selectedImage}
-                  alt="Uploaded Ingredients"
-                  style={{ maxWidth: "200px", maxHeight: "200px" }}
-                />
-              </div>
-            )}
-      </div>)
-      }
+      {/* Add Image Upload Section */}
+      {showUploadImage && (
+        <div id="image-upload-section" className="mt-4">
+          <input
+            type="file"
+            accept="image/*"
+            onChange={handleImageUpload}
+            className="form-control"
+            aria-label="Upload ingredient image"
+          />
+          {/* Display Image Preview */}
+          {selectedImage && (
+            <div className="image-preview mt-3">
+              <img
+                src={selectedImage}
+                alt="Uploaded Ingredients"
+                style={{ maxWidth: "200px", maxHeight: "200px" }}
+              />
+            </div>
+          )}
+        </div>
+      )}
 
       {/* Ingredient Selection Section  */}
       <AnimatePresence>
@@ -608,26 +631,29 @@ const CoolAIFull = () => {
         )}
       </AnimatePresence>
 
-      {/* Recipe Loading Spinner */}
+      {/* Recipe Loading Spinner  - Replaced with the Loading Component*/}
       <AnimatePresence>
         {isLoadingRecipe && (
           <motion.div
-            id="loading-spinner-container"
-            className="loading-spinner"
+            id="loading-component-container"
             initial={{ opacity: 0, scale: 0.5 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.5 }}
             transition={{ duration: 0.3 }}
             style={{
               position: "absolute",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              backgroundColor: "rgba(255, 255, 255, 0.8)", // Optional: Add a semi-transparent background
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              zIndex: 10, // Ensure it's on top of other content
             }}
           >
-            <div className="spinner"></div>
-            <p>Getting some delicious ideas...</p>
-            {/* <p id="loading-message">This might take a moment</p> Added Loading Message */}
+            <Loading />
           </motion.div>
         )}
       </AnimatePresence>
