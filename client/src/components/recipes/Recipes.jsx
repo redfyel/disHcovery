@@ -99,8 +99,6 @@ const Recipes = () => {
 
 
 
-
-
   if (loading) return <div className="loading">Loading recipes...</div>;
   if (error) return <div className="error">{error}</div>;
 
@@ -122,7 +120,6 @@ const Recipes = () => {
                   .toLowerCase()
                   .replace(/[^a-z0-9]+/g, "-")
                   .replace(/^-+|-+$/g, "");
-
 
                 const encodedTitle = encodeURIComponent(sanitizedTitle);
 

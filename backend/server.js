@@ -1,5 +1,6 @@
 // import express module
-const exp = require('express')
+
+exp = require('express')
 const app = exp()
 
 // import environment variables

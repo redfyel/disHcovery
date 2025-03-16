@@ -1,69 +1,97 @@
+/* Saved Recipes Container */
 .saved-recipes-container {
-    max-width: 900px;
-    margin: auto;
-    padding: 20px;
-  }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #698F3F;
-  }
-  
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+  background: #f8f6f1;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.saved-recipes-container h2 {
+  font-size: 24px;
+  color: #0a122a;
+  margin-bottom: 20px;
+}
+
+/* Error Message */
+.saved-error-message {
+  color: red;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* No Recipes Message */
+.saved-no-recipes {
+  font-size: 18px;
+  color: #698f3f;
+  font-weight: bold;
+}
+
+/* Recipe Grid */
+.saved-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+/* Recipe Card */
+.saved-recipe-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.saved-recipe-card:hover {
+  transform: scale(1.05);
+}
+
+/* Recipe Image */
+.saved-recipe-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Recipe Title */
+.saved-recipe-card h3 {
+  font-size: 18px;
+  color: #0a122a;
+  margin: 10px 0;
+}
+
+/* View Recipe Button */
+.view-button {
+  display: inline-block;
+  background: #698f3f;
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.view-button:hover {
+  background: #567a2c;
+}
+
+Selected Category: roulette
+Filtered Recipes: [{title: "Roulette Dish 1", ...}, {title: "Roulette Dish 2", ...}]
+
+Selected Category: ai
+Filtered Recipes: [{title: "AI Dish 1", ...}, {title: "AI Dish 2", ...}]
+
+/* Mobile Responsiveness */
+@media (max-width: 768px) {
   .saved-recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
-  
-  .saved-recipe-card {
-    background: #FBFAF8;
-    border: 1px solid #E7DECD;
-    border-radius: 10px;
-    text-align: center;
-    padding: 15px;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .saved-recipe-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .saved-recipe-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  
-  h3 {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-  
-  .view-button {
-    display: block;
-    background-color: #804E49;
-    color: #FBFAF8;
-    padding: 8px;
-    border-radius: 5px;
-    text-decoration: none;
-    margin-top: 10px;
-  }
-  
-  .view-button:hover {
-    background-color: #5e3a2f;
-  }
-  
-  .saved-no-recipes {
-    text-align: center;
-    color: #666;
-    font-size: 16px;
-  }
-  
-  .saved-error-message {
-    color: red;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
+}

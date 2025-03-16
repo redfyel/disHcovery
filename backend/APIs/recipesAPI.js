@@ -85,7 +85,7 @@ recipesApp.get("/saved-recipes/:userId", async (req, res) => {
 
 
 // save a recipe
-recipesApp.post("/save-recipe", async (req, res) => {
+recipesApp.post("/saved_recipe", async (req, res) => {
     try {
         console.log("Incoming save request:", req.body); // Log incoming request
         
@@ -137,7 +137,21 @@ recipesApp.get("/recipes/category/:category", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-
+// fetch airecipes
+recipesApp.get("/airecipes-api/ai-recipe/:id", async (req, res) => {
+    try {
+      const recipeId = req.params.id;
+      const recipe = await AiRecipeModel.findById(recipeId);
+      
+      if (!recipe) {
+        return res.status(404).json({ message: "Recipe not found" });
+      }
+      
+      res.json({ payload: recipe });
+    } catch (error) {
+      res.status(500).json({ message: "Error fetching recipe" });
+    }
+  });
 
 
 module.exports = recipesApp;

@@ -7,7 +7,6 @@ const bcryptjs = require("bcryptjs");
 const expressAsyncHandler = require("express-async-handler");
 
 
-
 //add a body parser middleware
 userApp.use(exp.json());
 
@@ -20,7 +19,7 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
     //get new user data from req obj
     const newUser = req.body;
 
-    newUser.recipes = []; 
+    newUser.saved_recipes = []; 
     newUser.roulette_recipes= []; 
 
     //verifying uniqueness
@@ -46,7 +45,6 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
     }
   })
 );
-
 
 //login route
 userApp.post("/login", expressAsyncHandler(async (req, res) => {
@@ -127,34 +125,73 @@ userApp.post('/save-recipe', expressAsyncHandler(async (req, res) => {
   }
 
   const token = authHeader.split(" ")[1];
-  try{
+
+  try {
     const decoded = jwt.verify(token, process.env.SECRET_KEY);
     const userId = new ObjectId(decoded.userId); 
 
     const user = await usersCollection.findOne({ _id: userId });
+
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
 
+    // Check if the recipe is already saved
+    const isAlreadySaved = user.saved_recipes.some(savedRecipe => savedRecipe._id === recipe._id);
+    
+    if (isAlreadySaved) {
+      return res.status(400).json({ message: "Recipe already saved" });
+    }
+
     const updateResult = await usersCollection.updateOne(
       { _id: userId },
-      { $push: { recipes : recipe } }
+      { $push: { saved_recipes: recipe } }
     );
 
     if (updateResult.modifiedCount === 0) {
       return res.status(500).json({ message: "Failed to update user saved recipes" });
     }
 
-    //console.log("Recipe successfully saved for user:", userId);
     res.status(200).json({ message: "Recipe saved successfully!", updatedUser: user });
 
-
   } catch (error) {
-    // console.error("Error saving recipe:", error);
-     res.status(401).json({ message: "Invalid or expired token", error });
+    res.status(401).json({ message: "Invalid or expired token", error });
   }
- 
-}))
+}));
+
+// fetch saved roulette recipes
+userApp.get("/saved-roulette-recipes/:userId", expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { userId } = req.params;
+
+  try {
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) }, { projection: { roulette_recipes: 1 } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ payload: user.roulette_recipes || [] });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving saved roulette recipes", error });
+  }
+}));
+
+// fetch saved recipes
+userApp.get("/saved-recipes/:userId", expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { userId } = req.params;
+
+  try {
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) }, { projection: { saved_recipes: 1 } });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ payload: user.saved_recipes || [] });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving saved recipes", error });
+  }
+}));
 
 
 

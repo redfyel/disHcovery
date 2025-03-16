@@ -30,40 +30,38 @@ const Recipe = () => {
     ]);
 
     const handleSaveRecipe = async () => {
-        if (!currentUser) {
-            alert("Please log in to save recipes.");
-            return;
-        }
-
         try {
-            if (!token) {
-                console.error("No token found in localStorage");
-                return;
-            }
-
-            const response = await fetch("http://localhost:4000/user-api/save-recipe", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`
-                },
-                body: JSON.stringify({
-                    recipe : recipe
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Failed to save recipe");
-            }
-            setIsSaved(true)
-
-            alert("Recipe saved successfully!");
+            const token = localStorage.getItem("token")?.replace(/^"(.*)"$/, "$1"); // Remove quotes
+            console.log("Retrieved token:", token);
+            
+      
+          const recipeData = {
+            userId: currentUser._id, // Ensure currentUser is not null
+            recipeId: recipe._id,    // Ensure recipe._id is valid
+          };
+          console.log("Sending recipe data:", recipeData);
+      
+          const response = await fetch("http://localhost:4000/user-api/saved-recipe", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Ensure correct format
+            },
+            body: JSON.stringify(recipeData),
+          });
+      
+          if (!response.ok) {
+            const errorMessage = await response.text();
+            throw new Error(`Failed to save recipe: ${errorMessage}`);
+          }
+      
+          console.log("Recipe saved successfully");
         } catch (error) {
-            console.error("Error saving recipe:", error);
-            alert("Error saving recipe. Please try again later.");
+          console.error("Error saving recipe:", error.message);
         }
-    };
-
+      };
+      
+    
 
     const fetchRecipe = useCallback(async (recipeTitle) => {
         try {
