@@ -138,6 +138,34 @@ recipesApp.get("/recipes/category/:category", async (req, res) => {
     }
 });
 
+// Fetch recipes based on multiple selected ingredients
+recipesApp.get("/recipes/by-ingredients", async (req, res) => {
+    try {
+        const recipesCollection = req.app.get("recipesCollection");
+        const ingredients = req.query.ingredients; // Expecting comma-separated values
+
+        if (!ingredients) {
+            return res.status(400).json({ message: "No ingredients provided" });
+        }
+
+        const ingredientList = ingredients.split(",").map((ing) => ing.trim().toLowerCase());
+
+        const recipes = await recipesCollection
+            .find({ ingredients: { $all: ingredientList } }) // Ensures all selected ingredients exist in the recipe
+            .toArray();
+
+        if (recipes.length === 0) {
+            return res.status(404).json({ message: "No matching recipes found" });
+        }
+
+        res.status(200).json({ payload: recipes });
+    } catch (error) {
+        console.error("Error fetching recipes by ingredients:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+
 
 
 module.exports = recipesApp;
