@@ -15,6 +15,12 @@ function Print() {
     return () => clearTimeout(backTimeout);
   }, [navigate]);
 
+  // UNCOMMENT FOR TESTING
+  // useEffect(() => {
+  //   window.print(); 
+  // }, []);
+  
+
   const recipe = JSON.parse(localStorage.getItem("recipeToPrint"));
   if (!recipe) {
     return (
