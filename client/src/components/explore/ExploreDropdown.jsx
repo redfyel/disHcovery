@@ -1,58 +1,34 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./Explore.css";
+import "./Explore.css"; 
 
-/**
- * Renders the dropdown in a portal, positioned near the anchor element.
- * 
- * @param {Object} props
- * @param {boolean} props.show - Whether to show the dropdown.
- * @param {React.RefObject<HTMLElement>} props.anchorRef - The ref to the Explore button.
- * @param {function} props.onFilterClick - Callback when a filter is clicked.
- * @param {function} props.onMouseEnter - Keep dropdown open on hover.
- * @param {function} props.onMouseLeave - Close dropdown on mouse leave.
- * @param {Object} props.categories - Categories data for rendering.
- */
-function ExploreDropdown({
-  show,
-  anchorRef,
-  onFilterClick,
-  onMouseEnter,
-  onMouseLeave,
-  categories,
-}) {
-  // If dropdown is hidden, return null to unmount the portal
+function ExploreDropdown({ show, anchorRef, onFilterClick, categories }) {
   if (!show) return null;
 
-  // Get the position of the anchor (Explore button)
   const rect = anchorRef.current?.getBoundingClientRect();
+  const top = rect ? rect.bottom + 10 : 50;
+  const left = 0; 
 
-  // Default to (0,0) if no rect is found
-  const top = rect ? rect.bottom + window.scrollY : 0; 
-  const left = rect ? rect.left + window.scrollX : 0;
-
-  // Render the dropdown in a portal attached to the <body>
   return ReactDOM.createPortal(
     <div
-      className="dropdown show"
+      className="exp-dropdown show wide-dropdown"  
       style={{
-        position: "absolute",
+        position: "fixed",
         top: `${top}px`,
         left: `${left}px`,
+        zIndex: 9999,
       }}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
       {Object.entries(categories).map(([category, { icon, filters }]) => (
-        <div key={category} className="dropdown-category">
-          <h4>
+        <div key={category} className="wide-category">
+          <h4 className="wide-category-title">
             {icon} {category}
           </h4>
-          <div className="dropdown-items">
+          <div className="wide-items">
             {filters.map((filter) => (
               <div
                 key={filter}
-                className="dropdown-item"
+                className="wide-item"
                 onClick={() => onFilterClick(category, filter)}
               >
                 {filter}

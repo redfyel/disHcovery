@@ -1,78 +1,110 @@
-/* Explore button styling */
+/* Overall Button */
+
 .explore-button {
   text-decoration: none;
   font-size: 16px;
   font-weight: 600;
   padding: 10px 15px;
   border-radius: 6px;
-  background: transparent;
-  color: #F8F6F1;
-  transition: background 0.3s ease;
+  color: #0A122A;
+  transition: all 0.3s ease;
+  /* background-color: #698F3F; */
+  border: 2px solid transparent;
+  /* box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); */
+  display: inline-block; /* ensure to take minimum horizontal space */
 }
 
-.explore-button:hover {
-  background: #56782E;
-}
+/* .explore-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+  border-color: rgba(105, 143, 63, 0.5);
+} */
 
-/* The dropdown root element */
-.dropdown {
-  width: 700px; /* wide layout */
-  background: rgba(15, 15, 15, 0.95);
-  backdrop-filter: blur(12px);
+/* Dropdown Styling */
+
+.wide-dropdown {
+  position: absolute;
+  top: calc(100% + 2px); /* Shift down by a few pixels, if required */
+  left: 0; /* Align with left edge of the button */
+  width: auto;       /* Adjust width based on content */
+  min-width: 300px;   /* Minimum width to prevent collapsing */
+  max-width: 800px;  /* Keep the maximum width */
+  margin-left: 0;  /* Aligned to left edge*/
+  background-color: rgba(231, 222, 205, 0.9);
+  backdrop-filter: blur(15px);
+  box-shadow: 0 6px 15px rgba(10, 18, 42, 0.5);
   border-radius: 12px;
-  padding: 20px;
   display: flex;
-  flex-wrap: wrap;
-  justify-content: space-between;
-  gap: 20px;
-  box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+  justify-content: space-around;
+  align-items: flex-start;
+  padding: 30px;
+  box-sizing: border-box;
+  overflow: hidden;
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.3s ease, transform 0.3s ease;
-  z-index: 9999; /* ensure it stays above other elements */
+  transform: translateY(-15px);
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  z-index: 9999;
+  pointer-events: none;
+  white-space: nowrap; /* Prevent wrapping of categories */
 }
 
-/* When the dropdown is shown, make it visible */
-.dropdown.show {
+.wide-dropdown.show {
   opacity: 1;
   transform: translateY(0);
+  pointer-events: auto;
 }
 
-/* Category sections */
-.dropdown-category {
-  flex: 1 1 180px;
+/* Category Styling */
+
+.wide-category {
+  flex: 1 0 auto;   /* Adjust for even distribution and content size */
+  padding: 20px;
+  border-radius: 10px;
+  transition: all 0.3s ease;
+  text-align: left;
+  background-color: rgba(248, 246, 241, 0.1);
 }
 
-.dropdown-category h4 {
-  font-size: 16px;
-  font-weight: 600;
-  color: #f8f6f1;
+.wide-category:hover {
+  transform: translateY(-5px);
+  background-color: rgba(248, 246, 241, 0.2);
+}
+
+/* Category Headings */
+
+.wide-category-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #0A122A;
+  margin-bottom: 15px;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
 }
 
-/* Items container */
-.dropdown-items {
+/* Items Styling */
+
+.wide-items {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 10px;
+  gap: 12px;
 }
 
-/* Individual items */
-.dropdown-item {
-  padding: 8px 12px;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #ddd;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.2s, transform 0.2s;
+.wide-item {
+  padding: 12px 18px;
+  border-radius: 8px;
+  font-size: 16px;
+  color: #0A122A;
+  background-color: rgba(105, 143, 63, 0.1);
+  transition: all 0.3s ease;
   cursor: pointer;
+  border: 1px solid transparent;
+  box-shadow: 0 3px 5px rgba(10, 18, 42, 0.1);
 }
 
-.dropdown-item:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: scale(1.05);
+.wide-item:hover {
+  background-color: rgba(105, 143, 63, 0.2);
+  color: #FBFAF8;
+  transform: translateY(-3px);
+  box-shadow: 0 5px 8px rgba(10, 18, 42, 0.2);
 }

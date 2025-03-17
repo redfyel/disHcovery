@@ -43,11 +43,15 @@ function App() {
                     element: <Recipe />
                 },
                 {
+                    path: '/recipes/category/:category',
+                    element: <Recipes />
+                },
+                {
                     path: '/recipes/by-ingredients/:ingredients',
                     element: <Recipes />
                 },
                 {
-                    path: '/recipes/category/:category',
+                    path :'/recipes/explore',
                     element: <Recipes />
                 },
                 {
