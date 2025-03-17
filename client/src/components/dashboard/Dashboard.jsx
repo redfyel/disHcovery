@@ -141,7 +141,7 @@ const Dashboard = () => {
       )}
     </div>
   ) : (
-    <AccessDenied compact />
+    <AccessDenied  />
   );
 };
 
