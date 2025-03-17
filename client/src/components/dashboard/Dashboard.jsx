@@ -10,14 +10,32 @@ import Desserts from "../../assets/images/dessert.jpg";
 import Healthy from "../../assets/images/Healthy.jpg";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import UserEditModal from "../dashboard/UserEditModal";
+import AccessDenied from "../protected/AccessDenied";
+import RecipeRoulette from "../recipe-roulette/RecipeRoulette";
+import CoolAI from '../ai-ingredients/CoolAI'
 
 const Dashboard = () => {
   const navigate = useNavigate();
-  const { currentUser } = useContext(userLoginContext);
-  
+  const { currentUser, loginStatus } = useContext(userLoginContext);
+
+  // Always call hooks regardless of loginStatus
   const [showDropdown, setShowDropdown] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  // Initialize recipeHistory with currentUser.roulette_recipes
+  const [recipeHistory, setRecipeHistory] = useState([]);
+
+  useEffect(() => {
+    // console.log("currentUser in useEffect:", currentUser); 
+
+    if (currentUser && currentUser.roulette_recipes) {
+      // console.log("currentUser.roulette_recipes:", currentUser.roulette_recipes);
+      setRecipeHistory(currentUser.roulette_recipes);
+    } else {
+      setRecipeHistory([]); 
+    }
+  }, [currentUser]);
 
   const categories = [
     { name: "Breakfast", img: Breakfast },
@@ -28,7 +46,6 @@ const Dashboard = () => {
     { name: "Healthy", img: Healthy },
   ];
 
-  // Close dropdown on clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
@@ -40,11 +57,12 @@ const Dashboard = () => {
   }, []);
 
   const handleSaveDetails = (updatedUser) => {
-    console.log("User details updated:", updatedUser);
+    // console.log("User details updated:", updatedUser);
     setIsEditModalOpen(false);
   };
 
-  return (
+  // Conditionally render content based on loginStatus
+  return loginStatus ? (
     <div className="dashboard">
       {/* Sidebar */}
       <aside className="sidebar">
@@ -79,31 +97,42 @@ const Dashboard = () => {
 
       {/* Right Sidebar */}
       <aside className="right-sidebar">
-        <div className="roulette" ref={dropdownRef}>
-          <button className="past-recipes" onClick={() => setShowDropdown(!showDropdown)}>
-            Past Roulette Recipes ▼
-          </button>
-          {showDropdown && (
-            <div className="dropdown visible">
-              {currentUser.roulette_recipes?.length > 0 ? (
-                currentUser.roulette_recipes.map((recipe, index) => (
-                  <div key={index} className="dropdown-item">
-                    <Link to={`/recipe/${encodeURIComponent(recipe.title.replace(/\s+/g, "-").toLowerCase())}`} className="dropdown-link">
-                      {recipe.title}
-                    </Link>
-                  </div>
-                ))
-              ) : (
-                <div className="no-recipes">No past recipes found</div>
-              )}
-            </div>
-          )}
-        </div>
 
         <section className="fridge-section">
+
+          {/* Recipe Roulette Moved to Top */}
+          <RecipeRoulette />
+
+          {/* Recipe History Dropdown */}
+          <div className="recipe-history">
+            <button className="recipe-history-button" onClick={() => setShowDropdown(!showDropdown)}>
+              Past Recipes  {showDropdown ? "▲" : "▼"}
+            </button>
+            {showDropdown && (
+              <div className="recipe-history-dropdown" ref={dropdownRef}>
+                {recipeHistory.length > 0 ? (
+                  recipeHistory.map((recipe, index) => (
+                    <div key={index} className="recipe-history-item">
+                       <Link
+                        to={`/recipe/${encodeURIComponent(
+                          recipe.title.replace(/\s+/g, "-").toLowerCase()
+                        )}`}
+                        className="dropdown-link"
+                      >
+                        {recipe.title}
+                      </Link>
+                    </div>
+                  ))
+                ) : (
+                  <div className="recipe-history-item">No recipes yet!</div>
+                )}
+              </div>
+            )}
+          </div>
+
           <p>What's in your fridge?</p>
-          <button onClick={() => navigate("/CoolAi")}>Go to CoolAi</button>
-        </section>
+          <CoolAI />
+          </section>
       </aside>
 
       {/* User Edit Modal */}
@@ -111,6 +140,8 @@ const Dashboard = () => {
         <UserEditModal user={currentUser} onSave={handleSaveDetails} onClose={() => setIsEditModalOpen(false)} />
       )}
     </div>
+  ) : (
+    <AccessDenied compact />
   );
 };
 
