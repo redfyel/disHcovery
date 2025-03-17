@@ -1,18 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams, useLocation } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
 import Loading from "../loading/Loading";
 import "./Recipes.css";
 
 const Recipes = () => {
-    const { category } = useParams();
     const [recipes, setRecipes] = useState([]);
     const [filteredRecipes, setFilteredRecipes] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const location = useLocation();
+
+    const { ingredients } = useParams();
 
     const [filters, setFilters] = useState({
         categories: [],
@@ -25,20 +26,15 @@ const Recipes = () => {
     useEffect(() => {
         const fetchRecipes = async () => {
             try {
-                setLoading(true);  // Start loading before the fetch
+                setLoading(true);
                 let url = "http://localhost:4000/recipe-api/recipes";
 
-                // Check if ingredients are passed in location state
-                const ingredients = location.state?.ingredients;
-                if (ingredients && ingredients.length > 0) {
-                    const queryString = ingredients.join(",");
-                    url = `http://localhost:4000/recipe-api/recipes/by-ingredients?ingredients=${queryString}`;
-                } else if (category) {
-                    url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+                if (ingredients) {
+                    url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
+                    console.log("Fetching URL:", url);
                 }
 
                 const response = await fetch(url);
-
                 if (!response.ok) {
                     throw new Error(`Failed to fetch recipes. Status: ${response.status}`);
                 }
@@ -55,7 +51,7 @@ const Recipes = () => {
         };
 
         fetchRecipes();
-    }, [category, location.state?.ingredients, location]); // Listen for changes in location state
+    }, [ingredients]);
 
     useEffect(() => {
         const filterRecipes = () => {
@@ -96,9 +92,14 @@ const Recipes = () => {
     return (
         <div className="recipes-page">
             <div className="recipes-header d-flex justify-content-between align-items-center">
-                <h1 className="recipes-title">Discover Delicious Recipes</h1>
-                <h2 className="filters-title">Taste Tuner</h2>
-            </div>
+    <h1 className="recipes-title">
+        {ingredients 
+            ? `Recipes containing ${decodeURIComponent(ingredients)}` 
+            : "Discover Delicious Recipes"}
+    </h1>
+    <h2 className="filters-title">Taste Tuner</h2>
+</div>
+
 
             <div className="recipes-container">
                 <div className="recipes-content">

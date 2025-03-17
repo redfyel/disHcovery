@@ -5,8 +5,8 @@
   font-weight: 600;
   padding: 10px 15px;
   border-radius: 6px;
-  background: #698F3F;
-  color: #fff;
+  background: transparent;
+  color: #F8F6F1;
   transition: background 0.3s ease;
 }
 
