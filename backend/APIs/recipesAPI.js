@@ -6,7 +6,8 @@ let recipesApp = express.Router();
 // Add JSON parser middleware
 recipesApp.use(express.json());
 
-// Fetch all recipes
+
+
 recipesApp.get('/recipes', async (req, res) => {
     try {
         const recipesCollection = req.app.get('recipesCollection');
@@ -113,7 +114,7 @@ recipesApp.post("/save-recipe", async (req, res) => {
         res.status(500).json({ error: "Failed to save recipe", details: error.message });
     }
 });
-// fetch recipes by category
+
 // Fetch recipes by category (case-insensitive, partial match)
 recipesApp.get("/recipes/category/:category", async (req, res) => {
     try {
@@ -137,28 +138,39 @@ recipesApp.get("/recipes/category/:category", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-
-// Fetch recipes based on multiple selected ingredients
-recipesApp.get("/recipes/by-ingredients", async (req, res) => {
+  
+// fetch recipes by ingredients
+recipesApp.get("/recipes/by-ingredients/:ingredients", async (req, res) => {
     try {
         const recipesCollection = req.app.get("recipesCollection");
-        const ingredients = req.query.ingredients; // Expecting comma-separated values
 
-        if (!ingredients) {
+        // Get ingredients from query and validate
+        const ingredientsQuery = req.params.ingredients;
+        if (!ingredientsQuery) {
             return res.status(400).json({ message: "No ingredients provided" });
         }
 
-        const ingredientList = ingredients.split(",").map((ing) => ing.trim().toLowerCase());
+        // Decode the URI encoded ingredients
+        const ingredients = ingredientsQuery.split(",").map((ing) => decodeURIComponent(ing.trim()));
 
-        const recipes = await recipesCollection
-            .find({ ingredients: { $all: ingredientList } }) // Ensures all selected ingredients exist in the recipe
-            .toArray();
+        // console.log("Ingredients are:", ingredients);
 
-        if (recipes.length === 0) {
+        // Build regex patterns for each ingredient for case-insensitive, partial match
+        const regexPatterns = ingredients.map(ingredient => new RegExp(ingredient.replace(/ /g, '.*'), 'i'));
+
+        // Construct the query using regex objects directly
+        const recipes = await recipesCollection.find({
+            "ingredients.name": { $in: regexPatterns }
+        }).toArray();
+
+        // If no recipes found, send a 404 response
+        if (!recipes.length) {
             return res.status(404).json({ message: "No matching recipes found" });
         }
 
-        res.status(200).json({ payload: recipes });
+        // Send the response with the found recipes
+        res.status(200).json({ success: true, payload: recipes });
+
     } catch (error) {
         console.error("Error fetching recipes by ingredients:", error);
         res.status(500).json({ message: "Internal Server Error" });

@@ -62,7 +62,7 @@ function Search() {
                     value={query}
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
-                    onBlur={handleInputBlur}
+                    // onBlur={handleInputBlur}
                     ref={inputRef} // Assign the ref to the input element
                 />
             </div>
@@ -107,3 +107,4 @@ function Search() {
 }
 
 export default Search;
+
