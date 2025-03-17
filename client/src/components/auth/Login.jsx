@@ -19,9 +19,8 @@ function Login() {
     onLogin(userCred);
     // Check for return path and navigate accordingly
     const returnPath = sessionStorage.getItem("returnAfterLogin");
-    sessionStorage.removeItem("returnAfterLogin"); // Clear stored path after use
-    navigate(returnPath || "/"); // Redirect to stored path or default
-    navigate("/dashboard");
+    sessionStorage.removeItem("returnAfterLogin"); 
+    navigate(returnPath || "/dashboard"); // Redirect to stored path or default
   }
 
   return (
