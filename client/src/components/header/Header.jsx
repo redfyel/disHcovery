@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import Search from "../search-box/Search";
 import Explore from "../explore/Explore";
-import logo from "../../assets/images/logoo.png";
+import logo from "../../assets/images/logo_og.png";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./Header.css";
 import { useContext } from "react";

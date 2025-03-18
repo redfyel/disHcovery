@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { VscDebugRestart } from "react-icons/vsc";
 import { Link } from "react-router-dom";
-import logo from "../../assets/images/logoo.png"; 
+import logo from "../../assets/images/logo_darkbg.png"; 
 
 const Footer = () => {
   const [board, setBoard] = useState(Array(9).fill(null));
@@ -85,7 +85,7 @@ const Footer = () => {
         {/* Left Side: Food Tic-Tac-Toe */}
         <div className="d-flex flex-column align-items-center text-xl mb-1 mb-lg-0">
           {winner && (
-            <div className="text-center mt-2">
+            <div className="text-center mt-2 mb-0">
               <div className="text-2xl font-bold text-yellow-300 animate-bounce">
                 {winner} wins! 🎉
               </div>
@@ -133,7 +133,7 @@ const Footer = () => {
 
         {/* Right Side: disHcovery Links and Copyright */}
         <div className="d-flex flex-column align-items-center text-center">
-        <img src={logo} alt="Dishcovery Logo" style={{ width: '250px', height: 'auto', filter: 'brightness(1.1)' }}/>
+        <img src={logo} alt="Dishcovery Logo" style={{ width: '280px', height: 'auto', filter: 'brightness(1.1)' }}/>
           <p className="text-sm mb-2">Discover, Create, Savor!</p>
 
           {/* Animated Ingredients */}
@@ -207,7 +207,7 @@ const Footer = () => {
           gap: 4px;
           background-color:  #0a122a; 
           transform: rotate(-5deg);
-          margin-top: 20px;
+          margin-top: 50px;
         }
         footer {
           position: relative;
