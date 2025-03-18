@@ -83,15 +83,88 @@
   background: #567a2c;
 }
 
-Selected Category: roulette
-Filtered Recipes: [{title: "Roulette Dish 1", ...}, {title: "Roulette Dish 2", ...}]
+/* MODAL OVERLAY (Blurred Background) */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(206, 54, 54, 0.3) ; /* Slight dim */
+  /* backdrop-filter: blur(8px); Blurs only the background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
 
-Selected Category: ai
-Filtered Recipes: [{title: "AI Dish 1", ...}, {title: "AI Dish 2", ...}]
+/* MODAL CONTENT (Clear White Background) */
+.modal-content {
+  background: #fff !important;
+  background-image: url(https://i.pinimg.com/736x/74/11/4e/74114e4824bb04fc13cef524bb69733a.jpg) !important;
+  padding: 25px;
+  border-radius: 12px;
+  width: 50%;
+  max-width: 500px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;
+  max-height: 80vh;
+  opacity: 1 !important; /* Ensures full visibility */
+}
 
-/* Mobile Responsiveness */
+
+/* CLOSE BUTTON */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+.close-button:hover {
+  color: #0a122a !important;
+}
+
+/* MODAL HEADINGS */
+.modal-content h2 {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* MODAL PARAGRAPH */
+.modal-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* FADE-IN EFFECT */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* RESPONSIVE DESIGN */
 @media (max-width: 768px) {
-  .saved-recipe-grid {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  .modal-content {
+    width: 90%;
+    padding: 20px;
   }
 }

@@ -131,14 +131,6 @@ const Filters = ({ onFilterChange }) => {
                 </div>
             </div>
             <hr className="custom-hr" />
-
-
-
-
-
-
-
-
             <div className="filter-section">
   <h3><FaConciergeBell /> Meal Type</h3>
   <div className="filter-options meal-type-options">

@@ -10,15 +10,7 @@ const SavedRecipes = () => {
   const [aiRecipes, setAiRecipes] = useState([]);
   const [error, setError] = useState(null);
   const [selectedCategory, setSelectedCategory] = useState("all");
-
-  const filteredRecipes = 
-    selectedCategory === "saved"
-      ? savedRecipes
-      : selectedCategory === "roulette"
-      ? rouletteRecipes
-      : selectedCategory === "ai"
-      ? aiRecipes
-      : [...savedRecipes, ...rouletteRecipes, ...aiRecipes]; 
+  const [selectedRecipe, setSelectedRecipe] = useState(null);
 
   useEffect(() => {
     if (!loginStatus || !currentUser?._id) return;
@@ -41,7 +33,6 @@ const SavedRecipes = () => {
         if (!aiRes.ok) throw new Error(`Error ${aiRes.status}: ${aiRes.statusText}`);
         const aiData = await aiRes.json();
         setAiRecipes(aiData?.payload ?? []);
-
       } catch (err) {
         console.error("Error fetching recipes:", err.message);
         setError(err.message);
@@ -51,9 +42,29 @@ const SavedRecipes = () => {
     fetchRecipes();
   }, [loginStatus, currentUser]);
 
-  if (!loginStatus) {
-    return <p className="text-center">Please <Link to="/login">log in</Link> to view saved recipes.</p>;
-  }
+  const openModal = (recipe) => setSelectedRecipe(recipe);
+  const closeModal = () => setSelectedRecipe(null);
+
+  const renderRecipeSection = (title, recipes, type) => {
+    return recipes.length > 0 && (
+      <div className="recipe-category">
+        <h2>{title}</h2>
+        <div className="saved-recipe-grid">
+          {recipes.map((recipe) => (
+            <div key={recipe._id} className="saved-recipe-card">
+              {recipe.image && <img src={recipe.image} alt={recipe.title} className="saved-recipe-image" />}
+              <h3>{recipe.title}</h3>
+              {type === "ai" ? (
+                <button onClick={() => openModal(recipe)} className="view-button">View Details</button>
+              ) : (
+                <Link to={`/recipe/${encodeURIComponent(recipe.title)}`} className="view-button">View Recipe</Link>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    );
+  };
 
   return (
     <div className="saved-recipes-container">
@@ -69,28 +80,39 @@ const SavedRecipes = () => {
 
       {error && <p className="saved-error-message">{error}</p>}
 
-      {filteredRecipes.length === 0 ? (
-        <p className="saved-no-recipes">No recipes found.</p>
+      {selectedCategory === "all" ? (
+        <>
+          {renderRecipeSection("Saved Recipes", savedRecipes)}
+          {renderRecipeSection("Recipe Roulette", rouletteRecipes)}
+          {renderRecipeSection("AI Recipes", aiRecipes, "ai")}
+        </>
       ) : (
-        <div className="saved-recipe-grid">
-          {filteredRecipes.map((recipe) => {
-            const titleBeforeBracket = recipe.title.split("(")[0].trim();
-            const sanitizedTitle = titleBeforeBracket
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")
-              .toLowerCase()
-              .replace(/[^a-z0-9]+/g, "-")
-              .replace(/^-+|-+$/g, "");
-            const encodedTitle = encodeURIComponent(sanitizedTitle);
+        <>
+          {selectedCategory === "saved" && renderRecipeSection("Saved Recipes", savedRecipes)}
+          {selectedCategory === "roulette" && renderRecipeSection("Recipe Roulette", rouletteRecipes)}
+          {selectedCategory === "ai" && renderRecipeSection("AI Recipes", aiRecipes, "ai")}
+        </>
+      )}
 
-            return (
-              <div key={recipe._id || `${recipe.title}-${Math.random()}`} className="saved-recipe-card">
-                {recipe.image && <img src={recipe.image} alt={recipe.title} className="saved-recipe-image" />}
-                <h3>{recipe.title}</h3>
-                <Link to={`/recipe/${encodedTitle}`} className="view-button">View Recipe</Link>
-              </div>
-            );
-          })}
+      {selectedRecipe && (
+        <div className="modal-overlay" onClick={closeModal}>
+          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <button className="close-button" onClick={closeModal}>✖</button>
+            <h2>{selectedRecipe.title}</h2>
+            <p><strong>Description:</strong> {selectedRecipe.description}</p>
+            <h3>Ingredients:</h3>
+            <ul>
+              {selectedRecipe.ingredients.map((ingredient, index) => (
+                <li key={index}>{ingredient}</li>
+              ))}
+            </ul>
+            <h3>Instructions:</h3>
+            <ol>
+              {selectedRecipe.instructions.map((instruction, index) => (
+                <li key={index}>{instruction}</li>
+              ))}
+            </ol>
+          </div>
         </div>
       )}
     </div>
