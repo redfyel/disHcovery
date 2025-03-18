@@ -15,81 +15,76 @@ import Dashboard from './components/dashboard/Dashboard'
 
 
 function App() {
-  const browserRouter = createBrowserRouter([
-    {
-      path : '/',
-      element : <RootLayout/>,
-      errorElement : <RoutingError/>,
-      children:[
+    const browserRouter = createBrowserRouter([
         {
-          path : '/',
-          element : <Home/>
-        },
-        {
-              path : '/recipes',
-              element : <Recipes/>
-         },
-        // {
-        //   path : '/join-us',
-        //   element : <Auth/>,
-        //   children : [
-        //     {
-        //       path : '/login',
-        //       element : <Login />
-        //     },
-        //     {
-        //       path : '/register',
-        //       element : <Register />
-        //     },    
-        //   ]
-        // },
-           {
-               path : '/login',
-               element : <Login />
-             },
-            
-             {
-              path : '/register',
-              element : <Register />
-            },
-        {
-          path : '/recipe/:title',
-          element : <Recipe/>
-        },
-        {
-          path:'/recipes/category/:category',
-          element: <Recipes/>
-        },
-        {
-          path : '/saved',
-          element : <Saved />
-        },
-        {
-          path : '/ai-ingredients',
-          element : <CoolAIFull/>
-        },
-        {
-          path : '/print',
-          element: <Print/>
-        },
-        {
-        path : '/dashboard',
-        element : <Dashboard />
-      }
-    
-      ],
-    },
-    {
-      path : '/access-denied',
-      element : <AccessDenied/>
-    }
-  ])
+            path: '/',
+            element: <RootLayout />,
+            errorElement: <RoutingError />,
+            children: [
+                {
+                    path: '/',
+                    element: <Home />
+                },
+                {
+                    path: '/recipes',
+                    element: <Recipes />
+                },
 
-  return (
-    <div className='main'>
-      <RouterProvider router = {browserRouter}/>
-    </div>
-  )
+                {
+                    path: '/login',
+                    element: <Login />
+                },
+
+                {
+                    path: '/register',
+                    element: <Register />
+                },
+                {
+                    path: '/recipe/:title',
+                    element: <Recipe />
+                },
+                {
+                    path: '/recipes/category/:category',
+                    element: <Recipes />
+                },
+                {
+                    path: '/recipes/by-ingredients/:ingredients',
+                    element: <Recipes />
+                },
+                {
+                    path :'/recipes/explore',
+                    element: <Recipes />
+                },
+                {
+                    path: '/saved',
+                    element: <Saved />
+                },
+                {
+                    path: '/ai-ingredients',
+                    element: <CoolAIFull />
+                },
+                {
+                    path: '/print',
+                    element: <Print />
+                },
+                {
+                    path: '/dashboard',
+                    element: <Dashboard />
+                }
+
+            ],
+        },
+        {
+            path: '/access-denied',
+            element: <AccessDenied />
+        }
+    ])
+
+    return (
+        <div className='main'>
+            <RouterProvider router={browserRouter} />
+        </div>
+    )
 }
 
 export default App

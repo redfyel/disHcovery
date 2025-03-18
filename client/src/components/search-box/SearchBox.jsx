@@ -1,228 +1,261 @@
-import React, {
-    useState,
-    useRef,
-    useEffect,
-    useCallback,
-    useMemo,
-  } from "react";
-  import ReactDOM from "react-dom";
-  
-  // --- Helper Functions ---
-  const useOutsideClick = (ref, callback) => {
-    useEffect(() => {
-      const handleClickOutside = (event) => {
-        if (ref.current && !ref.current.contains(event.target)) {
-          callback();
+import React, { useState, useRef, useEffect, useMemo } from "react";
+import ReactDOM from "react-dom";
+import { useNavigate } from "react-router-dom";
+
+// --- Search Box Component ---
+function SearchBox({
+    searchTerm,
+    searchInputRef,
+    searchInputWrapperWidth,
+    setRecipes,
+    setIsDropdownVisible, // Receive setIsDropdownVisible
+    dropdownRef, // Receive the dropdown ref
+}) {
+    const navigate = useNavigate();
+    const [selectedIngredients, setSelectedIngredients] = useState([]);
+
+    // Toggle selection for an ingredient
+    const handleItemClick = (itemName) => {
+        setSelectedIngredients((prev) => {
+            return prev.includes(itemName)
+                ? prev.filter((ing) => ing !== itemName)
+                : [...prev, itemName];
+        });
+    };
+
+    // Handler to navigate to the recipes page with selected ingredients
+    const handleShowRecipes = (e) => {
+        e.stopPropagation();
+        console.log("Show Recipes button clicked", selectedIngredients);
+        navigate("/recipes/by-ingredients/" + selectedIngredients.join(",")); // Corrected line;
+        setIsDropdownVisible(false); // Close the dropdown
+    };
+
+    // Currently not used because navigation is used instead.
+    const fetchRecipesByIngredients = async () => {
+        if (selectedIngredients.length === 0) {
+            return;
         }
-      };
-  
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref, callback]);
-  };
-  
-  // --- Search Box Component ---
-  function SearchBox({ searchTerm, searchInputRef, searchInputWrapperWidth }) {
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
-  
+        const queryString = selectedIngredients.join(",");
+        const url = `http://localhost:4000/recipe-api/recipes/by-ingredients?ingredients=${queryString}`;
+        try {
+            const response = await fetch(url);
+            const data = await response.json();
+            if (response.ok) {
+                setRecipes(data.payload);
+            } else {
+                console.error(data.message);
+                setRecipes([]);
+            }
+        } catch (error) {
+            console.error("Error fetching recipes:", error);
+        }
+    };
+
     // Ingredients list (memoized for performance)
     const ingredients = useMemo(
-      () => [
-        {
-          name: "Onion",
-          image:
-            "https://gyanagri.com/wp-content/uploads/2021/03/onion-images.jpg",
-        },
-        {
-          name: "Garlic",
-          image:
-            "https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-garlic-varieties-from-softneck-to-hardneck-a-natural-remedy-for-cold-png-image_12535998.png",
-        },
-        {
-          name: "Eggs",
-          image:
-            "https://www.incredibleegg.org/wp-content/uploads/2023/07/AEB-IE_SectionLanding-FoodServices_Mobile_879x760_Egg-Types.jpg",
-        },
-        {
-          name: "Mayonnaise",
-          image:
-            "https://as2.ftcdn.net/jpg/04/08/21/53/1000_F_408215396_qWlXQzFi8dMcMbSlKm8Zla1I5B0e6MCm.jpg",
-        },
-        {
-          name: "Soy Sauce",
-          image:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcREJ75Fonpqnxz0HqD_hDC3LYmDOAaj8QGgCg&s",
-        },
-        {
-          name: "Olive Oil",
-          image:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPD6Q2zPXoJSjqtFu-h05k3K8932P5lCFbWsbGtlFo6ooO6sP20_hxTxCDRv2I3pxWlEI&usqp=CAU",
-        },
-        {
-          name: "Milk",
-          image:
-            "https://media.istockphoto.com/id/183778031/photo/milk-bottle-clipping-path.jpg?s=612x612&w=0&k=20&c=RC3dmJPzsBSGnpfRtY0wjjb5G-LOLvxP4ZNmu_yJ8Qk=",
-        },
-        {
-          name: "Butter",
-          image:
-            "https://media.istockphoto.com/id/177834117/photo/butter-isolated-on-white.jpg?s=612x612&w=0&k=20&c=wKXNDSvB-tzfT9RPdmKsH2JAGpBv7OISdUmGdegupxg=",
-        },
-        {
-          name: "Vegetable Oil",
-          image:
-            "https://img.freepik.com/premium-photo/vegetable-oil-glass-bottle-isolated-white-background-with-clipping-path-organic-healthy-food-cooking_622428-3581.jpg",
-        },
-        {
-          name: "Cheese",
-          image:
-            "https://c8.alamy.com/comp/DEJ9F6/swiss-cheese-isolated-on-a-white-background-DEJ9F6.jpg",
-        },
-        {
-          name: "Chicken",
-          image:
-            "https://embed.widencdn.net/img/beef/4hh1pywcnj/800x600px/Grind_Fine_85.psd?keep=c&u=7fueml",
-        },
-        {
-          name: "Frozen Peas",
-          image:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaaVK1x6-n8H2KVaUm60mbdkhbjGgDqJPeLQ&s",
-        },
-        {
-          name: "Bread",
-          image:
-            "https://img.freepik.com/premium-photo/bakery-products-isolated-white-background_176402-2928.jpg",
-        },
-        {
-          name: "Potatoes",
-          image:
-            "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDGy0xAELslHyhNKv6z6PuEaw6k-QBYVHkTA&s",
-        },
-      ],
-      []
+        () => [
+            {
+                name: "Onion",
+                image:
+                    "https://gyanagri.com/wp-content/uploads/2021/03/onion-images.jpg",
+            },
+            {
+                name: "Garlic",
+                image:
+                    "https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-garlic-varieties-from-softneck-to-hardneck-a-natural-remedy-for-cold-png-image_12535998.png",
+            },
+            {
+                name: "Eggs",
+                image:
+                    "https://www.incredibleegg.org/wp-content/uploads/2023/07/AEB-IE_SectionLanding-FoodServices_Mobile_879x760_Egg-Types.jpg",
+            },
+
+            {
+                name: "Olive Oil",
+                image:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPD6Q2zPXoJSjqtFu-h05k3K8932P5lCFbWsbGtlFo6ooO6sP20_hxTxCDRv2I3pxWlEI&usqp=CAU",
+            },
+            {
+                name: "Potatoes",
+                image:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDGy0xAELslHyhNKv6z6PuEaw6k-QBYVHkTA&s",
+            },
+            {
+                name: "Milk",
+                image:
+                    "https://media.istockphoto.com/id/183778031/photo/milk-bottle-clipping-path.jpg?s=612x612&w=0&k=20&c=RC3dmJPzsBSGnpfRtY0wjjb5G-LOLvxP4ZNmu_yJ8Qk=",
+            },
+            {
+                name: "Butter",
+                image:
+                    "https://media.istockphoto.com/id/177834117/photo/butter-isolated-on-white.jpg?s=612x612&w=0&k=20&c=wKXNDSvB-tzfT9RPdmKsH2JAGpBv7OISdUmGdegupxg=",
+            },
+            {
+                name: "Cheese",
+                image:
+                    "https://c8.alamy.com/comp/DEJ9F6/swiss-cheese-isolated-on-a-white-background-DEJ9F6.jpg",
+            },
+            {
+                name: "Chicken",
+                image:
+                    "https://images.jdmagicbox.com/quickquotes/images_main/fresh-frozen-chicken-2219887756-p3zqtoc9.jpg",
+            },
+            {
+                name: "Bread",
+                image:
+                    "https://img.freepik.com/premium-photo/bakery-products-isolated-white-background_176402-2928.jpg",
+            },
+
+            {
+                name: "FrozenPeas",
+                image:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaaVK1x6-n8H2KVaUm60mbdkhbjGgDqJPeLQ&s",
+            },
+            {
+                name: "Tofu",
+                image:
+                    "https://thumbs.dreamstime.com/b/tofu-cheese-isolated-white-background-clipping-path-full-depth-field-181352721.jpg",
+            },
+            {
+                name: "Beef",
+                image:
+                    "https://embed.widencdn.net/img/beef/4hh1pywcnj/800x600px/Grind_Fine_85.psd?keep=c&u=7fueml",
+            },
+            {
+                name: "Lemon",
+                image:
+                    "https://media.istockphoto.com/id/1456512861/vector/lime-and-lemon-composition-fresh-citrus-fruits-whole-halves-and-slices-fruits-realistic-3d.jpg?s=612x612&w=0&k=20&c=ffBSgWnoBE7D0bdBMFES_O4_KeW1MUgcLVD4mxWNn8k=",
+            },
+            {
+                name: "Mayonnaise",
+                image:
+                    "https://as2.ftcdn.net/jpg/04/08/21/53/1000_F_408215396_qWlXQzFi8dMcMbSlKm8Zla1I5B0e6MCm.jpg",
+            },
+            {
+                name: "Fish",
+                image:
+                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK-aI6pTRdtTcxntvaOmcTJQza36ZYhNiPXFuB5pyaxn5_-zBkcxCTWUeBaq4haxWhRH4&usqp=CAU",
+            },
+        ],
+        []
     );
-  
-    // Filtered ingredients
+
+    // Filter ingredients based on searchTerm
     const filteredIngredients = useMemo(
-      () =>
-        ingredients.filter((item) =>
-          item.name.toLowerCase().includes(searchTerm.toLowerCase())
-        ),
-      [searchTerm, ingredients]
+        () =>
+            ingredients.filter((item) =>
+                item.name.toLowerCase().includes(searchTerm.toLowerCase())
+            ),
+        [searchTerm, ingredients]
     );
-  
-    // --- Event Handlers ---
-    const handleItemClick = (itemName) => {
-      alert(`Woww! You selected ${itemName}`);
-      setIsDropdownOpen(false); // Close dropdown after selection
-    };
-  
-    // --- Outside Click Detection ---
-    useOutsideClick(dropdownRef, () => {
-      setIsDropdownOpen(false);
-    });
-  
-    useEffect(() => {
-      setIsDropdownOpen(true); // Open dropdown when SearchBox mounts
-    }, []);
-  
-    // --- Dropdown Positioning ---
+
+    // Positioning the dropdown relative to the search input
     const rect = searchInputRef.current?.getBoundingClientRect();
     const dropdownTop = rect ? rect.bottom + window.scrollY : 0;
     const dropdownLeft = rect ? rect.left + window.scrollX : 0;
-  
-    // Width adjustments to account for border, padding, shadow
-    let adjustedWidth = searchInputWrapperWidth;
-    const borderWidth = 2; // 1px border on each side (example)
-    const paddingWidth = 15; // 10px padding on each side (example)
-    const shadowWidth = 10; // Approximate shadow width (example)
-  
-    adjustedWidth -= borderWidth + paddingWidth + shadowWidth;
-  
-    // --- Render ---
+    const adjustedWidth = searchInputWrapperWidth;
+
     return (
-      <div className="searchbox-container" style={{ position: "relative" }}>
-        {isDropdownOpen &&
-          ReactDOM.createPortal(
-            <div
-              ref={dropdownRef}
-              className="search-dropdown"
-              style={{
-                position: "absolute",
-                top: `${dropdownTop}px`,
-                left: `${dropdownLeft}px`,
-                zIndex: 1000,
-                backgroundColor: "white",
-                border: "1px solid #ccc",
-                borderRadius: "5px",
-                boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
-                padding: "10px",
-                width: `${adjustedWidth}px`, // Use adjusted width
-                boxSizing: "border-box", // Include padding and border in the width
-                maxHeight: 'none', //REMOVE: remove max height if set
-                overflowY: 'visible',   //REMOVE: remove vertical scrolling if set
-                height : 'auto' // added here for all the items show in the drop down
-              }}
-            >
-              {filteredIngredients.length > 0 ? (
+        <div className="searchbox-container" style={{ position: "relative" }}>
+            {ReactDOM.createPortal(
                 <div
-                  className="ingredients-list"
-                  style={{
-                    display: "flex",
-                    flexWrap: "wrap",
-                    gap: "8px",
-                    //maxHeight: "200px",   //REMOVE: remove the item to show all elements
-                    //overflowY: "auto",  //REMOVE: remove scrolling
-                  }}
+                    ref={dropdownRef}
+                    onMouseDown={(e) => e.stopPropagation()}
+                    className="search-dropdown"
+                    style={{
+                        position: "absolute",
+                        top: `${dropdownTop}px`,
+                        left: `${dropdownLeft}px`,
+                        zIndex: 1000,
+                        backgroundColor: "white",
+                        border: "1px solid #ccc",
+                        borderRadius: "5px",
+                        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                        padding: "10px",
+                        width: `${adjustedWidth}px`,
+                        boxSizing: "border-box",
+                        maxHeight: "none",
+                        overflowY: "visible",
+                        height: "auto",
+                    }}
                 >
-                  {filteredIngredients.map((item) => (
-                    <div
-                      key={item.name}
-                      className="ingredient-item"
-                      onClick={() => handleItemClick(item.name)}
-                      style={{
-                        alignItems: "center",
-                        backgroundColor: "#f3f4f6",
-                        borderRadius: "20px",
-                        cursor: "pointer",
-                        display: "flex",
-                        gap: "6px",
-                        padding: "6px 12px",
-                        transition: "background-color 0.2s",
-                      }}
-                    >
-                      <img
-                        src={item.image}
-                        alt={item.name}
-                        style={{
-                          border: "1px solid #d1d5db",
-                          borderRadius: "50%",
-                          height: "24px",
-                          width: "24px",
-                        }}
-                      />
-                      <span style={{ fontSize: "14px", color: "#374151" }}>
-                        {item.name}
-                      </span>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div
-                  className="no-ingredients"
-                  style={{ color: "#6b7280", padding: "8px" }}
-                >
-                  No ingredients found
-                </div>
-              )}
-            </div>,
-            document.body
-          )}
-      </div>
+                    {filteredIngredients.length > 0 ? (
+                        <div
+                            className="ingredients-list"
+                            style={{
+                                display: "flex",
+                                flexWrap: "wrap",
+                                gap: "8px",
+                            }}
+                        >
+                            {filteredIngredients.map((item) => (
+                                <div
+                                    key={item.name}
+                                    className="ingredient-item"
+                                    onMouseDown={(e) => e.stopPropagation()}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleItemClick(item.name);
+                                    }}
+                                    style={{
+                                        alignItems: "center",
+                                        backgroundColor: selectedIngredients.includes(item.name)
+                                            ? "#a9a9a9"
+                                            : "#f3f4f6",
+                                        borderRadius: "20px",
+                                        cursor: "pointer",
+                                        display: "flex",
+                                        gap: "6px",
+                                        padding: "6px 12px",
+                                        transition: "background-color 0.2s",
+                                    }}
+                                >
+                                    <img
+                                        src={item.image}
+                                        alt={item.name}
+                                        style={{
+                                            border: "1px solid #698F3F",
+                                            borderRadius: "50%",
+                                            height: "24px",
+                                            width: "24px",
+                                        }}
+                                    />
+                                    <span style={{ fontSize: "14px", color: "#0A122A" }}>
+                                        {item.name}
+                                    </span>
+                                </div>
+                            ))}
+                            <button
+                                onMouseDown={(e) => e.stopPropagation()}
+                                onClick={handleShowRecipes}
+                                style={{
+                                    backgroundColor: "#698F3F",
+                                    color: "white",
+                                    padding: "10px 15px",
+                                    border: "none",
+                                    borderRadius: "5px",
+                                    cursor: "pointer",
+                                    fontSize: "14px",
+                                    marginTop: "10px",
+                                }}
+                            >
+                                Show Recipes with ({selectedIngredients.length}) ingredients
+                            </button>
+                        </div>
+                    ) : (
+                        <div
+                            className="no-ingredients"
+                            style={{ color: "#6b7280", padding: "8px" }}
+                        >
+                            No ingredients found
+                        </div>
+                    )}
+                </div>,
+                document.body
+            )}
+        </div>
     );
-  }
-  
-  export default SearchBox;
+}
+
+export default SearchBox;

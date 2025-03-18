@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate,useParams } from "react-router-dom";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
-import Loading from "../loading/Loading"; // Import the Loading Component
+import Loading from "../loading/Loading";
 import "./Recipes.css";
 
 const Recipes = () => {
-  const { category } = useParams(); 
   const [recipes, setRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+  const location = useLocation();
+  const { ingredients } = useParams();
 
   const [filters, setFilters] = useState({
     categories: [],
@@ -23,37 +24,38 @@ const Recipes = () => {
 
   useEffect(() => {
     const fetchRecipes = async () => {
-        try {
-            let url = "http://localhost:4000/recipe-api/recipes";
-            if (category) {
-                url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
-            }
+      try {
+        setLoading(true);
+        let url = "http://localhost:4000/recipe-api/recipes";
 
-            //console.log("Fetching recipes from:", url);
-
-            const response = await fetch(url);
-            // console.log("Response status:", response.status);
-
-            if (!response.ok) {
-                throw new Error(`Failed to fetch recipes. Status: ${response.status}`);
-            }
-
-            const data = await response.json();
-            // console.log("Fetched recipes data:", data);
-
-            setRecipes(data.payload || []);
-            setFilteredRecipes(data.payload || []);
-        } catch (err) {
-            console.error("Error fetching recipes:", err.message);
-            setError(err.message);
-        } finally {
-            setLoading(false);
+        // If there is a query string, fetch from the /explore endpoint
+        if (location.search) {
+          url = `http://localhost:4000/recipe-api/recipes/explore${location.search}`;
+          console.log("Fetching URL with query:", url);
+        } else if (ingredients) {
+          // If ingredients parameter exists, use the by-ingredients endpoint
+          url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
+          console.log("Fetching URL by ingredients:", url);
         }
+
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error(`Failed to fetch recipes. Status: ${response.status}`);
+        }
+
+        const data = await response.json();
+        setRecipes(data.payload || []);
+        setFilteredRecipes(data.payload || []);
+      } catch (err) {
+        console.error("Error fetching recipes:", err.message);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
     };
 
     fetchRecipes();
-}, [category]);
-
+  }, [ingredients, location.search]);
 
   useEffect(() => {
     const filterRecipes = () => {
@@ -94,7 +96,11 @@ const Recipes = () => {
   return (
     <div className="recipes-page">
       <div className="recipes-header d-flex justify-content-between align-items-center">
-        <h1 className="recipes-title">Discover Delicious Recipes</h1>
+        <h1 className="recipes-title">
+          {ingredients 
+            ? `Recipes containing ${decodeURIComponent(ingredients)}` 
+            : "Discover Delicious Recipes"}
+        </h1>
         <h2 className="filters-title">Taste Tuner</h2>
       </div>
 
@@ -110,7 +116,6 @@ const Recipes = () => {
                   .toLowerCase()
                   .replace(/[^a-z0-9]+/g, "-")
                   .replace(/^-+|-+$/g, "");
-
                 const encodedTitle = encodeURIComponent(sanitizedTitle);
 
                 return (

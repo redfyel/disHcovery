@@ -6,7 +6,8 @@ let recipesApp = express.Router();
 // Add JSON parser middleware
 recipesApp.use(express.json());
 
-// Fetch all recipes
+
+
 recipesApp.get('/recipes', async (req, res) => {
     try {
         const recipesCollection = req.app.get('recipesCollection');
@@ -113,7 +114,7 @@ recipesApp.post("/saved_recipe", async (req, res) => {
         res.status(500).json({ error: "Failed to save recipe", details: error.message });
     }
 });
-// fetch recipes by category
+
 // Fetch recipes by category (case-insensitive, partial match)
 recipesApp.get("/recipes/category/:category", async (req, res) => {
     try {
@@ -137,21 +138,69 @@ recipesApp.get("/recipes/category/:category", async (req, res) => {
         res.status(500).json({ message: "Internal Server Error" });
     }
 });
-// fetch airecipes
-recipesApp.get("/airecipes-api/ai-recipe/:id", async (req, res) => {
+  
+// fetch recipes by ingredients
+recipesApp.get("/recipes/by-ingredients/:ingredients", async (req, res) => {
     try {
-      const recipeId = req.params.id;
-      const recipe = await AiRecipeModel.findById(recipeId);
-      
-      if (!recipe) {
-        return res.status(404).json({ message: "Recipe not found" });
-      }
-      
-      res.json({ payload: recipe });
-    } catch (error) {
-      res.status(500).json({ message: "Error fetching recipe" });
-    }
-  });
+        const recipesCollection = req.app.get("recipesCollection");
 
+        // Get ingredients from query and validate
+        const ingredientsQuery = req.params.ingredients;
+        if (!ingredientsQuery) {
+            return res.status(400).json({ message: "No ingredients provided" });
+        }
+
+        // Decode the URI encoded ingredients
+        const ingredients = ingredientsQuery.split(",").map((ing) => decodeURIComponent(ing.trim()));
+
+        // console.log("Ingredients are:", ingredients);
+
+        // Build regex patterns for each ingredient for case-insensitive, partial match
+        const regexPatterns = ingredients.map(ingredient => new RegExp(ingredient.replace(/ /g, '.*'), 'i'));
+
+        // Construct the query using regex objects directly
+        const recipes = await recipesCollection.find({
+            "ingredients.name": { $in: regexPatterns }
+        }).toArray();
+
+        // If no recipes found, send a 404 response
+        if (!recipes.length) {
+            return res.status(404).json({ message: "No matching recipes found" });
+        }
+
+        // Send the response with the found recipes
+        res.status(200).json({ success: true, payload: recipes });
+
+    } catch (error) {
+        console.error("Error fetching recipes by ingredients:", error);
+        res.status(500).json({ message: "Internal Server Error" });
+    }
+});
+
+// fetch recipes by Explore Nav
+recipesApp.get("/recipes/explore", async (req, res) => {
+    try {
+      // Extract query parameters
+      const { Cuisine, MealType, Diet } = req.query;
+      const recipesCollection = req.app.get("recipesCollection");
+  
+      // Build a filter object
+      let filter = {};
+      if (Cuisine) filter.cuisine = { $regex: Cuisine, $options: "i" };
+      if (MealType) filter.mealType = { $regex: MealType, $options: "i" };
+      if (Diet) {
+        filter.dietFilters = { $elemMatch: { $regex: Diet, $options: "i" } };
+      }
+  
+    //   console.log("Filter object:", filter);
+  
+      // Fetch recipes from the database using the filter
+      const recipes = await recipesCollection.find(filter).toArray();
+      res.json({ payload: recipes });
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+});
+  
 
 module.exports = recipesApp;

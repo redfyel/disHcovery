@@ -219,3 +219,44 @@ textarea {
 .large {
   font-size: 100px; /* Even larger for emphasis */
 }
+
+.recipe-history {
+  margin-top: 10px;
+  position: relative; /* Required for absolute positioning of dropdown */
+}
+
+.recipe-history-button {
+  background-color: #f0f0f0;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.recipe-history-dropdown {
+  position: absolute;
+  top: 100%; /* Position below the button */
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10; /* Ensure it's above other content */
+  width: 200px; /* Adjust width as needed */
+}
+
+.recipe-history-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  cursor: pointer; /* Make it clear they are clickable if you add functionality*/
+}
+
+.recipe-history-item:hover {
+  background-color: #f5f5f5;
+}
+
+.recipe-history-item:last-child {
+  border-bottom: none;
+}

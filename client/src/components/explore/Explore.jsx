@@ -4,11 +4,10 @@ import { FaUtensils, FaGlobe, FaClock, FaLeaf } from "react-icons/fa";
 import ExploreDropdown from "./ExploreDropdown";
 import "./Explore.css";
 
-// Example categories with icons
 const categories = {
   Categories: {
     icon: <FaUtensils />,
-    filters: ["Main Course", "Appetizer", "Salad"],
+    filters: ["Main Course", "Appetizer", "Salad", "Quick & Easy", "Soup", "Comfort Food"],
   },
   Cuisine: {
     icon: <FaGlobe />,
@@ -20,7 +19,7 @@ const categories = {
   },
   Diet: {
     icon: <FaLeaf />,
-    filters: ["Vegan", "Keto", "Paleo", "Gluten Free", "Ovo Vegetarian"],
+    filters: ["Vegan", "Keto", "High-Protein", "Paleo", "Gluten Free", "Ovo Vegetarian"],
   },
 };
 
@@ -31,29 +30,32 @@ function Explore() {
 
   const handleFilterClick = (category, filter) => {
     const query = new URLSearchParams({ [category]: filter }).toString();
-    navigate(`/explore?${query}`);
+    navigate(`/recipes/explore?${query}`);
+  };
+
+  const handleMouseEnter = () => {
+    setShowDropdown(true);
+  };
+
+  const handleMouseLeave = () => {
+    setTimeout(() => {
+      setShowDropdown(false);
+    }, 300);
   };
 
   return (
-    <div>
-      {/* The "Explore" link (anchor) */}
-      <Link
-        to="#"
-        className="explore-button"
-        ref={exploreButtonRef}
-        onMouseEnter={() => setShowDropdown(true)}
-        onMouseLeave={() => setShowDropdown(false)}
-      >
+    <div
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
+      style={{ position: "relative", display: "inline-block" }}
+    >
+      <Link to="#" className="explore-button" ref={exploreButtonRef}>
         Explore
       </Link>
-
-      {/* The dropdown itself, rendered in a Portal */}
       <ExploreDropdown
         show={showDropdown}
         anchorRef={exploreButtonRef}
         onFilterClick={handleFilterClick}
-        onMouseEnter={() => setShowDropdown(true)}
-        onMouseLeave={() => setShowDropdown(false)}
         categories={categories}
       />
     </div>
