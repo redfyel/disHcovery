@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useContext } from "react";
 import { Link } from "react-router-dom";
+import AccessDenied from "../protected/AccessDenied";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import "./Saved.css";
 
@@ -70,6 +71,12 @@ const SavedRecipes = () => {
     <div className="saved-recipes-container">
       <div className="header-container">
         <h2>Saved Recipes</h2>
+        {!loginStatus && (
+                    <div>
+                      <AccessDenied />
+                      {/* Please <a href="/login" className="fw-bold">log in</a> to use AI recipes! */}
+                    </div>
+            )}
         <select className="recipe-dropdown" value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
           <option value="all">All Recipes</option>
           <option value="saved">Saved Recipes</option>
@@ -95,8 +102,8 @@ const SavedRecipes = () => {
       )}
 
       {selectedRecipe && (
-        <div className="modal-overlay" onClick={closeModal}>
-          <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+        <div className="ai-modal-overlay" onClick={closeModal}>
+          <div className="ai-modal-content" onClick={(e) => e.stopPropagation()}>
             <button className="close-button" onClick={closeModal}>✖</button>
             <h2>{selectedRecipe.title}</h2>
             <p><strong>Description:</strong> {selectedRecipe.description}</p>

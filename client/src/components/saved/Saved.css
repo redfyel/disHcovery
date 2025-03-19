@@ -84,7 +84,7 @@
 }
 
 /* MODAL OVERLAY (Blurred Background) */
-.modal-overlay {
+.ai-modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
@@ -99,7 +99,7 @@
 }
 
 /* MODAL CONTENT (Clear White Background) */
-.modal-content {
+.ai-modal-content {
   background: #fff !important;
   background-image: url(https://i.pinimg.com/736x/74/11/4e/74114e4824bb04fc13cef524bb69733a.jpg) !important;
   padding: 25px;
@@ -135,7 +135,7 @@
 }
 
 /* MODAL HEADINGS */
-.modal-content h2 {
+.ai-modal-content h2 {
   font-size: 22px;
   font-weight: bold;
   text-align: center;
@@ -143,7 +143,7 @@
 }
 
 /* MODAL PARAGRAPH */
-.modal-content p {
+.ai-modal-content p {
   font-size: 16px;
   line-height: 1.6;
   color: #333;

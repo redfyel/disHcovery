@@ -70,6 +70,42 @@ userApp.post("/login", expressAsyncHandler(async (req, res) => {
   res.status(200).json({ message: "login success", user: userInfo, token });
 }));
 
+userApp.post("/preferences", expressAsyncHandler(async (req, res) => {
+  console.log("Received Preferences Data:", req.body); // Debugging log
+
+  const usersCollection = req.app.get("usersCollection");
+  const { userId, ...preferences } = req.body;
+
+  if (!userId || Object.keys(preferences).length === 0) {
+    return res.status(400).json({ message: "Missing userId or preferences" });
+  }
+
+  try {
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Ensure the user document has a preferences object
+    const updateResult = await usersCollection.updateOne(
+      { _id: new ObjectId(userId) },
+      { $set: { preferences } } // Overwrites preferences object
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update preferences" });
+    }
+
+    res.status(200).json({ message: "Preferences saved successfully!", updatedPreferences: preferences });
+
+  } catch (error) {
+    console.error("Error saving preferences:", error);
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+}));
+
+
 const { ObjectId } = require("mongodb"); 
 const jwt = require("jsonwebtoken");
 
