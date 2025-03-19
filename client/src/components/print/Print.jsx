@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { FaUtensils, FaClock, FaConciergeBell, FaUsers } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
-import logo from '../../assets/images/logoo.png'
+import logo from '../../assets/images/logo_og.png'
 
 function Print() {
   const navigate = useNavigate();

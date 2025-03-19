@@ -1,6 +1,6 @@
 import Lottie from "lottie-react";
 import LoadingAnimation from "../../assets/animations/loading.json";
-import logo from "../../assets/images/logoo.png";
+import logo from "../../assets/images/logo_og.png";
 
 function Loading() {
   return (
