@@ -8,8 +8,10 @@ function Register() {
   const navigate = useNavigate();
   const [err, setErr] = useState("");
   const onRegisterSuccess = () => {
+    localStorage.setItem("isNewUser", "true");
     navigate("/login");
   };
+
   async function onUserRegister(newUser) {
     try {
       let res = await fetch(`http://localhost:4000/user-api/register`, {

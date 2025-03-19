@@ -21,6 +21,8 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
 
     newUser.saved_recipes = []; 
     newUser.roulette_recipes= []; 
+    newUser.preferences = {}; 
+
 
     //verifying uniqueness
     let existingUser = await usersCollection.findOne({
