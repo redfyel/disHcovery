@@ -282,5 +282,24 @@ airecipesApp.post("/generate-recipe-from-image", async (req, res) => {
   }
 });
 
+// fetch the saved ai_recipes
+airecipesApp.get("/ai-recipes/:username", async (req, res) => {
+  try {
+    const { username } = req.params;
+    const AIcollection = req.app.get("aiRecipesCollection");
+
+    const recipes = await AIcollection.find({ username }).toArray();
+
+    if (!recipes.length) {
+      return res.status(404).json({ error: "No AI-generated recipes found." });
+    }
+
+    res.json({ payload: recipes });
+  } catch (error) {
+    console.error("Error fetching AI recipes:", error);
+    res.status(500).json({ error: "Failed to fetch AI recipes." });
+  }
+});
+
 
 module.exports = airecipesApp;

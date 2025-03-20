@@ -86,7 +86,7 @@ recipesApp.get("/saved-recipes/:userId", async (req, res) => {
 
 
 // save a recipe
-recipesApp.post("/save-recipe", async (req, res) => {
+recipesApp.post("/saved_recipe", async (req, res) => {
     try {
         console.log("Incoming save request:", req.body); // Log incoming request
         

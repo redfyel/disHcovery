@@ -1,69 +1,170 @@
+/* Saved Recipes Container */
 .saved-recipes-container {
-    max-width: 900px;
-    margin: auto;
+  max-width: 1200px;
+  margin: 40px auto;
+  padding: 20px;
+  text-align: center;
+  background: #f8f6f1;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Heading */
+.saved-recipes-container h2 {
+  font-size: 24px;
+  color: #0a122a;
+  margin-bottom: 20px;
+}
+
+/* Error Message */
+.saved-error-message {
+  color: red;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+/* No Recipes Message */
+.saved-no-recipes {
+  font-size: 18px;
+  color: #698f3f;
+  font-weight: bold;
+}
+
+/* Recipe Grid */
+.saved-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  justify-content: center;
+}
+
+/* Recipe Card */
+.saved-recipe-card {
+  background: white;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.2s ease-in-out;
+}
+
+.saved-recipe-card:hover {
+  transform: scale(1.05);
+}
+
+/* Recipe Image */
+.saved-recipe-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+/* Recipe Title */
+.saved-recipe-card h3 {
+  font-size: 18px;
+  color: #0a122a;
+  margin: 10px 0;
+}
+
+/* View Recipe Button */
+.view-button {
+  display: inline-block;
+  background: #698f3f;
+  color: white;
+  text-decoration: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  font-weight: bold;
+  transition: background 0.3s ease;
+}
+
+.view-button:hover {
+  background: #567a2c;
+}
+
+/* MODAL OVERLAY (Blurred Background) */
+.ai-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(206, 54, 54, 0.3) ; /* Slight dim */
+  /* backdrop-filter: blur(8px); Blurs only the background */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+/* MODAL CONTENT (Clear White Background) */
+.ai-modal-content {
+  background: #fff !important;
+  background-image: url(https://i.pinimg.com/736x/74/11/4e/74114e4824bb04fc13cef524bb69733a.jpg) !important;
+  padding: 25px;
+  border-radius: 12px;
+  width: 50%;
+  max-width: 500px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.3);
+  text-align: left;
+  position: relative;
+  animation: fadeIn 0.3s ease-in-out;
+  overflow-y: auto;
+  max-height: 80vh;
+  opacity: 1 !important; /* Ensures full visibility */
+}
+
+
+/* CLOSE BUTTON */
+.close-button {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  background: transparent;
+  border: none;
+  font-size: 22px;
+  cursor: pointer;
+  color: #333;
+  font-weight: bold;
+  transition: color 0.3s ease-in-out;
+}
+
+.close-button:hover {
+  color: #0a122a !important;
+}
+
+/* MODAL HEADINGS */
+.ai-modal-content h2 {
+  font-size: 22px;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* MODAL PARAGRAPH */
+.ai-modal-content p {
+  font-size: 16px;
+  line-height: 1.6;
+  color: #333;
+}
+
+/* FADE-IN EFFECT */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* RESPONSIVE DESIGN */
+@media (max-width: 768px) {
+  .modal-content {
+    width: 90%;
     padding: 20px;
   }
-  
-  h2 {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #698F3F;
-  }
-  
-  .saved-recipe-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-  }
-  
-  .saved-recipe-card {
-    background: #FBFAF8;
-    border: 1px solid #E7DECD;
-    border-radius: 10px;
-    text-align: center;
-    padding: 15px;
-    transition: transform 0.3s ease-in-out;
-  }
-  
-  .saved-recipe-card:hover {
-    transform: scale(1.05);
-  }
-  
-  .saved-recipe-image {
-    width: 100%;
-    height: 160px;
-    object-fit: cover;
-    border-radius: 10px;
-  }
-  
-  h3 {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-  
-  .view-button {
-    display: block;
-    background-color: #804E49;
-    color: #FBFAF8;
-    padding: 8px;
-    border-radius: 5px;
-    text-decoration: none;
-    margin-top: 10px;
-  }
-  
-  .view-button:hover {
-    background-color: #5e3a2f;
-  }
-  
-  .saved-no-recipes {
-    text-align: center;
-    color: #666;
-    font-size: 16px;
-  }
-  
-  .saved-error-message {
-    color: red;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
+}
