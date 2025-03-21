@@ -44,7 +44,7 @@ const Recipe = () => {
   ]);
 
   // Keep numeric servings in state
-  const [servings, setServings] = useState(1);
+  // const [servings, setServings] = useState(1);
 
   // Fetch the recipe from the API
   const fetchRecipe = useCallback(async (recipeTitle) => {
@@ -71,11 +71,11 @@ const Recipe = () => {
   }, [title, fetchRecipe]);
 
   // Once the recipe loads, parse out the numeric servings
-  useEffect(() => {
-    if (recipe && recipe.servings) {
-      setServings(parseNumericServings(recipe.servings));
-    }
-  }, [recipe]);
+  // useEffect(() => {
+  //   if (recipe && recipe.servings) {
+  //     setServings(parseNumericServings(recipe.servings));
+  //   }
+  // }, [recipe]);
 
   if (loading) return <div className="loading">Loading recipe...</div>;
   if (error) {
@@ -100,6 +100,7 @@ const Recipe = () => {
     }
     if (!token) {
       console.error("No token found");
+      alert("Authentication error. Please log in again.");
       return;
     }
     try {
@@ -172,7 +173,7 @@ const Recipe = () => {
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
   // Numeric version of the original servings
-  const numericRecipeServings = parseNumericServings(recipe.servings);
+  // const numericRecipeServings = parseNumericServings(recipe.servings);
 
   // For easy references
   const recipeId = recipe._id;
@@ -218,23 +219,23 @@ const Recipe = () => {
                 {showIngredientSelection ? "Close" : "Alternatives"}
               </button>
 
-              <ScaleRecipe
+              {/* <ScaleRecipe
                 servings={servings}
                 setServings={setServings}
                 originalServingsText={recipe.servings}
-              />
+              /> */}
             </div>
 
             <ul>
               {recipe.ingredients?.map((ingredient, index) => (
                 <li key={index}>
-                  <div className="ingredient-text">
+                  {/* <div className="ingredient-text">
                     {(
                       (ingredient.amount * servings) /
                       numericRecipeServings
                     ).toFixed(2)}{" "}
                     {ingredient.unit} {ingredient.name}
-                  </div>
+                  </div> */}
                   {ingredientAlternatives[ingredient.name] && (
                     <p
                       className={`alternative ${
@@ -345,7 +346,7 @@ const Recipe = () => {
             <p><strong>Cuisine:</strong> {recipe.cuisine}</p>
             <p><strong>Meal Type:</strong> {recipe.mealType}</p>
             <p><strong>Category:</strong> {recipe.category}</p>
-            <p><strong>Servings:</strong> {recipe.servings}</p>
+            {/* <p><strong>Servings:</strong> {recipe.servings}</p> */}
             <p><strong>Prep Time:</strong> {recipe.preparationTime}</p>
             <p><strong>Cook Time:</strong> {recipe.cookingTime}</p>
             <p><strong>Total Time:</strong> {recipe.totalTime}</p>
