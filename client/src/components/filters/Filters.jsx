@@ -104,7 +104,7 @@ const Filters = ({ onFilterChange }) => {
                     <input type="checkbox" checked={selectedFilters.hasVideo} onChange={handleVideoFilterChange} />
                     <span className="slider"></span>
                 </label>
-                <span className="toggle-label">{selectedFilters.hasVideo ? " With Video" : " Without Video"}</span>
+                <span className="toggle-label">{selectedFilters.hasVideo ? " Recipes With Video" : " All Recipes"}</span>
             </div>
             <hr className="custom-hr" />
 
