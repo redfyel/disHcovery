@@ -168,3 +168,31 @@
     padding: 20px;
   }
 }
+
+
+/* Hide scrollbars when access is denied */
+body.access-denied {
+  overflow: hidden;
+}
+
+/* Hide extra lines/borders when access is denied */
+.access-denied .saved-recipes-container {
+  display: none; /* Hides the recipe container */
+}
+
+/* Ensure the access denied message is centered */
+.access-denied-message {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background: #fbfaf8; /* Background matching your theme */
+}
+
+/* Remove lines (if using any borders) */
+.access-denied-message::before,
+.access-denied-message::after {
+  display: none;
+}

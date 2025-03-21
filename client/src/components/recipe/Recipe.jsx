@@ -85,6 +85,7 @@ const Recipe = () => {
     }
     if (!token) {
       console.error("No token found");
+      alert("Authentication error. Please log in again.");
       return;
     }
     try {
