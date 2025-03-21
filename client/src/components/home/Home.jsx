@@ -140,9 +140,6 @@ const features = [
   </div>
 </section>;
 
-
-
-
       {/* Categories Section */}
       <section className="categories-section">
         <h2 className="section-title">Explore Categories</h2>

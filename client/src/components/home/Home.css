@@ -107,19 +107,60 @@
   display: none;              /* Hide scrollbar in Chrome, Safari, Opera */
 }
 
+.feature-card:nth-child(odd) {
+  background: #698F3F; /* Green */
+  color: white;
+  padding: 40px; /* Increased padding for better spacing */
+  margin: 20px 0; /* Added margin to separate cards */
+}
+
+.feature-card:nth-child(even) {
+  background: #0A122A; /* Dark Blue */
+  color: white;
+  padding: 40px;
+  margin: 20px 0;
+}
+
+/* Ensure text inside even feature cards remains white */
+.feature-card .feature-text {
+  font-size: 1.8rem; /* Increased text size */
+  line-height: 1.6; /* Better readability */
+  font-weight: bold;
+}
+
+/* Adjust images based on background */
+.feature-card:nth-child(odd) .feature-image img {
+  filter: invert(1) brightness(2);
+}
+
+.feature-card:nth-child(even) .feature-image img {
+  filter: invert(1) brightness(2); /* Makes the image appear white */
+}
+
+/* Add spacing to feature-text */
+.feature-text {
+  flex: 1;
+  padding: 60px; /* More padding for spacious layout */
+  text-align: left;
+}
+.feature-card .feature-text {
+  color: white !important; /* Force white text */
+}
+
 .feature-card {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  background: #fbfaf8;
+  background: #698F3F;
   border-radius: 15px;
   padding: 25px;
   margin: 0;
   box-shadow: 0px 4px 8px rgba(246, 243, 243, 0.1);
   height: 100vh;              /* Each card fills the viewport height */
   scroll-snap-align: center;
-  background-color: #bbfa77;
+  border: 3px solid #0A122A;  /* Added proper border color */
 }
+
 
 
 .feature-card.reverse {
