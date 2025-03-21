@@ -5,21 +5,14 @@ import Share from "../share/Share";
 import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
-import {
-  faHeart,
-  faPrint,
-  faBookmark,
-  faComment,
-} from "@fortawesome/free-solid-svg-icons";
+import { IoFastFoodSharp } from "react-icons/io5";
+import {  FaUsers } from "react-icons/fa";
+import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,} from "@fortawesome/free-solid-svg-icons";
+import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
-import ScaleRecipe from "../scale/ScaleRecipe";
+import {motion} from 'framer-motion'
 
-// Helper function: parse numeric portion from something like "4 slices"
-function parseNumericServings(servingsStr) {
-  const parsed = parseInt(servingsStr, 10);
-  return isNaN(parsed) ? 1 : parsed;
-}
 
 const Recipe = () => {
   const { title } = useParams();
@@ -43,8 +36,6 @@ const Recipe = () => {
     { id: 2, author: "David L.", text: "I added extra spice." },
   ]);
 
-  // Keep numeric servings in state
-  const [servings, setServings] = useState(1);
 
   // Fetch the recipe from the API
   const fetchRecipe = useCallback(async (recipeTitle) => {
@@ -70,12 +61,6 @@ const Recipe = () => {
     fetchRecipe(title);
   }, [title, fetchRecipe]);
 
-  // Once the recipe loads, parse out the numeric servings
-  useEffect(() => {
-    if (recipe && recipe.servings) {
-      setServings(parseNumericServings(recipe.servings));
-    }
-  }, [recipe]);
 
   if (loading) return <div className="loading">Loading recipe...</div>;
   if (error) {
@@ -171,9 +156,6 @@ const Recipe = () => {
   // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
-  // Numeric version of the original servings
-  const numericRecipeServings = parseNumericServings(recipe.servings);
-
   // For easy references
   const recipeId = recipe._id;
   const recipeTitle = recipe.title;
@@ -191,6 +173,17 @@ const Recipe = () => {
             alt={recipeTitle}
             className="rrecipe-image"
           />
+
+           <div className="recipe-info">
+            <div className="tag"><FontAwesomeIcon icon={faUtensils}/> {recipe.cuisine}</div>
+            <div className="tag"><FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}</div>
+            <div className="tag"><IoFastFoodSharp size={23} />{recipe.category}</div> 
+            <div className="tag"><FaUsers />Servings:{recipe.servings}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}</div>
+          </div>
+
           <div className="save-print-area">
             <button onClick={handleSaveRecipe} className="icon-button">
               <FontAwesomeIcon icon={faBookmark} />
@@ -200,92 +193,59 @@ const Recipe = () => {
               <FontAwesomeIcon icon={faPrint} /> Print
             </button>
           </div>
-
-          {/* INGREDIENTS SECTION */}
-          <div className="ingredients-section">
-            <div
-              className="ingredients-header"
-              style={{ display: "flex", alignItems: "center", gap: "10px" }}
-            >
-              <h3>Ingredients:</h3>
-
-              <button
-                onClick={toggleIngredientSelection}
-                className="ai-button ingredient-alternatives-button"
-                disabled={isFetchingAlternatives}
-              >
-                <HiSparkles style={{ marginRight: "5px" }} />
-                {showIngredientSelection ? "Close" : "Alternatives"}
-              </button>
-
-              <ScaleRecipe
-                servings={servings}
-                setServings={setServings}
-                originalServingsText={recipe.servings}
-              />
-            </div>
-
-            <ul>
-              {recipe.ingredients?.map((ingredient, index) => (
-                <li key={index}>
-                  <div className="ingredient-text">
-                    {(
-                      (ingredient.amount * servings) /
-                      numericRecipeServings
-                    ).toFixed(2)}{" "}
-                    {ingredient.unit} {ingredient.name}
-                  </div>
-                  {ingredientAlternatives[ingredient.name] && (
-                    <p
-                      className={`alternative ${
-                        selectedIngredients.includes(ingredient.name)
-                          ? "highlighted"
-                          : ""
-                      }`}
-                    >
-                      Alternative: {ingredientAlternatives[ingredient.name]}
+{/* Ingredients Section */}
+<div className="ingredients-section">
+    <div className="ingredients-header">
+        <h3>Ingredients:</h3>
+        <button
+            onClick={toggleIngredientSelection}
+            className="ai-button ingredient-alternatives-button"
+            disabled={isFetchingAlternatives} // Disable button while loading
+        >
+            <HiSparkles style={{ marginRight: '5px' }} />
+            {showIngredientSelection ? "Close" : "Alternatives"}
+        </button>
+    </div>
+    <ul>
+        {recipe?.ingredients?.map((ingredient, index) => (
+            <li key={index}>
+                <div className="ingredient-text">
+                    {ingredient.amount} {ingredient.unit} {ingredient.name}
+                </div>
+                {ingredientAlternatives[ingredient.name] && (
+                    <p className={`alternative ${selectedIngredients.includes(ingredient.name) ? 'highlighted' : ''}`}>
+                        Alternative: {ingredientAlternatives[ingredient.name]}
                     </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+                )}
+            </li>
+        ))}
+    </ul>
 
-            {showIngredientSelection && (
-              <div
-                className={`ingredient-selection ${
-                  showIngredientSelection ? "" : "hidden"
-                }`}
-              >
-                <h4>Select Ingredients for Alternatives:</h4>
-                <ul>
-                  {recipe.ingredients?.map((ingredient, index) => (
+    {showIngredientSelection && (
+        <div className={`ingredient-selection ${showIngredientSelection ? '' : 'hidden'}`}>
+            <h4>Select Ingredients for Alternatives:</h4>
+            <ul>
+                {recipe?.ingredients?.map((ingredient, index) => (
                     <li key={index}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value={ingredient.name}
-                          checked={selectedIngredients.includes(
-                            ingredient.name
-                          )}
-                          onChange={() =>
-                            handleIngredientSelect(ingredient.name)
-                          }
-                        />
-                        {ingredient.amount} {ingredient.unit} {ingredient.name}
-                      </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                value={ingredient.name}
+                                checked={selectedIngredients.includes(ingredient.name)}
+                                onChange={() => handleIngredientSelect(ingredient.name)}
+                            />
+                            {ingredient.amount} {ingredient.unit} {ingredient.name}
+                        </label>
                     </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={fetchIngredientAlternatives}
-                  className="ai-button"
-                  disabled={isFetchingAlternatives}
-                >
-                  {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
-                </button>
-              </div>
-            )}
-          </div>
+                ))}
+            </ul>
+            <button onClick={fetchIngredientAlternatives} className="ai-button" disabled={isFetchingAlternatives}>
+                {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
+            </button>
+        </div>
+    )}
+</div>
+
 
           {/* OPTIONAL MIX-INS SECTION */}
           {recipe.optional_mixins?.length > 0 && (
@@ -308,22 +268,8 @@ const Recipe = () => {
               ))}
             </ol>
           </div>
-
-          {/* ALLERGY WARNINGS SECTION */}
-          {Array.isArray(recipe.allergyWarnings) &&
-            recipe.allergyWarnings.length > 0 && (
-              <div className="allergy-warnings-section recipe-section">
-                <h3>Allergy Warnings:</h3>
-                <ul>
-                  {recipe.allergyWarnings.map((warning, index) => (
-                    <li key={index}>{warning}</li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-          {/* RECIPE VIDEO SECTION */}
-          {recipe.videoURL && (
+            {/* RECIPE VIDEO SECTION */}
+            {recipe.videoURL ? (
             <div className="recipe-video recipe-section">
               <h3>Recipe Video:</h3>
               <iframe
@@ -336,38 +282,60 @@ const Recipe = () => {
                 allowFullScreen
               ></iframe>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* RIGHT COLUMN */}
         <div className="recipe-right-column">
-          <div className="recipe-info">
-            <p><strong>Cuisine:</strong> {recipe.cuisine}</p>
-            <p><strong>Meal Type:</strong> {recipe.mealType}</p>
-            <p><strong>Category:</strong> {recipe.category}</p>
-            <p><strong>Servings:</strong> {recipe.servings}</p>
-            <p><strong>Prep Time:</strong> {recipe.preparationTime}</p>
-            <p><strong>Cook Time:</strong> {recipe.cookingTime}</p>
-            <p><strong>Total Time:</strong> {recipe.totalTime}</p>
-          </div>
+        <div className="nutrition-info">
+  <h3>Nutrition Facts</h3>
+  {recipe.nutritionInformation && Object.keys(recipe.nutritionInformation).length > 0 ? (
+    <ul className="nutrition-list">
+      {Object.entries(recipe.nutritionInformation).map(([key, value], index) => (
+        <li key={index}>
+          <span className="nutrient-name">
+            {key.replace(/\b\w/g, char => char.toUpperCase())}
+          </span>
+          <span className="nutrient-value">{value || "N/A"}</span>
+        </li>
+      ))}
+    </ul>
+  ) : (
+    <p className="no-nutrition">No nutrition information available.</p>
+  )}
+</div>
 
-          <div className="nutrition-info">
-            <h3>Nutrition</h3>
-            {recipe.nutritionInformation ? (
-              <>
-                <p><strong>Calories:</strong> {recipe.nutritionInformation.Calories}</p>
-                <p><strong>Fat:</strong> {recipe.nutritionInformation.Fat}</p>
-                <p><strong>Saturated Fat:</strong> {recipe.nutritionInformation["Saturated Fat"]}</p>
-                <p><strong>Carbohydrates:</strong> {recipe.nutritionInformation.Carbohydrates}</p>
-                <p><strong>Fiber:</strong> {recipe.nutritionInformation.Fiber}</p>
-                <p><strong>Sugars:</strong> {recipe.nutritionInformation.Sugars}</p>
-                <p><strong>Protein:</strong> {recipe.nutritionInformation.Protein}</p>
-                <p><strong>Sodium:</strong> {recipe.nutritionInformation.Sodium}</p>
-              </>
-            ) : (
-              <p>No nutrition information available.</p>
-            )}
-          </div>
+
+
+
+          {/* allergy warnings section */}
+          {Array.isArray(recipe.allergyWarnings) && recipe.allergyWarnings.length > 0 && (
+  <motion.div
+    className="allergy-warnings-section recipe-section"
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ type: "spring", stiffness: 120 }}
+  >
+    <h3 className="allergy-title">
+    <TiWarning size={20} />
+    Allergy Warnings
+    </h3>
+    <ul>
+      {recipe.allergyWarnings.map((warning, index) => (
+        <motion.li
+          key={index}
+          initial={{ x: -10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: index * 0.15 }}
+        >
+         <TiWarning size={20} />
+         {warning}
+        </motion.li>
+      ))}
+    </ul>
+  </motion.div>
+)}
+
 
           <div className="like-comment-share">
             <button className="icon-button">
