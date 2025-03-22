@@ -1,3 +1,20 @@
 .btn-close:hover{
-    border: 1px solid black;
+    border: 1px solid #0A122A;
 }
+.rou-recipe-title {
+    color: #698F3F;
+    text-align: center;
+    max-width: 100%;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    font-size: 2rem; 
+    line-height: 1.4; 
+    padding: 0 15px; 
+  }
+  
+  .rou-recipe-name {
+    display: inline;
+    white-space: normal; 
+    font-weight: bold;
+  }
+  
