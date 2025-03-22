@@ -1,9 +1,11 @@
+/* Recipe.css */
+
 /* ==========================================================================
 Base Styles
 ========================================================================== */
 
 body {
-  font-family: 'Arial', sans-serif;
+  font-family: "Arial", sans-serif;
   background-color: #FBFAF8;
   margin: 0;
   padding: 0;
@@ -15,7 +17,7 @@ Recipe Details Section
 ========================================================================== */
 
 .recipe-details {
-  max-width: 1000px;
+  max-width: 1100px; /* Adjust as needed */
   margin: 40px auto;
   background: #FBFAF8;
   padding: 30px;
@@ -32,9 +34,11 @@ Recipe Details Section
 }
 
 .recipe-grid-container {
-  display: grid;
-  grid-template-columns: 2fr 1fr;
-  gap: 30px;
+  display: flex; /* Changed to flexbox */
+  flex-direction: column; /* Stack items vertically */
+  align-items: center; /* Center horizontally */
+  /* grid-template-columns: 1fr;   Removed grid layout */
+  gap: 20px; /* Spacing between elements */
 }
 
 /* ==========================================================================
@@ -44,41 +48,46 @@ Left Column Styles
 .recipe-left-column {
   display: flex;
   flex-direction: column;
+  align-items: center; /* Center content within left column */
+  width: 100%; /* Take full width */
 }
 
 .rrecipe-image {
-  width: 500px;
-  height: 500px;
+  width: 500px; /* Adjust image size as needed */
+  height: 500px; /* Adjust image size as needed */
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   margin-bottom: 20px;
+  align-self: center; /* Ensures the image is centered within its container */
 }
 
 /* Recipe Info Section */
 .recipe-info {
-  background: #F8F6F1; /* Light Cream */
+  background: #f8f6f1;
   padding: 15px;
   border-radius: 12px;
-  box-shadow: 0px 4px 8px rgba(10, 18, 42, 0.1); /* Subtle Dark Blue Shadow */
+  box-shadow: 0px 4px 8px rgba(10, 18, 42, 0.1);
   margin-bottom: 25px;
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  border-left: 5px solid #698F3F; /* Olive Green Accent */
+  border-left: 5px solid #698f3f;
+  width: 100%; /* Take full width of left column */
+  justify-content: center; /* Center tags horizontally */
 }
 
 /* Recipe Tags */
 .tag {
   display: flex;
   align-items: center;
-  background: #E7DECD; /* Beige */
+  background: #e7decD;
   padding: 6px 12px;
   border-radius: 15px;
   font-size: 14px;
   font-weight: bold;
-  color: #0A122A; /* Dark Blue */
-  box-shadow: 0px 2px 6px rgba(105, 143, 63, 0.2); /* Soft Olive Glow */
+  color: #0a122a;
+  box-shadow: 0px 2px 6px rgba(105, 143, 63, 0.2);
 }
 
 /* Tag Icons */
@@ -86,16 +95,15 @@ Left Column Styles
   margin-right: 6px;
   width: 16px;
   height: 16px;
-  color: #4E7223; /* Dark Olive Green */
+  color: #4e7223;
 }
-
 
 .recipe-info p {
   display: flex;
   align-items: center;
   gap: 5px;
   font-size: 16px;
-  color: #0A122A;
+  color: #0a122a;
   margin: 8px 0;
   line-height: 1.5;
   white-space: nowrap;
@@ -104,23 +112,23 @@ Left Column Styles
 .recipe-info svg {
   width: 20px;
   height: 20px;
-  color: #698F3F;
+  color: #698f3f;
 }
 
 .recipe-info strong {
-  color: #698F3F;
+  color: #698f3f;
   margin-right: 5px;
 }
 
 .save-print-area {
   display: flex;
-  justify-content: start;
+  justify-content: center; /* Center buttons horizontally */
   gap: 15px;
   margin-bottom: 20px;
 }
 
 .icon-button {
-  background-color: #F8F6F1;
+  background-color: #f8f6f1;
   border: none;
   padding: 10px 15px;
   border-radius: 8px;
@@ -128,47 +136,16 @@ Left Column Styles
   display: flex;
   align-items: center;
   gap: 8px;
-  color: #698F3F;
+  color: #698f3f;
   transition: background-color 0.3s ease;
 }
 
 .icon-button:hover {
-  background-color: #698F3F;
-  color: #FBFAF8;
-}
-
-/* Recipe Sections (Ingredients, Steps, etc.) */
-.recipe-section {
-  background-color: #F8F6F1;
-  padding: 20px;
-  border-radius: 12px;
-  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-}
-
-.recipe-section h3 {
-  font-size: 22px;
-  color: #0A122A;
-  margin-bottom: 15px;
-  border-bottom: 2px solid #698F3F;
-  padding-bottom: 5px;
-}
-
-.recipe-section ul,
-.recipe-section ol {
-  list-style-type: none;
-  padding: 0;
-}
-
-.recipe-section li {
-  font-size: 17px;
-  color: #0A122A;
-  line-height: 1.6;
-  margin-bottom: 8px;
+  background-color: #698f3f;
+  color: #fbfaf8;
 }
 
 /* Ingredients Section */
-
 .ingredients-header {
   display: flex;
   justify-content: space-between;
@@ -177,8 +154,8 @@ Left Column Styles
 }
 
 .ingredient-alternatives-button {
-  background-color: #698F3F;
-  color: #FBFAF8;
+  background-color: #698f3f;
+  color: #fbfaf8;
   border: none;
   padding: 8px 12px;
   border-radius: 5px;
@@ -194,11 +171,12 @@ Left Column Styles
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  justify-content: center; /* Center ingredients horizontally */
 }
 
 .ingredients-section li {
-  background-color: #FBFAF8;
-  color: #0A122A;
+  background-color: #fbfaf8;
+  color: #0a122a;
   border-radius: 8px;
   padding: 10px 12px;
   margin: 0;
@@ -207,8 +185,39 @@ Left Column Styles
   font-size: 16px;
 }
 
-/* Steps Section */
+/* Recipe Sections (Ingredients, Steps, etc.) */
+.recipe-section {
+  background-color: #f8f6f1;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0px 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 20px;
+  width: 100%; /* Take full width */
+  max-width: 700px; /* Limit section width */
+}
 
+.recipe-section h3 {
+  font-size: 22px;
+  color: #0a122a;
+  margin-bottom: 15px;
+  border-bottom: 2px solid #698f3f;
+  padding-bottom: 5px;
+}
+
+.recipe-section ul,
+.recipe-section ol {
+  list-style-type: none;
+  padding: 0;
+}
+
+.recipe-section li {
+  font-size: 17px;
+  color: #0a122a;
+  line-height: 1.6;
+  margin-bottom: 8px;
+}
+
+/* Steps Section */
 .steps-section ol {
   counter-reset: step-counter;
 }
@@ -226,8 +235,8 @@ Left Column Styles
   top: 0;
   width: 25px;
   height: 25px;
-  background-color: #698F3F;
-  color: #FBFAF8;
+  background-color: #698f3f;
+  color: #fbfaf8;
   border-radius: 50%;
   text-align: center;
   line-height: 25px;
@@ -236,67 +245,38 @@ Left Column Styles
 
 /* Allergy Warning Section */
 .allergy-warnings-section {
-  background: #FFF8E1; /* Soft warning color */
-  color: #5A1E02; /* Darker text for contrast */
-  border-left: 6px solid #FF6B35; /* Emphasized left border */
+  background: #f8f6f1;
+  color: #0a122a;
+  border-left: 6px solid #4e7223;
   padding: 16px;
-  margin-top: 20px;
   border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.2);
+  box-shadow: 0 4px 12px rgba(110, 143, 63, 0.3);
   transition: transform 0.3s ease-in-out;
+  max-width: 700px; /* Match recipe section width */
+  margin: 0 auto 20px; /* Center and add bottom margin */
 }
 
-/* On Hover, Slightly Lift */
 .allergy-warnings-section:hover {
   transform: scale(1.02);
 }
 
-/* Title */
 .allergy-title {
   font-size: 20px;
   font-weight: bold;
   display: flex;
   align-items: center;
   gap: 8px;
+  color: #698f3f;
 }
 
-/* Allergy Warning Section */
-.allergy-warnings-section {
-  background: #F8F6F1; /* Light Cream */
-  color: #0A122A; /* Dark Blue text */
-  border-left: 6px solid #4E7223; /* Dark Olive Green */
-  padding: 16px;
-  margin-top: 20px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(110, 143, 63, 0.3); /* Olive Green Shadow */
-  transition: transform 0.3s ease-in-out;
-}
-
-/* On Hover, Slightly Lift */
-.allergy-warnings-section:hover {
-  transform: scale(1.02);
-}
-
-/* Title */
-.allergy-title {
-  font-size: 20px;
-  font-weight: bold;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #698F3F; /* Olive Green */
-}
-
-/* Allergy List */
 .allergy-warnings-section ul {
   padding: 0;
   margin: 0;
   list-style: none;
 }
 
-/* Allergy Items */
 .allergy-warnings-section li {
-  background: #E7DECD; /* Beige */
+  background: #e7decD;
   padding: 10px;
   margin: 5px 0;
   border-radius: 6px;
@@ -305,50 +285,32 @@ Left Column Styles
   align-items: center;
   gap: 8px;
   font-weight: 500;
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
 }
 
-/* Warning Icon - Forces Same Size & Alignment */
 .allergy-warnings-section li svg,
 .allergy-title svg {
   flex-shrink: 0;
-  width: 20px; 
-  height: 20px; 
-  color: #4E7223;
+  width: 20px;
+  height: 20px;
+  color: #4e7223;
 }
 
-
-/* Recipe Video Section */
-.recipe-video iframe {
-  width: 100%;
-  max-height: 400px;
-  border-radius: 12px;
-  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
-}
-
-/* ==========================================================================
-Right Column Styles
-========================================================================== */
-
-.recipe-right-column {
-  display: flex;
-  flex-direction: column;
-}
-
+/* Nutrition Info Section */
 .nutrition-info {
-  background: #FBFAF8; /* Off-White */
+  background: #fbfaf8;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
-  margin-bottom: 25px;
-  border-left: 5px solid #698F3F; /* Olive Green Accent */
-  max-width: 400px;
+  border-left: 5px solid #698f3f;
   animation: fadeIn 0.5s ease-in-out;
+  max-width: 700px; /* Match recipe section width */
+  margin: 0 auto 20px; /* Center and add bottom margin */
 }
 
 .nutrition-info h3 {
   font-size: 22px;
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
   margin-bottom: 15px;
   font-weight: bold;
 }
@@ -361,16 +323,16 @@ Right Column Styles
 
 .nutrition-list li {
   display: flex;
-  align-items: center; /* Ensures proper vertical alignment */
-  gap: 12px; /* Adds spacing instead of space-between */
-  flex-wrap: wrap; /* Allows wrapping if needed */
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
   padding: 8px 12px;
-  background: #E7DECD; /* Beige */
+  background: #e7decD;
   border-radius: 8px;
   margin-bottom: 8px;
   font-size: 16px;
   font-weight: 500;
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
   transition: transform 0.2s ease-in-out;
 }
 
@@ -379,68 +341,48 @@ Right Column Styles
 }
 
 .nutrient-name {
-  color: #698F3F; /* Olive Green */
+  color: #698f3f;
   font-weight: bold;
-  flex-grow: 1; /* Ensures name takes up available space */
-  min-width: 120px; /* Prevents excessive shrinking */
+  flex-grow: 1;
+  min-width: 120px;
 }
 
 .nutrient-value {
-  color: #0A122A; /* Dark Blue */
+  color: #0a122a;
   font-weight: bold;
-  flex-shrink: 0; /* Prevents values from being cut off */
-  text-align: left; /* Aligns it closer instead of far right */
+  flex-shrink: 0;
+  text-align: left;
 }
-
 
 .no-nutrition {
   font-size: 16px;
-  color: #698F3F; /* Olive Green */
+  color: #698f3f;
   font-style: italic;
 }
 
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
+/* Like Comment Share */
 .like-comment-share {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* Center content */
   gap: 10px;
 }
 
-.comment-button {
-  background-color: #F8F6F1;
-  color: #0A122A;
-  border: none;
-  padding: 10px 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: background-color 0.3s ease;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.comment-button:hover {
-  background-color: #698F3F;
-  color: #FBFAF8;
-}
-
+.comment-button,
 .share-button {
-  background-color: #698F3F;
-  color: #FBFAF8;
+  /* Styles for the buttons */
+  background-color: #698f3f;
+  color: #fbfaf8;
   border: none;
   padding: 10px 15px;
   border-radius: 8px;
   cursor: pointer;
   font-size: 16px;
   transition: background-color 0.3s ease;
+  margin: 5px;
 }
 
+.comment-button:hover,
 .share-button:hover {
   background-color: #5a7a2e;
 }
@@ -448,10 +390,11 @@ Right Column Styles
 .sample-comments {
   margin-top: 10px;
   width: 100%;
+  max-width: 500px; /* Adjust as needed */
 }
 
 .sample-comment {
-  background-color: #F8F6F1;
+  background-color: #f8f6f1;
   border-radius: 8px;
   padding: 10px;
   margin-bottom: 8px;
@@ -461,48 +404,13 @@ Right Column Styles
 .comment-author {
   font-weight: bold;
   margin-bottom: 5px;
-  color: #698F3F;
+  color: #698f3f;
 }
 
 .comment-text {
   font-size: 16px;
-  color: #0A122A;
+  color: #0a122a;
 }
-
-/* ==========================================================================
-Recipe Extra Section (Not used in current JSX)
-========================================================================== */
-
-/* .recipe-extra {
-  margin-top: 30px;
-}
-
-.recipe-extra h3 {
-  font-size: 24px;
-  color: #698F3F;
-  margin-top: 25px;
-  margin-bottom: 15px;
-  border-bottom: 3px solid #f0f0f0;
-  padding-bottom: 8px;
-}
-
-.recipe-extra ul,
-.recipe-extra ol {
-  list-style-type: none;
-  padding: 0;
-  max-width: 700px;
-  margin: 0 auto;
-}
-
-.recipe-extra ul li,
-.recipe-extra ol li {
-  background: #f0f0f0;
-  color: #0A122A;
-  padding: 12px;
-  margin: 8px 0;
-  border-radius: 8px;
-  line-height: 1.6;
-} */
 
 /* ==========================================================================
 Back Button Style
@@ -514,12 +422,13 @@ Back Button Style
   padding: 15px 25px;
   font-size: 18px;
   font-weight: bold;
-  background-color: #698F3F;
-  color: #FBFAF8;
+  background-color: #698f3f;
+  color: #fbfaf8;
   border: none;
   border-radius: 10px;
   cursor: pointer;
   transition: 0.3s ease;
+  text-align: center;
 }
 
 .back-button:hover {
@@ -531,10 +440,10 @@ Color Palette
 ========================================================================== */
 
 :root {
-  --primary-dark: #0A122A;
-  --secondary-green: #698F3F;
-  --light-cream: #E7DECD;
-  --off-white: #F8F6F1;
+  --primary-dark: #0a122a;
+  --secondary-green: #698f3f;
+  --light-cream: #e7decD;
+  --off-white: #f8f6f1;
 }
 
 /* ==========================================================================
@@ -622,8 +531,8 @@ Ingredient Alternatives Section
 }
 
 .ingredient-selection input[type="checkbox"]:checked::before {
-  content: '\f00c';
-  font-family: 'Font Awesome 5 Free';
+  content: "\f00c";
+  font-family: "Font Awesome 5 Free";
   font-weight: 900;
   font-size: 12px;
   color: var(--off-white);
@@ -654,6 +563,7 @@ Ingredient Alternatives Section
   align-items: center;
   gap: 13px;
   justify-content: space-between;
+  /* background:rgb(105, 143, 63,0.9); */
   padding: 10px;
   margin: 5px 0;
 }
@@ -661,6 +571,10 @@ Ingredient Alternatives Section
 .ingredients-section ul li .ingredient-text {
   flex-grow: 1;
   margin-right: 10px;
+  /* background:#698F3F; */
+  color: rgb(105, 143, 63, 100);
+  font-weight: 630;
+  font-size: 1.1rem;
 }
 
 .alternative {
@@ -693,18 +607,32 @@ Ingredient Alternatives Section
   min-height: 40px;
 }
 
+/* Adds container for nutrition and allergy sections to appear side by side */
+.nutrition-allergy-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.nutrition-allergy-container .allergy-/* Adds container for nutrition and allergy sections to appear side by side */
+.nutrition-allergy-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.nutrition-allergy-container .allergy-warnings-section,
+.nutrition-allergy-container .nutrition-info {
+  width: 48%; /* Adjust as needed */
+}
+
 /* ==========================================================================
 Media Queries for Responsiveness
 ========================================================================== */
 
 @media (max-width: 768px) {
-  .recipe-grid-container {
-    grid-template-columns: 1fr;
-  }
-
-  .recipe-left-column,
-  .recipe-right-column {
-    width: 100%;
+  .recipe-details {
+    padding: 20px;
   }
 
   .rrecipe-image {
@@ -712,7 +640,35 @@ Media Queries for Responsiveness
     height: auto;
   }
 
-  .recipe-video iframe {
-    height: 300px;
+  .recipe-section {
+    padding: 15px;
+  }
+
+  .allergy-warnings-section,
+  .nutrition-info {
+    padding: 15px;
+  }
+
+  /* Stack nutrition and allergy info on smaller screens */
+  .nutrition-allergy-container {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .nutrition-allergy-container .allergy-warnings-section,
+  .nutrition-allergy-container .nutrition-info {
+    width: 100%;
+  }
+}
+
+/* Keyframe Animation */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }

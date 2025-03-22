@@ -1,4 +1,3 @@
-// Recipe.jsx
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Share from "../share/Share";
@@ -6,13 +5,19 @@ import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
-import {  FaUsers } from "react-icons/fa";
-import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,} from "@fortawesome/free-solid-svg-icons";
+import { FaUsers } from "react-icons/fa";
+import {
+  faHeart,
+  faPrint,
+  faBookmark,
+  faComment,
+  faUtensils,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
-import {motion} from 'framer-motion'
-
+import { motion } from "framer-motion";
 
 const Recipe = () => {
   const { title } = useParams();
@@ -35,7 +40,6 @@ const Recipe = () => {
     { id: 1, author: "Emily R.", text: "This recipe is amazing!" },
     { id: 2, author: "David L.", text: "I added extra spice." },
   ]);
-
 
   // Fetch the recipe from the API
   const fetchRecipe = useCallback(async (recipeTitle) => {
@@ -60,7 +64,6 @@ const Recipe = () => {
     setError(null);
     fetchRecipe(title);
   }, [title, fetchRecipe]);
-
 
   if (loading) return <div className="loading">Loading recipe...</div>;
   if (error) {
@@ -89,14 +92,17 @@ const Recipe = () => {
       return;
     }
     try {
-      const response = await fetch("http://localhost:4000/user-api/save-recipe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ recipe }),
-      });
+      const response = await fetch(
+        "http://localhost:4000/user-api/save-recipe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ recipe }),
+        }
+      );
       if (!response.ok) {
         throw new Error("Failed to save recipe");
       }
@@ -166,204 +172,225 @@ const Recipe = () => {
     <div className="recipe-details">
       <h1 className="recipe-title">{recipeTitle}</h1>
 
-      <div className="recipe-grid-container">
-        {/* LEFT COLUMN */}
-        <div className="recipe-left-column">
-          <img
-            src={recipe.image}
-            alt={recipeTitle}
-            className="rrecipe-image"
-          />
+      <div className="recipe-left-column">
+        <img src={recipe.image} alt={recipeTitle} className="rrecipe-image" />
 
-           <div className="recipe-info">
-            <div className="tag"><FontAwesomeIcon icon={faUtensils}/> {recipe.cuisine}</div>
-            <div className="tag"><FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}</div>
-            <div className="tag"><IoFastFoodSharp size={23} />{recipe.category}</div> 
-            <div className="tag"><FaUsers />Servings:{recipe.servings}</div>
-            <div className="tag"><FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}</div>
-            <div className="tag"><FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime}</div>
-            <div className="tag"><FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}</div>
+        <div className="recipe-info">
+          <div className="tag">
+            <FontAwesomeIcon icon={faUtensils} /> {recipe.cuisine}
           </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}
+          </div>
+          <div className="tag">
+            <IoFastFoodSharp size={23} />
+            {recipe.category}
+          </div>
+          <div className="tag">
+            <FaUsers />
+            Servings:{recipe.servings}
+          </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}
+          </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime}
+          </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}
+          </div>
+        </div>
 
-          <div className="save-print-area">
-            <button onClick={handleSaveRecipe} className="icon-button">
-              <FontAwesomeIcon icon={faBookmark} />
-              {isSaved ? " Saved" : " Save"}
-            </button>
-            <button onClick={handlePrint} className="icon-button">
-              <FontAwesomeIcon icon={faPrint} /> Print
+        <div className="save-print-area">
+          <button onClick={handleSaveRecipe} className="icon-button">
+            <FontAwesomeIcon icon={faBookmark} />
+            {isSaved ? " Saved" : " Save"}
+          </button>
+          <button onClick={handlePrint} className="icon-button">
+            <FontAwesomeIcon icon={faPrint} /> Print
+          </button>
+        </div>
+        {/* Ingredients Section */}
+        <div className="ingredients-section">
+          <div className="ingredients-header">
+            <h3>Ingredients:</h3>
+            <button
+              onClick={toggleIngredientSelection}
+              className="ai-button ingredient-alternatives-button"
+              disabled={isFetchingAlternatives} // Disable button while loading
+            >
+              <HiSparkles style={{ marginRight: "5px" }} />
+              {showIngredientSelection ? "Close" : "Alternatives"}
             </button>
           </div>
-{/* Ingredients Section */}
-<div className="ingredients-section">
-    <div className="ingredients-header">
-        <h3>Ingredients:</h3>
-        <button
-            onClick={toggleIngredientSelection}
-            className="ai-button ingredient-alternatives-button"
-            disabled={isFetchingAlternatives} // Disable button while loading
-        >
-            <HiSparkles style={{ marginRight: '5px' }} />
-            {showIngredientSelection ? "Close" : "Alternatives"}
-        </button>
-    </div>
-    <ul>
-        {recipe?.ingredients?.map((ingredient, index) => (
-            <li key={index}>
+          <ul>
+            {recipe?.ingredients?.map((ingredient, index) => (
+              <li key={index}>
                 <div className="ingredient-text">
-                    {ingredient.amount} {ingredient.unit} {ingredient.name}
+                  {ingredient.amount} {ingredient.unit} {ingredient.name}
                 </div>
                 {ingredientAlternatives[ingredient.name] && (
-                    <p className={`alternative ${selectedIngredients.includes(ingredient.name) ? 'highlighted' : ''}`}>
-                        Alternative: {ingredientAlternatives[ingredient.name]}
-                    </p>
+                  <p
+                    className={`alternative ${
+                      selectedIngredients.includes(ingredient.name)
+                        ? "highlighted"
+                        : ""
+                    }`}
+                  >
+                    Alternative: {ingredientAlternatives[ingredient.name]}
+                  </p>
                 )}
-            </li>
-        ))}
-    </ul>
+              </li>
+            ))}
+          </ul>
 
-    {showIngredientSelection && (
-        <div className={`ingredient-selection ${showIngredientSelection ? '' : 'hidden'}`}>
-            <h4>Select Ingredients for Alternatives:</h4>
-            <ul>
-                {recipe?.ingredients?.map((ingredient, index) => (
-                    <li key={index}>
-                        <label>
-                            <input
-                                type="checkbox"
-                                value={ingredient.name}
-                                checked={selectedIngredients.includes(ingredient.name)}
-                                onChange={() => handleIngredientSelect(ingredient.name)}
-                            />
-                            {ingredient.amount} {ingredient.unit} {ingredient.name}
-                        </label>
-                    </li>
-                ))}
-            </ul>
-            <button onClick={fetchIngredientAlternatives} className="ai-button" disabled={isFetchingAlternatives}>
-                {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
-            </button>
-        </div>
-    )}
-</div>
-
-
-          {/* OPTIONAL MIX-INS SECTION */}
-          {recipe.optional_mixins?.length > 0 && (
-            <div className="optional-mixins-section recipe-section">
-              <h3>Optional Mix-ins:</h3>
+          {showIngredientSelection && (
+            <div
+              className={`ingredient-selection ${
+                showIngredientSelection ? "" : "hidden"
+              }`}
+            >
+              <h4>Select Ingredients for Alternatives:</h4>
               <ul>
-                {recipe.optional_mixins.map((mix, index) => (
-                  <li key={index}>{mix}</li>
+                {recipe?.ingredients?.map((ingredient, index) => (
+                  <li key={index}>
+                    <label>
+                      <input
+                        type="checkbox"
+                        value={ingredient.name}
+                        checked={selectedIngredients.includes(ingredient.name)}
+                        onChange={() => handleIngredientSelect(ingredient.name)}
+                      />
+                      {ingredient.amount} {ingredient.unit} {ingredient.name}
+                    </label>
+                  </li>
                 ))}
               </ul>
+              <button
+                onClick={fetchIngredientAlternatives}
+                className="ai-button"
+                disabled={isFetchingAlternatives}
+              >
+                {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
+              </button>
             </div>
           )}
-
-          {/* STEPS SECTION */}
-          <div className="steps-section recipe-section">
-            <h3>Steps:</h3>
-            <ol>
-              {recipe.steps?.map((step, index) => (
-                <li key={index}>{step}</li>
-              ))}
-            </ol>
-          </div>
-            {/* RECIPE VIDEO SECTION */}
-            {recipe.videoURL ? (
-            <div className="recipe-video recipe-section">
-              <h3>Recipe Video:</h3>
-              <iframe
-                width="560"
-                height="315"
-                src={recipe.videoURL.replace("watch?v=", "embed/")}
-                title="Recipe Video"
-                frameBorder="0"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                allowFullScreen
-              ></iframe>
-            </div>
-          ) : null}
         </div>
 
-        {/* RIGHT COLUMN */}
-        <div className="recipe-right-column">
-        <div className="nutrition-info">
-  <h3>Nutrition Facts</h3>
-  {recipe.nutritionInformation && Object.keys(recipe.nutritionInformation).length > 0 ? (
-    <ul className="nutrition-list">
-      {Object.entries(recipe.nutritionInformation).map(([key, value], index) => (
-        <li key={index}>
-          <span className="nutrient-name">
-            {key.replace(/\b\w/g, char => char.toUpperCase())}
-          </span>
-          <span className="nutrient-value">{value || "N/A"}</span>
-        </li>
-      ))}
-    </ul>
-  ) : (
-    <p className="no-nutrition">No nutrition information available.</p>
-  )}
-</div>
-
-
-
-
-          {/* allergy warnings section */}
-          {Array.isArray(recipe.allergyWarnings) && recipe.allergyWarnings.length > 0 && (
-  <motion.div
-    className="allergy-warnings-section recipe-section"
-    initial={{ opacity: 0, scale: 0.9 }}
-    animate={{ opacity: 1, scale: 1 }}
-    transition={{ type: "spring", stiffness: 120 }}
-  >
-    <h3 className="allergy-title">
-    <TiWarning size={20} />
-    Allergy Warnings
-    </h3>
-    <ul>
-      {recipe.allergyWarnings.map((warning, index) => (
-        <motion.li
-          key={index}
-          initial={{ x: -10, opacity: 0 }}
-          animate={{ x: 0, opacity: 1 }}
-          transition={{ delay: index * 0.15 }}
-        >
-         <TiWarning size={20} />
-         {warning}
-        </motion.li>
-      ))}
-    </ul>
-  </motion.div>
-)}
-
-
-          <div className="like-comment-share">
-            <button className="icon-button">
-              <FontAwesomeIcon icon={faHeart} /> Like
-            </button>
-            <button className="comment-button">
-              <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} /> Comment
-            </button>
-            <div className="sample-comments">
-              {comments.map((comment) => (
-                <div key={comment.id} className="sample-comment">
-                  <p className="comment-author">{comment.author}</p>
-                  <p className="comment-text">{comment.text}</p>
-                </div>
+        {/* OPTIONAL MIX-INS SECTION */}
+        {recipe.optional_mixins?.length > 0 && (
+          <div className="optional-mixins-section recipe-section">
+            <h3>Optional Mix-ins:</h3>
+            <ul>
+              {recipe.optional_mixins.map((mix, index) => (
+                <li key={index}>{mix}</li>
               ))}
-            </div>
-            <button onClick={toggleShareOptions} className="share-button">
-              Share
-            </button>
-            {showShareOptions && (
-              <Share
-                recipeId={recipeId}
-                recipeTitle={recipeTitle}
-                recipeImage={recipe.image}
-              />
+            </ul>
+          </div>
+        )}
+
+        <div className="nutrition-allergy-container">
+          {/* allergy warnings section */}
+          <motion.div
+            className="allergy-warnings-section recipe-section"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ type: "spring", stiffness: 120 }}
+          >
+            <h3 className="allergy-title">
+              <TiWarning size={20} />
+              Allergy Warnings
+            </h3>
+            <ul>
+              {recipe.allergyWarnings?.map((warning, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ x: -10, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: index * 0.15 }}
+                >
+                  <TiWarning size={20} />
+                  {warning}
+                </motion.li>
+              ))}
+            </ul>
+          </motion.div>
+
+          <div className="nutrition-info">
+            <h3>Nutrition Facts</h3>
+            {recipe.nutritionInformation &&
+            Object.keys(recipe.nutritionInformation).length > 0 ? (
+              <ul className="nutrition-list">
+                {Object.entries(recipe.nutritionInformation).map(
+                  ([key, value], index) => (
+                    <li key={index}>
+                      <span className="nutrient-name">
+                        {key.replace(/\b\w/g, (char) => char.toUpperCase())}
+                      </span>
+                      <span className="nutrient-value">{value || "N/A"}</span>
+                    </li>
+                  )
+                )}
+              </ul>
+            ) : (
+              <p className="no-nutrition">
+                No nutrition information available.
+              </p>
             )}
           </div>
+        </div>
+
+        {/* STEPS SECTION */}
+        <div className="steps-section recipe-section">
+          <h3>Steps:</h3>
+          <ol>
+            {recipe.steps?.map((step, index) => (
+              <li key={index}>{step}</li>
+            ))}
+          </ol>
+        </div>
+        {/* RECIPE VIDEO SECTION */}
+        {recipe.videoURL ? (
+          <div className="recipe-video recipe-section">
+            <h3>Recipe Video:</h3>
+            <iframe
+              width="560"
+              height="315"
+              src={recipe.videoURL.replace("watch?v=", "embed/")}
+              title="Recipe Video"
+              frameBorder="0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
+            ></iframe>
+          </div>
+        ) : null}
+
+        <div className="like-comment-share">
+          <button className="icon-button">
+            <FontAwesomeIcon icon={faHeart} /> Like
+          </button>
+          <button className="comment-button">
+            <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} />{" "}
+            Comment
+          </button>
+          <div className="sample-comments">
+            {comments.map((comment) => (
+              <div key={comment.id} className="sample-comment">
+                <p className="comment-author">{comment.author}</p>
+                <p className="comment-text">{comment.text}</p>
+              </div>
+            ))}
+          </div>
+          <button onClick={toggleShareOptions} className="share-button">
+            Share
+          </button>
+          {showShareOptions && (
+            <Share
+              recipeId={recipeId}
+              recipeTitle={recipeTitle}
+              recipeImage={recipe.image}
+            />
+          )}
         </div>
       </div>
 
