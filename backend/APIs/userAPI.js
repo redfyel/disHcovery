@@ -61,9 +61,10 @@ userApp.post("/register", expressAsyncHandler(async (req, res) => {
     //get new user data from req obj
     const newUser = req.body;
 
-    newUser.saved_recipes = [];
-    newUser.roulette_recipes = [];
-    newUser.preferences = {};
+    newUser.saved_recipes = []; 
+    newUser.roulette_recipes= []; 
+    newUser.preferences = {}; 
+    newUser.liked_recipes = [];
 
 
     //verifying uniqueness
@@ -259,6 +260,105 @@ userApp.get("/saved-recipes/:userId", expressAsyncHandler(async (req, res) => {
         res.status(500).json({ message: "Error retrieving saved recipes", error });
     }
 }));
+// like fetch
+userApp.get("/liked-recipes/:userId", expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { userId } = req.params;
+
+  try {
+    const user = await usersCollection.findOne(
+      { _id: new ObjectId(userId) },
+      { projection: { liked_recipes: 1 } }
+    );
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({ payload: user.liked_recipes || [] });
+  } catch (error) {
+    res.status(500).json({ message: "Error retrieving liked recipes", error });
+  }
+}));
+
+
+userApp.put('/edit-profile', expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get('usersCollection');
+  const { phone, address, bio } = req.body;
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = new ObjectId(decoded.userId);
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $set: { phone, address, bio } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update user profile" });
+    }
+
+    const updatedUser = await usersCollection.findOne({ _id: userId }, { projection: { password: 0 } });
+
+    res.status(200).json({ message: "Profile updated successfully", updatedUser });
+
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired token", error });
+  }
+}));
+// to be liked 
+userApp.post('/like-recipe', expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get('usersCollection');
+  const { recipe } = req.body;  
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET_KEY);
+    const userId = new ObjectId(decoded.userId); 
+
+    const user = await usersCollection.findOne({ _id: userId });
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    // Check if the recipe is already liked
+    const isAlreadyLiked = user.liked_recipes.some(likedRecipe => likedRecipe._id === recipe._id);
+    
+    if (isAlreadyLiked) {
+      return res.status(400).json({ message: "Recipe already liked" });
+    }
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $push: { liked_recipes: recipe } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res.status(500).json({ message: "Failed to update liked recipes" });
+    }
+
+    res.status(200).json({ message: "Recipe liked successfully!", updatedUser: user });
+
+  } catch (error) {
+    res.status(401).json({ message: "Invalid or expired token", error });
+  }
+}));
+
 
 
 module.exports = userApp;

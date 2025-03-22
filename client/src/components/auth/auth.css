@@ -7,23 +7,26 @@
   background: url('../../assets/images/wallpaper.jpg') no-repeat center center/cover;
   backdrop-filter: blur(5px);
 }
-
+.error {
+  color: red;
+}
 /* Centered Form Box */
 .auth-form {
-  background: rgba(255, 255, 255, 0.021);
+  background: rgba(144, 238, 144, 0.3); /* Light green translucent background */
   padding: 30px;
   border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-  backdrop-filter: blur(8px);
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(12px);
   width: 350px;
   text-align: center;
+  border: 2px solid rgba(34, 139, 34, 0.8); /* Green border */
 }
 
 /* Title */
 .auth-title {
   font-size: 24px;
   font-weight: bold;
-  color:black;
+  color: black;
   margin-bottom: 20px;
 }
 
@@ -37,54 +40,87 @@
   width: 100%;
   padding: 12px;
   padding-right: 40px;
-  border-radius:25px;
-  border: none;
-  background: rgba(255, 255, 255, 0.3);
+  border-radius: 25px;
+  border: 1px solid rgba(34, 139, 34, 0.7);
+  background: rgba(255, 255, 255, 0.5);
   color: black;
   font-size: 16px;
   outline: none;
 }
 
 .input-group input::placeholder {
-  color:black;
+  color: rgba(0, 0, 0, 0.6);
 }
 
 /* Password Eye Icon */
 .toggle-password {
   position: absolute;
-  right: 10px;
-  top: 12px;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
   cursor: pointer;
-  color:black;
+  color: black;
+  font-size: 18px;
 }
 
-/* Buttons */
+/* 🔹 LOGIN BUTTON FIXED */
 .btn {
+  display: block; /* Ensures it's always visible */
   width: 100%;
-  padding: 12px;
+  padding: 0px;
+  font-weight: bold !important;
   border-radius: 25px;
-  border: none;
-  color: beige;
+  border: 2px solid rgba(10, 18, 42, 0.1) !important;
+  background: rgba(46, 139, 87, 1); /* Solid Green */
+  color: #0a122a; /* High contrast */
   font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   margin-top: 10px;
-  transition: 0.3s;
+  text-align: center;
+  transition: 0.3s ease-in-out;
+  text-transform: uppercase;
 }
 
+/* 🔹 Hover Effect */
 .btn:hover {
-  background: #ff7f50;
+  background: white;
+  color: #2e8b57; /* Green text on hover */
+  border-color: #2e8b57;
 }
 
 /* Switch Auth */
 .switch-auth {
   margin-top: 20px;
   font-size: 14px;
-  color: black;
+  /* background:  rgba(10, 18, 42); */
+  color: #698F3F;
+  font-weight: 700;
+  /* border-radius: 30px; */
 }
 
 .switch-auth span {
-  color:black;
+  color: #698F3F;
+  background: #F8F6F1;
+  padding: 6px;
+  border-radius: 20% !important;
   cursor: pointer;
   font-weight: bold;
+  /* text-decoration: underline; */
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .auth-form {
+    width: 90%;
+    padding: 20px;
+  }
+
+  .input-group input {
+    font-size: 14px;
+  }
+
+  .btn {
+    font-size: 14px;
+  }
 }

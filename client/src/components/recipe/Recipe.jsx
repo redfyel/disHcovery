@@ -30,7 +30,8 @@ const Recipe = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [saveError, setSaveError] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [comments, setComments] = useState([]);
   const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -100,6 +101,62 @@ const Recipe = () => {
       checkIfRecipeIsSaved();
     }
   }, [recipe, loginStatus, checkIfRecipeIsSaved]);
+  useEffect(() => {
+    if (recipe && recipe.likedBy && currentUser) {
+      // Check if recipe.likedBy is an array before using includes
+      setIsLiked(Array.isArray(recipe.likedBy) ? recipe.likedBy.includes(currentUser.id) : false);
+    }
+  }, [recipe, currentUser]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/recipe-api/comments/${recipe?._id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch comments");
+        }
+        const data = await response.json();
+        setComments(data.comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+    if (recipe?._id) {
+      fetchComments();
+    }
+  }, [recipe]);
+
+  // Once the recipe loads, parse out the numeric servings
+  useEffect(() => {
+    if (recipe && recipe.servings) {
+      setServings(parseNumericServings(recipe.servings));
+    }
+  }, [recipe]);
+
+  useEffect(() => {
+    if (currentUser && token) {
+      fetchLikedRecipes();
+    }
+  }, [currentUser, token]);
+
+  const fetchLikedRecipes = async () => {
+    // Add a check to ensure currentUser.id exists before making the request
+    if (!currentUser?.id) {
+      console.warn("currentUser.id is undefined, skipping fetchLikedRecipes");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:4000/user-api/liked-recipes/${currentUser.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+      console.log("Liked Recipes:", data.payload);
+    } catch (error) {
+      console.error("Error fetching liked recipes:", error);
+    }
+  };
 
   if (loading) return <Loading />;
   if (error) {
@@ -151,6 +208,8 @@ const Recipe = () => {
     }
   };
 
+
+
   // Toggle ingredient selection for AI alternatives
   const toggleIngredientSelection = () => {
     setShowIngredientSelection(!showIngredientSelection);
@@ -197,13 +256,51 @@ const Recipe = () => {
     }
   };
 
+  const handleLikeRecipe = async () => {
+    if (!currentUser) {
+      alert("Please log in to like recipes.");
+      return;
+    }
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/user-api/like-recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ recipe}),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update like status");
+      }
+
+      const data = await response.json();
+      
+      setIsLiked(true);
+
+      console.log("Like status updated:", data);
+    } catch (error) {
+      console.error("Error toggling like status:", error);
+      alert("Error updating like status. Please try again later.");
+    }
+  };
+
   // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
+  // Numeric version of the original servings
+  const numericRecipeServings = parseNumericServings(recipe?.servings);
+
   // For easy references
-  const recipeId = recipe._id;
-  const recipeTitle = recipe.title;
-  const nutrition = recipe.nutritionInformation;
+  const recipeId = recipe?._id;
+  const recipeTitle = recipe?.title;
+  const nutrition = recipe?.nutritionInformation;
 
   return (
     <div className="recipe-details">
@@ -328,11 +425,11 @@ const Recipe = () => {
           </div>
 
           {/* OPTIONAL MIX-INS SECTION */}
-          {recipe.optional_mixins?.length > 0 && (
+          {recipe?.optional_mixins?.length > 0 && (
             <div className="optional-mixins-section recipe-section">
               <h3>Optional Mix-ins:</h3>
               <ul>
-                {recipe.optional_mixins.map((mix, index) => (
+                {recipe?.optional_mixins.map((mix, index) => (
                   <li key={index}>{mix}</li>
                 ))}
               </ul>
@@ -343,7 +440,7 @@ const Recipe = () => {
           <div className="steps-section recipe-section">
             <h3>Steps:</h3>
             <ol>
-              {recipe.steps?.map((step, index) => (
+              {recipe?.steps?.map((step, index) => (
                 <li key={index}>{step}</li>
               ))}
             </ol>
@@ -355,14 +452,14 @@ const Recipe = () => {
               <iframe
                 width="560"
                 height="315"
-                src={recipe.videoURL.replace("watch?v=", "embed/")}
+                src={recipe?.videoURL.replace("watch?v=", "embed/")}
                 title="Recipe Video"
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               ></iframe>
             </div>
-          ) : null}
+          )  (null) }
         </div>
 
         {/* RIGHT COLUMN */}
@@ -420,8 +517,9 @@ const Recipe = () => {
             )}
 
           <div className="like-comment-share">
-            <button className="icon-button">
-              <FontAwesomeIcon icon={faHeart} /> Like
+            <button className="icon-button" onClick={handleLikeRecipe}>
+              <FontAwesomeIcon icon={faHeart} style={{ color: isLiked ? "red" : "black" }} />
+              {isLiked ? " Liked" : " Like"}
             </button>
             <button className="comment-button">
               <FontAwesomeIcon
@@ -445,7 +543,7 @@ const Recipe = () => {
               <Share
                 recipeId={recipeId}
                 recipeTitle={recipeTitle}
-                recipeImage={recipe.image}
+                recipeImage={recipe?.image}
               />
             )}
           </div>
