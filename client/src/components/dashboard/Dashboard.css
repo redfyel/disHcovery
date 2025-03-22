@@ -1,13 +1,14 @@
+/* General Dashboard Styling */
 .dashboard {
   display: grid;
   grid-template-columns: 1fr 3fr 1fr;
   gap: 20px;
   padding: 20px;
   background-color: #f9f9f9;
-  height: 100vh;
+  min-height: 100vh; /* Use min-height instead of height */
 }
 
-/* Sidebar */
+/* Sidebar Styles */
 .sidebar {
   display: flex;
   flex-direction: column;
@@ -18,93 +19,119 @@
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-/* What's Cooking */
+.user-name {
+  font-size: 1.5em;
+  margin-top: 10px;
+}
+
+.user-email {
+  color: #777;
+  margin-bottom: 15px;
+}
+
+.edit-profile {
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.edit-profile:hover {
+  background-color: #0056b3;
+}
+
+/* Main Content Styles */
+.main-content {
+  padding: 20px;
+}
+
 .homepage-section-title {
   text-align: center;
-  font-size: 24px;
-  font-weight: bold;
+  font-size: 2em;
   margin-bottom: 20px;
+  color: #333;
 }
 
-.homepage-category-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+/* Categories Section */
+.categories-section {
+  margin-bottom: 30px;
+}
+
+.categories-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
   gap: 15px;
+  justify-content: center;
 }
 
-.homepage-category-card {
+.category-card {
   text-align: center;
   text-decoration: none;
   color: black;
 }
 
-.homepage-category-circle {
+.category-circle {
   width: 100px;
   height: 100px;
   border-radius: 50%;
   overflow: hidden;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  margin: 0 auto;
 }
 
-.homepage-category-image {
+.category-image {
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block; /* Ensure no extra space below image */
 }
 
-/* Past Roulette Recipes */
-.past-recipes {
-  background: #007bff;
-  color: white;
-  padding: 10px;
-  border: none;
+.category-name {
+  margin-top: 5px;
+  font-size: 1em;
+}
+
+/* Liked Recipes Section */
+.liked-recipes-container {
+  margin-top: 20px;
+}
+
+.liked-recipes-list {
+  list-style: none;
+  padding: 0;
+}
+
+.liked-recipe-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
   cursor: pointer;
-  width: 100%;
-  text-align: center;
-  font-size: 16px;
-}
-
-.dropdown {
-  display: none;
-  position: absolute;
-  background: white;
-  border: 2px solid #ccc;
-  width: 220px;
-  max-height: 200px;
-  overflow-y: auto;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  border-radius: 5px;
-}
-
-.dropdown.visible {
-  display: block;
-}
-
-.dropdown-item {
   padding: 10px;
   border-bottom: 1px solid #ddd;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.dropdown-item:hover {
-  background: #f0f0f0;
+.liked-recipe-item:hover {
+  background-color: #f5f5f5;
 }
 
-.dropdown-link {
-  text-decoration: none;
-  color: black;
+.recipe-thumbnail {
+  width: 50px;
+  height: 50px;
+  border-radius: 20px;
+  border: 2px solid #ddd;
+  object-fit: cover;
 }
 
-.no-recipes {
-  text-align: center;
-  color: gray;
-  padding: 10px;
-  font-size: 14px;
+.recipe-title {
+  font-size: 16px;
+  font-weight: bold;
 }
 
-
-/* Right Sidebar */
+/* Right Sidebar Styles */
 .right-sidebar {
   background: white;
   padding: 20px;
@@ -114,26 +141,65 @@
 }
 
 .fridge-section p {
-  font-size: 18px;
+  font-size: 1.2em;
   font-weight: bold;
   margin-bottom: 10px;
+  color: #333;
 }
 
-.fridge-btn {
-  background: #28a745;
-  color: white;
-  padding: 10px;
+/* Recipe History Styles */
+.recipe-history {
+  margin-top: 10px;
+  position: relative;
+}
+
+.recipe-history-button {
+  background-color: #f0f0f0;
   border: none;
+  padding: 8px 12px;
   cursor: pointer;
-  width: 100%;
-  font-size: 16px;
-  border-radius: 5px;
+  border-radius: 4px;
+  font-size: 14px;
 }
 
-.fridge-btn:hover {
-  background: #218838;
+.recipe-history-dropdown {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  background-color: white;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+  width: 200px;
 }
 
+.recipe-history-item {
+  padding: 8px 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.recipe-history-item:hover {
+  background-color: #f5f5f5;
+}
+
+.recipe-history-item:last-child {
+  border-bottom: none;
+}
+
+/* Responsive Design (Example) */
+@media (max-width: 768px) {
+  .dashboard {
+    grid-template-columns: 1fr; /* Stack columns on smaller screens */
+  }
+
+  .sidebar,
+  .right-sidebar {
+    margin-bottom: 20px; /* Add spacing when stacked */
+  }
+}
 /* Modal Overlay */
 .modal-overlay {
   position: fixed;
@@ -210,53 +276,4 @@ textarea {
   padding: 8px 12px;
   border-radius: 6px;
   cursor: pointer;
-}
-.profile-icon {
-  font-size: 80px; /* Increased size */
-  color: #555;
-}
-
-.large {
-  font-size: 100px; /* Even larger for emphasis */
-}
-
-.recipe-history {
-  margin-top: 10px;
-  position: relative; /* Required for absolute positioning of dropdown */
-}
-
-.recipe-history-button {
-  background-color: #f0f0f0;
-  border: none;
-  padding: 8px 12px;
-  cursor: pointer;
-  border-radius: 4px;
-  font-size: 14px;
-}
-
-.recipe-history-dropdown {
-  position: absolute;
-  top: 100%; /* Position below the button */
-  left: 0;
-  background-color: white;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  z-index: 10; /* Ensure it's above other content */
-  width: 200px; /* Adjust width as needed */
-}
-
-.recipe-history-item {
-  padding: 8px 12px;
-  border-bottom: 1px solid #eee;
-  font-size: 14px;
-  cursor: pointer; /* Make it clear they are clickable if you add functionality*/
-}
-
-.recipe-history-item:hover {
-  background-color: #f5f5f5;
-}
-
-.recipe-history-item:last-child {
-  border-bottom: none;
 }

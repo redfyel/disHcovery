@@ -14,29 +14,38 @@ import {
   faUtensils,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
+import { FaUsers } from "react-icons/fa";
+import {
+  faHeart,
+  faPrint,
+  faBookmark,
+  faComment,
+  faUtensils,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
+import Toast from "../toast/Toast";
+import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
 
 const Recipe = () => {
   const { title } = useParams();
   const navigate = useNavigate();
-  const { currentUser, token } = useContext(userLoginContext);
-
+  const { currentUser, token, loginStatus } = useContext(userLoginContext);
   const [recipe, setRecipe] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
-  const [saveError, setSaveError] = useState(null);
-
+  const [isLiked, setIsLiked] = useState(false);
+  const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [ingredientAlternatives, setIngredientAlternatives] = useState({});
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [isFetchingAlternatives, setIsFetchingAlternatives] = useState(false);
-
-  const [comments] = useState([
+  const [comments, setComments] = useState([
     { id: 1, author: "Emily R.", text: "This recipe is amazing!" },
     { id: 2, author: "David L.", text: "I added extra spice." },
   ]);
@@ -59,13 +68,103 @@ const Recipe = () => {
     }
   }, []);
 
+  // Check if the recipe is already saved
+  const checkIfRecipeIsSaved = useCallback(async () => {
+    if (!loginStatus || !recipe) return;
+
+    try {
+      const response = await fetch(
+        "http://localhost:4000/user-api/is-recipe-saved",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ recipeId: recipe._id }), // Send the recipe ID
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to check if recipe is saved.");
+      }
+
+      const data = await response.json();
+      setIsSaved(data.isSaved); // Assuming the backend returns { isSaved: true/false }
+    } catch (error) {
+      console.error("Error checking if recipe is saved:", error);
+    }
+  }, [loginStatus, token, recipe]);
+
   useEffect(() => {
     setLoading(true);
     setError(null);
     fetchRecipe(title);
   }, [title, fetchRecipe]);
 
-  if (loading) return <div className="loading">Loading recipe...</div>;
+  useEffect(() => {
+    if (recipe) {
+      checkIfRecipeIsSaved();
+    }
+  }, [recipe, loginStatus, checkIfRecipeIsSaved]);
+  useEffect(() => {
+    if (recipe && recipe.likedBy && currentUser) {
+      // Check if recipe.likedBy is an array before using includes
+      setIsLiked(Array.isArray(recipe.likedBy) ? recipe.likedBy.includes(currentUser.id) : false);
+    }
+  }, [recipe, currentUser]);
+
+  useEffect(() => {
+    const fetchComments = async () => {
+      try {
+        const response = await fetch(
+          `http://localhost:4000/recipe-api/comments/${recipe?._id}`
+        );
+        if (!response.ok) {
+          throw new Error("Failed to fetch comments");
+        }
+        const data = await response.json();
+        setComments(data.comments);
+      } catch (error) {
+        console.error("Error fetching comments:", error);
+      }
+    };
+    if (recipe?._id) {
+      fetchComments();
+    }
+  }, [recipe]);
+
+  // Once the recipe loads, parse out the numeric servings
+  useEffect(() => {
+    if (recipe && recipe.servings) {
+      setServings(parseNumericServings(recipe.servings));
+    }
+  }, [recipe]);
+
+  useEffect(() => {
+    if (currentUser && token) {
+      fetchLikedRecipes();
+    }
+  }, [currentUser, token]);
+
+  const fetchLikedRecipes = async () => {
+    // Add a check to ensure currentUser.id exists before making the request
+    if (!currentUser?.id) {
+      console.warn("currentUser.id is undefined, skipping fetchLikedRecipes");
+      return;
+    }
+    try {
+      const response = await fetch(`http://localhost:4000/user-api/liked-recipes/${currentUser.id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      const data = await response.json();
+      console.log("Liked Recipes:", data.payload);
+    } catch (error) {
+      console.error("Error fetching liked recipes:", error);
+    }
+  };
+
+  if (loading) return <Loading />;
   if (error) {
     return (
       <div className="error">
@@ -82,15 +181,17 @@ const Recipe = () => {
 
   // Save recipe
   const handleSaveRecipe = async () => {
-    if (!currentUser) {
-      alert("Please log in to save recipes.");
+    if (!loginStatus) {
+      // setToast({ message: "Please log in to save recipes.", type: "alert" });
+      showToast("Please log in to save a recipe.", "alert");
       return;
     }
-    if (!token) {
-      console.error("No token found");
-      alert("Authentication error. Please log in again.");
+
+    if (isSaved) {
+      showToast("Recipe is already saved.", "info");
       return;
     }
+
     try {
       const response = await fetch(
         "http://localhost:4000/user-api/save-recipe",
@@ -103,16 +204,17 @@ const Recipe = () => {
           body: JSON.stringify({ recipe }),
         }
       );
-      if (!response.ok) {
-        throw new Error("Failed to save recipe");
-      }
+
+      if (!response.ok) throw new Error("Failed to save recipe");
+
       setIsSaved(true);
-      alert("Recipe saved successfully!");
-    } catch (error) {
-      console.error("Error saving recipe:", error);
-      alert("Error saving recipe. Please try again later.");
+      showToast("Recipe saved successfully!", "success");
+    } catch (err) {
+      showToast(`Recipe could not be saved! ${err.message}`, "error");
     }
   };
+
+
 
   // Toggle ingredient selection for AI alternatives
   const toggleIngredientSelection = () => {
@@ -160,16 +262,61 @@ const Recipe = () => {
     }
   };
 
+  const handleLikeRecipe = async () => {
+    if (!currentUser) {
+      alert("Please log in to like recipes.");
+      return;
+    }
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:4000/user-api/like-recipe", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ recipe}),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update like status");
+      }
+
+      const data = await response.json();
+      
+      setIsLiked(true);
+
+      console.log("Like status updated:", data);
+    } catch (error) {
+      console.error("Error toggling like status:", error);
+      alert("Error updating like status. Please try again later.");
+    }
+  };
+
   // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
+  // Numeric version of the original servings
+  const numericRecipeServings = parseNumericServings(recipe?.servings);
+
   // For easy references
-  const recipeId = recipe._id;
-  const recipeTitle = recipe.title;
-  const nutrition = recipe.nutritionInformation;
+  const recipeId = recipe?._id;
+  const recipeTitle = recipe?.title;
+  const nutrition = recipe?.nutritionInformation;
 
   return (
     <div className="recipe-details">
+      {toast && (
+        <Toast
+          message={toast.message}
+          type={toast.type}
+          onClose={() => showToast(null)}
+        />
+      )}
       <h1 className="recipe-title">{recipeTitle}</h1>
 
       <div className="recipe-left-column">
