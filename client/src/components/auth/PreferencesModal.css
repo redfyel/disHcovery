@@ -1,10 +1,11 @@
+/* PreferencesModal.css */
 .pref-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
+    background-color: rgba(10, 18, 42, 0.5); /* #0A122A with 50% opacity */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,7 +14,7 @@
 }
 
 .pref-modal-content {
-    background: #fff;
+    background: #FBFAF8; /*  #FBFAF8 */
     border-radius: 12px;
     width: 90%;
     max-width: 500px;
@@ -37,10 +38,11 @@
     cursor: pointer;
     outline: none;
     transition: color 0.3s ease-in-out;
+    color: #0A122A; /* #0A122A - Dark Color for Contrast */
 }
 
 .pref-modal-close-btn:hover {
-    color: #e74c3c;
+    color: #698F3F; /* #698F3F - Accent Color */
 }
 
 /* Smooth scrolling */
@@ -49,10 +51,10 @@
 }
 
 .pref-modal-content::-webkit-scrollbar-thumb {
-    background-color: #698F3F;
+    background-color: #698F3F; /* #698F3F */
     border-radius: 10px;
 }
 
 .pref-modal-content::-webkit-scrollbar-track {
-    background: #F8F6F1;
+    background: #F8F6F1; /* #F8F6F1 */
 }
