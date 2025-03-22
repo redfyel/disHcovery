@@ -14,6 +14,7 @@ const Recipes = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { ingredients } = useParams();
+  const { category } = useParams(); 
 
   const [filters, setFilters] = useState({
     categories: [],
@@ -41,6 +42,9 @@ const Recipes = () => {
       try {
         setLoading(true);
         let url = "http://localhost:4000/recipe-api/recipes";
+        if (category) {
+          url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+      }
 
         if (location.search) {
           url = `http://localhost:4000/recipe-api/recipes/explore${location.search}`;
