@@ -14,15 +14,6 @@ import {
   faUtensils,
   faClock,
 } from "@fortawesome/free-solid-svg-icons";
-import { FaUsers } from "react-icons/fa";
-import {
-  faHeart,
-  faPrint,
-  faBookmark,
-  faComment,
-  faUtensils,
-  faClock,
-} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
@@ -114,32 +105,9 @@ const Recipe = () => {
     }
   }, [recipe, currentUser]);
 
-  useEffect(() => {
-    const fetchComments = async () => {
-      try {
-        const response = await fetch(
-          `http://localhost:4000/recipe-api/comments/${recipe?._id}`
-        );
-        if (!response.ok) {
-          throw new Error("Failed to fetch comments");
-        }
-        const data = await response.json();
-        setComments(data.comments);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
-    if (recipe?._id) {
-      fetchComments();
-    }
-  }, [recipe]);
+  
 
-  // Once the recipe loads, parse out the numeric servings
-  useEffect(() => {
-    if (recipe && recipe.servings) {
-      setServings(parseNumericServings(recipe.servings));
-    }
-  }, [recipe]);
+  
 
   useEffect(() => {
     if (currentUser && token) {
@@ -149,7 +117,7 @@ const Recipe = () => {
 
   const fetchLikedRecipes = async () => {
     // Add a check to ensure currentUser.id exists before making the request
-    if (!currentUser?.id) {
+    if (!currentUser?._id) {
       console.warn("currentUser.id is undefined, skipping fetchLikedRecipes");
       return;
     }
@@ -300,8 +268,7 @@ const Recipe = () => {
   // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
-  // Numeric version of the original servings
-  const numericRecipeServings = parseNumericServings(recipe?.servings);
+ 
 
   // For easy references
   const recipeId = recipe?._id;
