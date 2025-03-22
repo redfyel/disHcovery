@@ -417,7 +417,7 @@ const Recipe = () => {
                 allowFullScreen
               ></iframe>
             </div>
-          ) : null}
+          )  (null) }
         </div>
 
         {/* RIGHT COLUMN */}
