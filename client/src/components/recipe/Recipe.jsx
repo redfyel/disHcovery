@@ -31,15 +31,13 @@ const Recipe = () => {
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const [comments, setComments] = useState([]);
   const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [ingredientAlternatives, setIngredientAlternatives] = useState({});
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [isFetchingAlternatives, setIsFetchingAlternatives] = useState(false);
-
-  const [comments] = useState([
+  const [comments, setComments] = useState([
     { id: 1, author: "Emily R.", text: "This recipe is amazing!" },
     { id: 2, author: "David L.", text: "I added extra spice." },
   ]);
@@ -459,7 +457,7 @@ const Recipe = () => {
                 allowFullScreen
               ></iframe>
             </div>
-          )  (null) }
+          )  : (null) }
         </div>
 
         {/* RIGHT COLUMN */}
