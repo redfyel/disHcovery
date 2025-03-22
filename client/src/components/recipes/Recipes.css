@@ -36,6 +36,15 @@
   gap: 20px;
 }
 
+.recipe-grid.no-recipes {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  margin: auto;
+  min-height: 50vh; 
+}
+
 .recipe-card {
   background: #FBFAF8;
   padding: 10px; 

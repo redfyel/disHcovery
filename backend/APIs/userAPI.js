@@ -71,7 +71,7 @@ userApp.post("/login", expressAsyncHandler(async (req, res) => {
 }));
 
 userApp.post("/preferences", expressAsyncHandler(async (req, res) => {
-  console.log("Received Preferences Data:", req.body); // Debugging log
+  // console.log("Received Preferences Data:", req.body); 
 
   const usersCollection = req.app.get("usersCollection");
   const { userId, ...preferences } = req.body;
