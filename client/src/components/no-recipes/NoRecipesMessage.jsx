@@ -48,7 +48,7 @@ const NoRecipesMessage = ({ type }) => {
       ),
       buttonAction: () => navigate("/recipes"),
     },
-    aiGenerated: {
+    ai: {
       text: "No AI-generated recipes yet.",
       subtext: "Let AI whip up a dish for you from your ingredients!",
       buttonText: (

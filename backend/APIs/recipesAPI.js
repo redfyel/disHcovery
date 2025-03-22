@@ -6,8 +6,6 @@ let recipesApp = express.Router();
 // Add JSON parser middleware
 recipesApp.use(express.json());
 
-
-
 recipesApp.get('/recipes', async (req, res) => {
     try {
         const recipesCollection = req.app.get('recipesCollection');
