@@ -20,10 +20,10 @@ function RootLayout() {
   }, [location]);
 
   // Hide Footer and CoolAI button only for "/ai-ingredients" route
-  const hideFooterCoolAI = location.pathname === "/ai-ingredients";
+  const hideFooterCoolAI = location.pathname === "/ai-ingredients" || location.pathname === '/dashboard' || location.pathname === '/login' || location.pathname === '/register';
 
   // Hide CoolAI button for '/login' and '/register'
-  const hideCoolAI = location.pathname === "/login" || location.pathname === "/register";
+  const hideCoolAI = location.pathname === "/login" || location.pathname === "/register" || location.pathname === '/dashboard';
 
   return (
     <div>
