@@ -8,74 +8,35 @@ function SearchBox({
     searchInputRef,
     searchInputWrapperWidth,
     setRecipes,
-    setIsDropdownVisible, // Receive setIsDropdownVisible
-    dropdownRef, // Receive the dropdown ref
+    setIsDropdownVisible,
+    dropdownRef,
 }) {
     const navigate = useNavigate();
     const [selectedIngredients, setSelectedIngredients] = useState([]);
 
     // Toggle selection for an ingredient
     const handleItemClick = (itemName) => {
-        setSelectedIngredients((prev) => {
-            return prev.includes(itemName)
+        setSelectedIngredients((prev) =>
+            prev.includes(itemName)
                 ? prev.filter((ing) => ing !== itemName)
-                : [...prev, itemName];
-        });
+                : [...prev, itemName]
+        );
     };
 
     // Handler to navigate to the recipes page with selected ingredients
     const handleShowRecipes = (e) => {
         e.stopPropagation();
         console.log("Show Recipes button clicked", selectedIngredients);
-        navigate("/recipes/by-ingredients/" + selectedIngredients.join(",")); // Corrected line;
-        setIsDropdownVisible(false); // Close the dropdown
+        navigate("/recipes/by-ingredients/" + selectedIngredients.join(","));
+        setIsDropdownVisible(false);
     };
 
-    // Currently not used because navigation is used instead.
-    const fetchRecipesByIngredients = async () => {
-        if (selectedIngredients.length === 0) {
-            return;
-        }
-        const queryString = selectedIngredients.join(",");
-        const url = `http://localhost:4000/recipe-api/recipes/by-ingredients?ingredients=${queryString}`;
-        try {
-            const response = await fetch(url);
-            const data = await response.json();
-            if (response.ok) {
-                setRecipes(data.payload);
-            } else {
-                console.error(data.message);
-                setRecipes([]);
-            }
-        } catch (error) {
-            console.error("Error fetching recipes:", error);
-        }
-    };
-
-    // Ingredients list (memoized for performance)
     const ingredients = useMemo(
         () => [
-            {
-                name: "Onion",
-                image:
-                    "https://gyanagri.com/wp-content/uploads/2021/03/onion-images.jpg",
-            },
-            {
-                name: "Garlic",
-                image:
-                    "https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-garlic-varieties-from-softneck-to-hardneck-a-natural-remedy-for-cold-png-image_12535998.png",
-            },
-            {
-                name: "Eggs",
-                image:
-                    "https://www.incredibleegg.org/wp-content/uploads/2023/07/AEB-IE_SectionLanding-FoodServices_Mobile_879x760_Egg-Types.jpg",
-            },
-
-            {
-                name: "Olive Oil",
-                image:
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTPD6Q2zPXoJSjqtFu-h05k3K8932P5lCFbWsbGtlFo6ooO6sP20_hxTxCDRv2I3pxWlEI&usqp=CAU",
-            },
+            { name: "Onion", image: "https://gyanagri.com/wp-content/uploads/2021/03/onion-images.jpg" },
+            { name: "Garlic", image: "https://png.pngtree.com/png-vector/20240528/ourmid/pngtree-garlic-varieties-from-softneck-to-hardneck-a-natural-remedy-for-cold-png-image_12535998.png" },
+            { name: "Eggs", image: "https://www.incredibleegg.org/wp-content/uploads/2023/07/AEB-IE_SectionLanding-FoodServices_Mobile_879x760_Egg-Types.jpg" },
+           
             {
                 name: "Potatoes",
                 image:
@@ -106,17 +67,6 @@ function SearchBox({
                 image:
                     "https://img.freepik.com/premium-photo/bakery-products-isolated-white-background_176402-2928.jpg",
             },
-
-            {
-                name: "FrozenPeas",
-                image:
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaaVK1x6-n8H2KVaUm60mbdkhbjGgDqJPeLQ&s",
-            },
-            {
-                name: "Tofu",
-                image:
-                    "https://thumbs.dreamstime.com/b/tofu-cheese-isolated-white-background-clipping-path-full-depth-field-181352721.jpg",
-            },
             {
                 name: "Beef",
                 image:
@@ -128,25 +78,17 @@ function SearchBox({
                     "https://media.istockphoto.com/id/1456512861/vector/lime-and-lemon-composition-fresh-citrus-fruits-whole-halves-and-slices-fruits-realistic-3d.jpg?s=612x612&w=0&k=20&c=ffBSgWnoBE7D0bdBMFES_O4_KeW1MUgcLVD4mxWNn8k=",
             },
             {
-                name: "Mayonnaise",
+                name: "Tofu",
                 image:
-                    "https://as2.ftcdn.net/jpg/04/08/21/53/1000_F_408215396_qWlXQzFi8dMcMbSlKm8Zla1I5B0e6MCm.jpg",
+                    "https://thumbs.dreamstime.com/b/tofu-cheese-isolated-white-background-clipping-path-full-depth-field-181352721.jpg",
             },
-            {
-                name: "Fish",
-                image:
-                    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQK-aI6pTRdtTcxntvaOmcTJQza36ZYhNiPXFuB5pyaxn5_-zBkcxCTWUeBaq4haxWhRH4&usqp=CAU",
-            },
+
         ],
         []
     );
 
-    // Filter ingredients based on searchTerm
     const filteredIngredients = useMemo(
-        () =>
-            ingredients.filter((item) =>
-                item.name.toLowerCase().includes(searchTerm.toLowerCase())
-            ),
+        () => ingredients.filter((item) => item.name.toLowerCase().includes(searchTerm.toLowerCase())),
         [searchTerm, ingredients]
     );
 
@@ -154,10 +96,9 @@ function SearchBox({
     const rect = searchInputRef.current?.getBoundingClientRect();
     const dropdownTop = rect ? rect.bottom + window.scrollY : 0;
     const dropdownLeft = rect ? rect.left + window.scrollX : 0;
-    const adjustedWidth = searchInputWrapperWidth;
 
     return (
-        <div className="searchbox-container" style={{ position: "relative" }}>
+        <div style={{ position: "relative", width: "60%", display: "flex", justifyContent: "center" }}>
             {ReactDOM.createPortal(
                 <div
                     ref={dropdownRef}
@@ -171,13 +112,13 @@ function SearchBox({
                         backgroundColor: "white",
                         border: "1px solid #ccc",
                         borderRadius: "5px",
-                        boxShadow: "0 2px 5px rgba(0, 0, 0, 0.2)",
+                        boxShadow: "0 2px 5px #698F3F",
                         padding: "10px",
-                        width: `${adjustedWidth}px`,
+                        width: searchInputWrapperWidth ? `${searchInputWrapperWidth}px` : "auto",
+                        maxWidth: "400px",
                         boxSizing: "border-box",
-                        maxHeight: "none",
-                        overflowY: "visible",
-                        height: "auto",
+                        maxHeight: "unset", // ❌ Remove fixed height
+                        overflowY: "visible", // ❌ Remove scroll
                     }}
                 >
                     {filteredIngredients.length > 0 ? (
@@ -187,6 +128,7 @@ function SearchBox({
                                 display: "flex",
                                 flexWrap: "wrap",
                                 gap: "8px",
+                                justifyContent: "center",
                             }}
                         >
                             {filteredIngredients.map((item) => (
@@ -199,16 +141,19 @@ function SearchBox({
                                         handleItemClick(item.name);
                                     }}
                                     style={{
+                                        display: "flex",
                                         alignItems: "center",
                                         backgroundColor: selectedIngredients.includes(item.name)
-                                            ? "#a9a9a9"
+                                            ? "#79a54a"
                                             : "#f3f4f6",
                                         borderRadius: "20px",
                                         cursor: "pointer",
-                                        display: "flex",
-                                        gap: "6px",
-                                        padding: "6px 12px",
+                                        padding: "4px 10px",
                                         transition: "background-color 0.2s",
+                                        fontSize: "15px",
+                                        flex: "1 1 90px",
+                                        justifyContent: "center",
+                                        minWidth: "70px",
                                     }}
                                 >
                                     <img
@@ -216,14 +161,13 @@ function SearchBox({
                                         alt={item.name}
                                         style={{
                                             border: "1px solid #698F3F",
-                                            borderRadius: "50%",
+                                            borderRadius: "70%",
                                             height: "24px",
                                             width: "24px",
+                                            marginRight: "6px",
                                         }}
                                     />
-                                    <span style={{ fontSize: "14px", color: "#0A122A" }}>
-                                        {item.name}
-                                    </span>
+                                    <span style={{ color: "#0A122A" }}>{item.name}</span>
                                 </div>
                             ))}
                             <button
@@ -238,6 +182,8 @@ function SearchBox({
                                     cursor: "pointer",
                                     fontSize: "14px",
                                     marginTop: "10px",
+                                    width: "100%",
+                                    maxWidth: "400px",
                                 }}
                             >
                                 Show Recipes with ({selectedIngredients.length}) ingredients
@@ -246,7 +192,7 @@ function SearchBox({
                     ) : (
                         <div
                             className="no-ingredients"
-                            style={{ color: "#6b7280", padding: "8px" }}
+                            style={{ color: "#6b7280", padding: "8px", textAlign: "center" }}
                         >
                             No ingredients found
                         </div>

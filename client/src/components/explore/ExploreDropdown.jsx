@@ -1,21 +1,18 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import "./Explore.css"; 
-
 function ExploreDropdown({ show, anchorRef, onFilterClick, categories }) {
   if (!show) return null;
 
   const rect = anchorRef.current?.getBoundingClientRect();
-  const top = rect ? rect.bottom + 10 : 50;
-  const left = 0; 
-
-  return ReactDOM.createPortal(
+  
+  return (
     <div
-      className="exp-dropdown show wide-dropdown"  
+      className={`exp-dropdown wide-dropdown ${show ? "show" : ""}`}
       style={{
-        position: "fixed",
-        top: `${top}px`,
-        left: `${left}px`,
+        position: "absolute",
+        top: "100%", // Places it directly below the button
+        left: "0", // Aligns with the button's left edge
         zIndex: 9999,
       }}
     >
@@ -37,9 +34,9 @@ function ExploreDropdown({ show, anchorRef, onFilterClick, categories }) {
           </div>
         </div>
       ))}
-    </div>,
-    document.body
+    </div>
   );
 }
+
 
 export default ExploreDropdown;

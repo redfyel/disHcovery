@@ -1,14 +1,9 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  FaChevronLeft,
-  FaChevronRight,
-  FaPlus,
-  FaTrash,
-  FaSave,
-} from "react-icons/fa";
+import {FaChevronLeft,FaChevronRight,FaPlus,FaTrash,FaSave,} from "react-icons/fa";
 import { motion, AnimatePresence } from "framer-motion";
 import { userLoginContext } from "../../contexts/UserLoginContext";
-import Loading from "../loading/Loading"; // Import the Loading component
+import Loading from "../loading/Loading";
+  import AccessDenied from "../protected/AccessDenied";
 import "./CoolAiFull.css";
 
 const CoolAIFull = () => {
@@ -36,6 +31,9 @@ const CoolAIFull = () => {
   const [showUploadImage, setShowUploadImage] = useState(true);
 
   const { loginStatus, currentUser } = useContext(userLoginContext);
+  if (!loginStatus) {
+    return <AccessDenied />;
+  }
 
   useEffect(() => {
     fetch("http://localhost:4000/ingredient-api/ingredients")

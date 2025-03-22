@@ -145,10 +145,15 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
             <FaUtensils size={40} color="#0A122A" />
             {selectedRecipe ? (
               <>
-                <h1 className="mt-2" style={{ color: "#698F3F" }}>
-                  You got {selectedRecipe.title}!
+                <h1 className="mt-2 rou-recipe-title">
+                  You got{" "}
+                  <span className="rou-recipe-name">
+                    {selectedRecipe.title}
+                  </span>
+                  !
                 </h1>
-                <p className="text-muted">Your dinner fate is sealed!</p>
+
+                <p style={{ color: "#0A122A" }}>Your dinner fate is sealed!</p>
                 {selectedRecipe.image && (
                   <img
                     src={selectedRecipe.image}
@@ -163,7 +168,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
                 <h1 className="mt-2" style={{ color: "#698F3F" }}>
                   Roll the Dice on Dinner
                 </h1>
-                <p className="text-muted">
+                <p style={{ color: "#0A122A" }}>
                   Spin the wheel, discover a dish, and let fate decide your next
                   meal!
                 </p>

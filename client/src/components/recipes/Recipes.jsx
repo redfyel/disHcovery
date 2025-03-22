@@ -3,6 +3,7 @@ import { useNavigate, useLocation, useParams } from "react-router-dom";
 import { PiCookingPotLight } from "react-icons/pi";
 import Filters from "../filters/Filters";
 import Loading from "../loading/Loading";
+import NoRecipesMessage from "../no-recipes/NoRecipesMessage"; // Import NoRecipesMessage
 import "./Recipes.css";
 
 const Recipes = () => {
@@ -13,6 +14,7 @@ const Recipes = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { ingredients } = useParams();
+  const { category } = useParams(); 
 
   const [filters, setFilters] = useState({
     categories: [],
@@ -21,19 +23,34 @@ const Recipes = () => {
     dietFilters: [],
     hasVideo: false,
   });
+  
+  useEffect(() => {
+    if (location.pathname === "/recipes") {
+      setFilters({
+        categories: [],
+        mealType: [],
+        cuisine: [],
+        dietFilters: [],
+        hasVideo: false,
+      });
+    }
+  }, [location]);
+  
 
   useEffect(() => {
     const fetchRecipes = async () => {
       try {
         setLoading(true);
         let url = "http://localhost:4000/recipe-api/recipes";
+        if (category) {
+          url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+      }
 
-        // If there is a query string, fetch from the /explore endpoint
         if (location.search) {
-          url = `http://localhost:4000/recipe-api/recipes/explore${location.search}`;
+          url = `http://localhost:4000/recipe-api/recipes/explore`;
+          url += location.search;
           console.log("Fetching URL with query:", url);
         } else if (ingredients) {
-          // If ingredients parameter exists, use the by-ingredients endpoint
           url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
           console.log("Fetching URL by ingredients:", url);
         }
@@ -106,7 +123,8 @@ const Recipes = () => {
 
       <div className="recipes-container">
         <div className="recipes-content">
-          <div className="recipe-grid">
+          {/* Recipe Grid */}
+          <div className={`recipe-grid ${filteredRecipes.length === 0 ? "no-recipes" : ""}`}>
             {filteredRecipes.length > 0 ? (
               filteredRecipes.map((recipe) => {
                 const titleBeforeBracket = recipe.title.split("(")[0].trim();
@@ -132,10 +150,17 @@ const Recipes = () => {
                 );
               })
             ) : (
-              <p className="no-results">No recipes found.</p>
+              <NoRecipesMessage 
+                message={filters.categories.length || filters.mealType.length || filters.cuisine.length || filters.dietFilters.length 
+                  ? "No recipes match your filters."
+                  : "No recipes found. Try adjusting filters or exploring new ingredients."
+                } 
+              />
             )}
           </div>
         </div>
+
+        {/* Filters Column */}
         <div className="filters-column">
           <Filters onFilterChange={setFilters} />
         </div>

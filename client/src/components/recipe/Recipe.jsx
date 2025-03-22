@@ -5,21 +5,14 @@ import Share from "../share/Share";
 import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
-import {
-  faHeart,
-  faPrint,
-  faBookmark,
-  faComment,
-} from "@fortawesome/free-solid-svg-icons";
+import { IoFastFoodSharp } from "react-icons/io5";
+import {  FaUsers } from "react-icons/fa";
+import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,} from "@fortawesome/free-solid-svg-icons";
+import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
-import ScaleRecipe from "../scale/ScaleRecipe";
+import {motion} from 'framer-motion'
 
-// Helper function: parse numeric portion from something like "4 slices"
-function parseNumericServings(servingsStr) {
-  const parsed = parseInt(servingsStr, 10);
-  return isNaN(parsed) ? 1 : parsed;
-}
 
 const Recipe = () => {
   const { title } = useParams();
@@ -146,6 +139,7 @@ const Recipe = () => {
     }
     if (!token) {
       console.error("No token found");
+      alert("Authentication error. Please log in again.");
       return;
     }
     try {
@@ -274,6 +268,17 @@ const Recipe = () => {
             alt={recipeTitle}
             className="rrecipe-image"
           />
+
+           <div className="recipe-info">
+            <div className="tag"><FontAwesomeIcon icon={faUtensils}/> {recipe.cuisine}</div>
+            <div className="tag"><FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}</div>
+            <div className="tag"><IoFastFoodSharp size={23} />{recipe.category}</div> 
+            <div className="tag"><FaUsers />Servings:{recipe.servings}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime}</div>
+            <div className="tag"><FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}</div>
+          </div>
+
           <div className="save-print-area">
             <button onClick={handleSaveRecipe} className="icon-button">
               <FontAwesomeIcon icon={faBookmark} />
@@ -328,10 +333,10 @@ const Recipe = () => {
                     >
                       Alternative: {ingredientAlternatives[ingredient.name]}
                     </p>
-                  )}
-                </li>
-              ))}
-            </ul>
+                )}
+            </li>
+        ))}
+    </ul>
 
             {showIngredientSelection && (
               <div
@@ -343,32 +348,25 @@ const Recipe = () => {
                 <ul>
                   {recipe?.ingredients?.map((ingredient, index) => (
                     <li key={index}>
-                      <label>
-                        <input
-                          type="checkbox"
-                          value={ingredient.name}
-                          checked={selectedIngredients.includes(
-                            ingredient.name
-                          )}
-                          onChange={() =>
-                            handleIngredientSelect(ingredient.name)
-                          }
-                        />
-                        {ingredient.amount} {ingredient.unit} {ingredient.name}
-                      </label>
+                        <label>
+                            <input
+                                type="checkbox"
+                                value={ingredient.name}
+                                checked={selectedIngredients.includes(ingredient.name)}
+                                onChange={() => handleIngredientSelect(ingredient.name)}
+                            />
+                            {ingredient.amount} {ingredient.unit} {ingredient.name}
+                        </label>
                     </li>
-                  ))}
-                </ul>
-                <button
-                  onClick={fetchIngredientAlternatives}
-                  className="ai-button"
-                  disabled={isFetchingAlternatives}
-                >
-                  {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
-                </button>
-              </div>
-            )}
-          </div>
+                ))}
+            </ul>
+            <button onClick={fetchIngredientAlternatives} className="ai-button" disabled={isFetchingAlternatives}>
+                {isFetchingAlternatives ? <Loading /> : "Get Alternatives"}
+            </button>
+        </div>
+    )}
+</div>
+
 
           {/* OPTIONAL MIX-INS SECTION */}
           {recipe?.optional_mixins?.length > 0 && (
@@ -419,7 +417,7 @@ const Recipe = () => {
                 allowFullScreen
               ></iframe>
             </div>
-          )}
+          ) : null}
         </div>
 
         {/* RIGHT COLUMN */}

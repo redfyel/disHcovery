@@ -6,8 +6,6 @@ let recipesApp = express.Router();
 // Add JSON parser middleware
 recipesApp.use(express.json());
 
-
-
 recipesApp.get('/recipes', async (req, res) => {
     try {
         const recipesCollection = req.app.get('recipesCollection');
@@ -180,27 +178,34 @@ recipesApp.get("/recipes/by-ingredients/:ingredients", async (req, res) => {
 // fetch recipes by Explore Nav
 recipesApp.get("/recipes/explore", async (req, res) => {
     try {
-      // Extract query parameters
-      const { Cuisine, MealType, Diet } = req.query;
-      const recipesCollection = req.app.get("recipesCollection");
-  
-      // Build a filter object
-      let filter = {};
-      if (Cuisine) filter.cuisine = { $regex: Cuisine, $options: "i" };
-      if (MealType) filter.mealType = { $regex: MealType, $options: "i" };
-      if (Diet) {
-        filter.dietFilters = { $elemMatch: { $regex: Diet, $options: "i" } };
-      }
-  
-    //   console.log("Filter object:", filter);
-  
-      // Fetch recipes from the database using the filter
-      const recipes = await recipesCollection.find(filter).toArray();
-      res.json({ payload: recipes });
+        // Extract query parameters
+        const { Cuisine, MealType, Diet, Categories } = req.query;
+        // console.log("Received Query Params:", req.query); 
+
+        const recipesCollection = req.app.get("recipesCollection");
+
+        // Build a filter object
+        let filter = {};
+        if (Cuisine) filter.cuisine = { $regex: new RegExp(Cuisine, "i") };
+        if (MealType) filter.mealType = { $regex: new RegExp(MealType, "i") };
+        if (Diet) {
+            filter.dietFilters = { $elemMatch: { $regex: new RegExp(Diet, "i") } };
+        }
+        if (Categories) {
+            filter.category = { $in: [Categories] };
+        }
+
+        // console.log("Generated MongoDB Filter:", filter); 
+
+        // Fetch recipes from the database using the filter
+        const recipes = await recipesCollection.find(filter).toArray();
+        res.json({ payload: recipes });
     } catch (error) {
-      res.status(500).json({ message: error.message });
+        res.status(500).json({ message: error.message });
     }
 });
+
+
   
 
 module.exports = recipesApp;

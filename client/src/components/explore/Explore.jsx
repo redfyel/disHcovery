@@ -7,11 +7,11 @@ import "./Explore.css";
 const categories = {
   Categories: {
     icon: <FaUtensils />,
-    filters: ["Main Course", "Appetizer", "Salad", "Quick & Easy", "Soup", "Comfort Food"],
+    filters: ["Main Course", "Appetizer", "Salad", "Healthy", "Quick & Easy", "Soup", "Comfort Food"],
   },
   Cuisine: {
     icon: <FaGlobe />,
-    filters: ["American", "British", "Italian", "Mexican", "Indian", "Mediterranean"],
+    filters: ["American", "British", "Italian", "Mexican", "Indian", "Chinese", "French", "Japanese"],
   },
   MealType: {
     icon: <FaClock />,
@@ -19,7 +19,7 @@ const categories = {
   },
   Diet: {
     icon: <FaLeaf />,
-    filters: ["Vegan", "Keto", "High-Protein", "Paleo", "Gluten Free", "Ovo Vegetarian"],
+    filters: ["Vegan", "Keto", "High-Protein", "Paleo", "Dairy-Free", "Gluten-Free", "Vegetarian"],
   },
 };
 
@@ -29,9 +29,15 @@ function Explore() {
   const exploreButtonRef = useRef(null);
 
   const handleFilterClick = (category, filter) => {
-    const query = new URLSearchParams({ [category]: filter }).toString();
+    const paramKey =
+      category === "Cuisine" ? "Cuisine"
+      : category === "MealType" ? "MealType"
+      : category === "Diet" ? "Diet"
+      : "Categories"; // Correctly maps 'Categories'
+  
+    const query = new URLSearchParams({ [paramKey]: filter }).toString();
     navigate(`/recipes/explore?${query}`);
-  };
+  }; 
 
   const handleMouseEnter = () => {
     setShowDropdown(true);
@@ -45,20 +51,22 @@ function Explore() {
 
   return (
     <div
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
-      style={{ position: "relative", display: "inline-block" }}
-    >
-      <Link to="#" className="explore-button" ref={exploreButtonRef}>
-        Explore
-      </Link>
-      <ExploreDropdown
-        show={showDropdown}
-        anchorRef={exploreButtonRef}
-        onFilterClick={handleFilterClick}
-        categories={categories}
-      />
-    </div>
+  onMouseEnter={handleMouseEnter}
+  onMouseLeave={handleMouseLeave}
+  style={{ position: "relative", display: "inline-block" }} // Ensure relative positioning
+>
+  <Link to="#" className="explore-button" ref={exploreButtonRef}>
+    Explore
+  </Link>
+  <ExploreDropdown
+  show={showDropdown}
+  anchorRef={exploreButtonRef}
+  onFilterClick={handleFilterClick} 
+  categories={categories}
+/>
+
+</div>
+
   );
 }
 

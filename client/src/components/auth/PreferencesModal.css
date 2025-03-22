@@ -1,5 +1,4 @@
-/* PreferencesModal.css */
-.modal-overlay {
+.pref-modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -10,24 +9,50 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
-  }
-  
-  .pref-modal-content {
+    overflow: hidden;
+}
+
+.pref-modal-content {
     background: #fff;
-    border-radius: 8px;
+    border-radius: 12px;
     width: 90%;
-    max-width: 600px;
+    max-width: 500px;
+    max-height: 80vh; /* Prevents overflow */
     padding: 20px;
     position: relative;
-  }
-  
-  .modal-close-btn {
+    box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.2);
+    overflow-y: auto; /* Enables scrolling */
+    scrollbar-width: thin;
+    scrollbar-color: #698F3F #F8F6F1; /* Styled scrollbar */
+}
+
+/* Cute close button */
+.pref-modal-close-btn {
     position: absolute;
     top: 10px;
     right: 10px;
     background: transparent;
     border: none;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     cursor: pointer;
-  }
-  
+    outline: none;
+    transition: color 0.3s ease-in-out;
+}
+
+.pref-modal-close-btn:hover {
+    color: #e74c3c;
+}
+
+/* Smooth scrolling */
+.pref-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.pref-modal-content::-webkit-scrollbar-thumb {
+    background-color: #698F3F;
+    border-radius: 10px;
+}
+
+.pref-modal-content::-webkit-scrollbar-track {
+    background: #F8F6F1;
+}
