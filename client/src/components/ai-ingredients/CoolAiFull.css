@@ -7,7 +7,7 @@
   background-color: #F0ECE5;
   border-radius: 15px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  position: relative; 
+  position: relative;
   min-height: 500px;
 }
 
@@ -33,7 +33,7 @@
   padding: 10px 15px;
   border-radius: 20px;
   margin-bottom: 10px;
-  word-break: break-word;
+  word-break: break-word; /*  This is key!  */
   text-align: left;
 }
 
@@ -62,7 +62,7 @@
   width: 80%;
   margin-left: auto;
   margin-right: auto;
-  margin-top: 15px; 
+  margin-top: 15px;
 }
 
 /* Ingredient Selection Styles */
@@ -117,7 +117,7 @@
   border-radius: 10px;
   padding: 10px;
   text-align: center;
-  border: 1px solid #698F3F;;
+  border: 1px solid #698F3F;
   cursor: pointer;
   transition: transform 0.2s, box-shadow 0.2s;
 }
@@ -143,6 +143,7 @@
 .ingredient-name {
   font-size: 0.9em;
   color: #555;
+    word-break: break-word;  /* Add this line! */
 }
 
 /* Selected Ingredients Styles */
@@ -161,7 +162,7 @@
 }
 
 .toggle-edit-btn:hover {
-  background-color:rgb(105, 143, 63, 0.5);
+  background-color: rgb(105, 143, 63, 0.5);
   color: #fff;
 }
 
@@ -217,17 +218,17 @@
 .inp-bar {
   flex: 1;
   padding: 10px;
-  border: 1px solid #ccc  !important; 
+  border: 1px solid #ccc !important;
   border-radius: 5px 0 0 5px;
   font-size: 16px;
   color: #333;
   /* background-color:rgb(105, 143, 63, 0.5)!important;   */
 }
-.inp-bar::placeholder {
-  color: #555; 
-  opacity: 1; 
-}
 
+.inp-bar::placeholder {
+  color: #555;
+  opacity: 1;
+}
 
 .add-btn {
   background-color: #698F3F;
@@ -360,23 +361,31 @@
 } */
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Responsive Design */
 @media (max-width: 600px) {
   #cool-ai-container.cool-ai-container {
-      padding: 10px;
+    padding: 10px;
   }
+
   #ingredient-grid.ingredient-grid {
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
   }
+
   .ingredient-image {
-      width: 50px;
-      height: 50px;
+    width: 50px;
+    height: 50px;
   }
 }
+
 /* Pagination dots */
 .category-pagination {
   display: flex;
@@ -402,6 +411,7 @@
 .category-pagination .dot:hover {
   background-color: #bbb;
 }
+
 /* caution ai */
 .ai-disclaimer {
   font-style: italic;
