@@ -47,7 +47,8 @@ const Recipes = () => {
       }
 
         if (location.search) {
-          url = `http://localhost:4000/recipe-api/recipes/explore${location.search}`;
+          url = `http://localhost:4000/recipe-api/recipes/explore`;
+          url += location.search;
           console.log("Fetching URL with query:", url);
         } else if (ingredients) {
           url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
