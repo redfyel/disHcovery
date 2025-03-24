@@ -1,25 +1,12 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Share from "../share/Share"; // This component isn't used, consider removing
+import Share from "../share/Share"; 
 import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import {
-  faHeart,
-  faPrint,
-  faBookmark,
-  faComment,
-  faUtensils,
-  faClock,
-  faPlay,
-  faStickyNote,
-  faShare,
-  faPlus,
-  faTimes,
-  faHeartBroken,
-} from "@fortawesome/free-solid-svg-icons";
+import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,faPlay,faStickyNote,faShare,faPlus,faTimes,faHeartBroken,} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
@@ -27,7 +14,7 @@ import Toast from "../toast/Toast";
 import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
 import Notes from "../notes/Notes";
-import Comments from "../comments/Comments"; // Import Comments
+import Comments from "../comments/Comments"; 
 
 const Recipe = () => {
   const { title } = useParams();
@@ -39,7 +26,7 @@ const Recipe = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
-  const [showComments, setShowComments] = useState(false); // added
+  const [showComments, setShowComments] = useState(false);
   const [showShareOptions, setShowShareOptions] = useState(false);
   const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
@@ -203,7 +190,6 @@ const Recipe = () => {
   //handle share options
   const handleShare = async () => {
     setShowShareOptions(!showShareOptions);
-    // Additional API Call for sharing the recipe can be added here
   };
 
   // Toggle ingredient selection for AI alternatives
@@ -281,7 +267,7 @@ const Recipe = () => {
 
       const data = await response.json();
 
-      setIsLiked(!isLiked); // Toggle isLiked
+      setIsLiked(!isLiked); 
 
       console.log("Like status updated:", data);
     } catch (error) {
@@ -339,9 +325,12 @@ const Recipe = () => {
           >
             <FontAwesomeIcon icon={faStickyNote} />
           </button>
-          <button onClick={handleShare} className="icon-button">
+          <button onClick={toggleShareOptions} className="icon-button">
             <FontAwesomeIcon icon={faShare} />
           </button>
+          {showShareOptions && (
+                 <Share recipeId={recipeId} recipeTitle={recipeTitle} recipeImage={recipe?.image} />
+             )}
         </div>
       </div>
 
