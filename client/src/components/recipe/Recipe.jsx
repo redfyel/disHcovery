@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Share from "../share/Share";
+import Share from "../share/Share"; // This component isn't used, consider removing
 import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
@@ -14,11 +14,11 @@ import {
   faUtensils,
   faClock,
   faPlay,
-  faStickyNote, // Import the sticky note icon
-  faShare,   //Import faShare
-  faPlus,  //Import faPlus
+  faStickyNote,
+  faShare,
+  faPlus,
   faTimes,
-  faHeartBroken//Importing X times
+  faHeartBroken,
 } from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
@@ -40,7 +40,7 @@ const Recipe = () => {
   const [isLiked, setIsLiked] = useState(false);
   const [showNotes, setShowNotes] = useState(false);
   const [showComments, setShowComments] = useState(false); // added
-   const [showShareOptions, setShowShareOptions] = useState(false);
+  const [showShareOptions, setShowShareOptions] = useState(false);
   const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
@@ -193,22 +193,18 @@ const Recipe = () => {
 
       if (!response.ok) throw new Error("Failed to save recipe");
 
-      setIsSaved(!isSaved);  // Toggle the isSaved state
+      setIsSaved(!isSaved); // Toggle the isSaved state
       showToast("Recipe saved successfully!", "success");
     } catch (err) {
       showToast(`Recipe could not be saved! ${err.message}`, "error");
     }
   };
 
-  
-
   //handle share options
-    const handleShare = async () => {
-    setShowShareOptions(!showShareOptions)
+  const handleShare = async () => {
+    setShowShareOptions(!showShareOptions);
     // Additional API Call for sharing the recipe can be added here
   };
-
-
 
   // Toggle ingredient selection for AI alternatives
   const toggleIngredientSelection = () => {
@@ -285,7 +281,7 @@ const Recipe = () => {
 
       const data = await response.json();
 
-      setIsLiked(true);
+      setIsLiked(!isLiked); // Toggle isLiked
 
       console.log("Like status updated:", data);
     } catch (error) {
@@ -298,13 +294,11 @@ const Recipe = () => {
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
   const toggleFab = () => setIsFabOpen(!isFabOpen);
 
- 
-
   // For easy references
   const recipeId = recipe?._id;
   const recipeTitle = recipe?.title;
   const nutrition = recipe?.nutritionInformation;
-  const userId = currentUser?._id; 
+  const userId = currentUser?._id;
 
   return (
     <div className="recipe-details">
@@ -318,33 +312,35 @@ const Recipe = () => {
       <h1 className="recipe-title">{recipeTitle}</h1>
 
       {/* Floating Action Bar */}
-      <div className={`floating-action-toggle ${isFabOpen ? 'open' : ''}`}>
-      <button className="toggle-button" onClick={toggleFab}>
-  <FontAwesomeIcon icon={isFabOpen ? faTimes : faPlus} />
-</button>
+      <div className={`floating-action-toggle ${isFabOpen ? "open" : ""}`}>
+        <button className="toggle-button" onClick={toggleFab}>
+          <FontAwesomeIcon icon={isFabOpen ? faTimes : faPlus} />
+        </button>
 
-        
         <div className="floating-action-bar">
-        
-
           <button onClick={handleSaveRecipe} className="icon-button">
             <FontAwesomeIcon icon={faBookmark} />
           </button>
           <button className="icon-button" onClick={handleLikeRecipe}>
-             <FontAwesomeIcon icon={isLiked ? faHeart : faHeartBroken} />
+            <FontAwesomeIcon icon={isLiked ? faHeart : faHeartBroken} />
           </button>
           <button onClick={handlePrint} className="icon-button">
             <FontAwesomeIcon icon={faPrint} />
           </button>
-          <button className="icon-button">
+          <button
+            className="icon-button"
+            onClick={() => setShowComments(!showComments)}
+          >
             <FontAwesomeIcon icon={faComment} />
           </button>
-          <button className="icon-button">
+          <button
+            className="icon-button"
+            onClick={() => setShowNotes(!showNotes)}
+          >
             <FontAwesomeIcon icon={faStickyNote} />
           </button>
-           <button onClick={handleShare} className="icon-button">
-              <FontAwesomeIcon icon={faShare} />
-           
+          <button onClick={handleShare} className="icon-button">
+            <FontAwesomeIcon icon={faShare} />
           </button>
         </div>
       </div>
@@ -361,15 +357,34 @@ const Recipe = () => {
         </div>
 
         <div className="recipe-info">
-          <div className="tag"><FontAwesomeIcon icon={faUtensils} /> {recipe.cuisine}</div>
-          <div className="tag"><FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}</div>
-          <div className="tag"> <IoFastFoodSharp size={23} />{recipe.category}</div>
-          <div className="tag"><FaUsers />Servings:{recipe.servings}</div>
-          <div className="tag"> <FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}</div>
-          <div className="tag"><FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime} </div>
-          <div className="tag"> <FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}</div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faUtensils} /> {recipe.cuisine}
+          </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faUtensils} /> {recipe.mealType}
+          </div>
+          <div className="tag">
+            {" "}
+            <IoFastFoodSharp size={23} />
+            {recipe.category}
+          </div>
+          <div className="tag">
+            <FaUsers />
+            Servings:{recipe.servings}
+          </div>
+          <div className="tag">
+            {" "}
+            <FontAwesomeIcon icon={faClock} /> Prep: {recipe.preparationTime}
+          </div>
+          <div className="tag">
+            <FontAwesomeIcon icon={faClock} /> Cook: {recipe.cookingTime}{" "}
+          </div>
+          <div className="tag">
+            {" "}
+            <FontAwesomeIcon icon={faClock} /> Total: {recipe.totalTime}
+          </div>
         </div>
-       
+
         <div className="nutrition-allergy-container">
           {/* allergy warnings section */}
           <motion.div
@@ -421,7 +436,7 @@ const Recipe = () => {
           </div>
         </div>
 
-            {/* Ingredients Section */}
+        {/* Ingredients Section */}
         <div className="ingredients-section">
           <div className="ingredients-header">
             <h3>Ingredients:</h3>
@@ -498,7 +513,6 @@ const Recipe = () => {
         </div>
       </div>
 
-      
       {/* VIDEO POPUP */}
       {showVideoPopup && (
         <div className="video-popup">
@@ -518,24 +532,24 @@ const Recipe = () => {
           </div>
         </div>
       )}
-    </div>
-  );
-
-
+      <div className="recipe-right-column">
         <div className="like-comment-share">
           <button
             className="icon-button"
             onClick={handleLikeRecipe}
             disabled={!loginStatus}
           >
-            <FontAwesomeIcon icon={faHeart} /> {isLiked ? 'Unlike' : 'Like'}
+            <FontAwesomeIcon icon={isLiked ? faHeart : faHeartBroken} />{" "}
+            {isLiked ? "Unlike" : "Like"}
           </button>
-          <button className="comment-button" onClick={()=> setShowComments(!showComments)}>
+          <button
+            className="comment-button"
+            onClick={() => setShowComments(!showComments)}
+          >
             <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} />{" "}
             Comments
           </button>
-
-       </div>
+        </div>
 
         {/* Notes Feature */}
         {loginStatus && recipeId && userId && (
@@ -549,9 +563,8 @@ const Recipe = () => {
             {showNotes && <Notes userId={userId} recipeId={recipeId} />}
           </div>
         )}
-
+         {showComments && <Comments recipeId={recipeId} />}
       </div>
-      {showComments && <Comments recipeId={recipeId} />}
       <button onClick={() => navigate(-1)} className="back-button">
         Go Back
       </button>
