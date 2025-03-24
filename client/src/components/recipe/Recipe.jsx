@@ -200,11 +200,7 @@ const Recipe = () => {
     }
   };
 
-  //like recipe 
-    const handleLikeRecipe = async () => {
-    setIsLiked(!isLiked); // Toggle the isLiked state
-    // Additional API Call for liking the recipe can be added here
-  };
+  
 
   //handle share options
     const handleShare = async () => {
@@ -502,9 +498,7 @@ const Recipe = () => {
         </div>
       </div>
 
-      <button onClick={() => navigate(-1)} className="back-button">
-        Go Back
-      </button>
+      
       {/* VIDEO POPUP */}
       {showVideoPopup && (
         <div className="video-popup">
@@ -522,7 +516,11 @@ const Recipe = () => {
               allowFullScreen
             ></iframe>
           </div>
-        ) : null}
+        </div>
+      )}
+    </div>
+  );
+
 
         <div className="like-comment-share">
           <button
