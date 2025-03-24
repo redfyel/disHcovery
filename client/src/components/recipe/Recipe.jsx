@@ -6,20 +6,14 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import {
-  faHeart,
-  faPrint,
-  faBookmark,
-  faComment,
-  faUtensils,
-  faClock,
-} from "@fortawesome/free-solid-svg-icons";
+import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
 import Toast from "../toast/Toast";
 import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
+import Notes from "../notes/Notes"; 
 
 const Recipe = () => {
   const { title } = useParams();
@@ -31,6 +25,7 @@ const Recipe = () => {
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
   const { toast, showToast } = useToast();
+  const [showNotes, setShowNotes] = useState(false);
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [ingredientAlternatives, setIngredientAlternatives] = useState({});
@@ -101,13 +96,13 @@ const Recipe = () => {
   useEffect(() => {
     if (recipe && recipe.likedBy && currentUser) {
       // Check if recipe.likedBy is an array before using includes
-      setIsLiked(Array.isArray(recipe.likedBy) ? recipe.likedBy.includes(currentUser.id) : false);
+      setIsLiked(
+        Array.isArray(recipe.likedBy)
+          ? recipe.likedBy.includes(currentUser.id)
+          : false
+      );
     }
   }, [recipe, currentUser]);
-
-  
-
-  
 
   useEffect(() => {
     if (currentUser && token) {
@@ -122,9 +117,12 @@ const Recipe = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:4000/user-api/liked-recipes/${currentUser.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await fetch(
+        `http://localhost:4000/user-api/liked-recipes/${currentUser.id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await response.json();
       console.log("Liked Recipes:", data.payload);
     } catch (error) {
@@ -150,8 +148,7 @@ const Recipe = () => {
   // Save recipe
   const handleSaveRecipe = async () => {
     if (!loginStatus) {
-      // setToast({ message: "Please log in to save recipes.", type: "alert" });
-      showToast("Please log in to save a recipe.", "alert");
+      showToast("Please log in to save recipes.", "alert");
       return;
     }
 
@@ -181,8 +178,6 @@ const Recipe = () => {
       showToast(`Recipe could not be saved! ${err.message}`, "error");
     }
   };
-
-
 
   // Toggle ingredient selection for AI alternatives
   const toggleIngredientSelection = () => {
@@ -241,21 +236,24 @@ const Recipe = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:4000/user-api/like-recipe", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ recipe}),
-      });
+      const response = await fetch(
+        "http://localhost:4000/user-api/like-recipe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ recipe }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error("Failed to update like status");
       }
 
       const data = await response.json();
-      
+
       setIsLiked(true);
 
       console.log("Like status updated:", data);
@@ -268,12 +266,11 @@ const Recipe = () => {
   // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
 
- 
-
   // For easy references
   const recipeId = recipe?._id;
   const recipeTitle = recipe?.title;
   const nutrition = recipe?.nutritionInformation;
+  const userId = currentUser?._id;  // Get the user ID
 
   return (
     <div className="recipe-details">
@@ -480,8 +477,12 @@ const Recipe = () => {
         ) : null}
 
         <div className="like-comment-share">
-          <button className="icon-button">
-            <FontAwesomeIcon icon={faHeart} /> Like
+          <button
+            className="icon-button"
+            onClick={handleLikeRecipe}
+            disabled={!loginStatus}
+          >
+            <FontAwesomeIcon icon={faHeart} /> {isLiked ? 'Unlike' : 'Like'}
           </button>
           <button className="comment-button">
             <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} />{" "}
@@ -506,6 +507,17 @@ const Recipe = () => {
             />
           )}
         </div>
+
+      {/* Notes Feature */}
+{loginStatus && recipeId && userId && (
+  <div className="notes-section">
+    <button className="notes-toggle-btn" onClick={() => setShowNotes(!showNotes)}>
+      {showNotes ? "Hide Notes" : "Add Notes"}
+    </button>
+    {showNotes && <Notes userId={userId} recipeId={recipeId} />}
+  </div>
+)}
+
       </div>
 
       <button onClick={() => navigate(-1)} className="back-button">
