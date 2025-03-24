@@ -1,6 +1,8 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { userLoginContext } from "../../contexts/UserLoginContext";
-import './Comments.css'; // You'll need to create this CSS file
+import './Comments.css';
+import { useToast } from "../../contexts/ToastContext";
+
 
 
 function Comments({ recipeId }) {
@@ -8,7 +10,8 @@ function Comments({ recipeId }) {
     const [newComment, setNewComment] = useState('');
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-    const { currentUser, token } = useContext(userLoginContext);
+    const { loginStatus,currentUser } = useContext(userLoginContext);
+    const {showToast} = useContext(useToast)
 
     useEffect(() => {
         async function loadComments() {
@@ -32,8 +35,8 @@ function Comments({ recipeId }) {
     }, [recipeId]);
 
     const handleAddComment = async () => {
-      if (!currentUser) {
-        alert("Please log in to add a comment.");
+      if (!loginStatus) {
+        showToast("Please log in to add a comment.", "alert");
         return;
       }
         if (!newComment.trim()) return;
@@ -53,13 +56,12 @@ function Comments({ recipeId }) {
             });
 
             if (response.ok) {
-                //Optimistic approach - Add comment directly. You can reload comments by calling the first API as well
                 setComments(prevComments => [...prevComments, {
                     userId: currentUser._id,
                     username: currentUser.username,
                     userComments: newComment
                 }]);
-                setNewComment(''); // Clear input after submission
+                setNewComment(''); 
             } else {
                 setError(`Failed to add comment: ${response.status}`);
             }

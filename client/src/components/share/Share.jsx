@@ -1,13 +1,14 @@
 import React, { useState } from "react";
 import { Copy, Share2, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
+import { useToast } from "../../contexts/ToastProvider";
 import { FaWhatsapp, FaInstagram, FaSnapchatGhost, FaPinterest, FaFacebookF } from "react-icons/fa";
 import './Share.css'
 
 const Share = ({ recipeTitle, recipeImage }) => {
     const [copied, setCopied] = useState(false);
     const [showShareOptions, setShowShareOptions] = useState(false);
-
+    const {toast, showToast} = useToast();
     const titleBeforeBracket = recipeTitle.split('(')[0].trim();
     const sanitizedTitle = titleBeforeBracket.toLowerCase().replace(/[^a-z0-9]+/g, "-");
     const encodedTitle = encodeURIComponent(sanitizedTitle);
@@ -59,7 +60,7 @@ const Share = ({ recipeTitle, recipeImage }) => {
                 console.error("Error sharing:", error);
             }
         } else {
-            alert("Sharing is not supported on this browser.");
+            showToast("Sharing is not supported on this browser.", "alert");
         }
     };
 

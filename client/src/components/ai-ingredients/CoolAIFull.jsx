@@ -3,7 +3,8 @@ import {FaChevronLeft,FaChevronRight,FaPlus,FaTrash,FaSave,} from "react-icons/f
 import { motion, AnimatePresence } from "framer-motion";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
-  import AccessDenied from "../protected/AccessDenied";
+import AccessDenied from "../protected/AccessDenied";
+import { useToast } from "../../contexts/ToastProvider";
 import "./CoolAiFull.css";
 
 const CoolAIFull = () => {
@@ -13,6 +14,7 @@ const CoolAIFull = () => {
   const [input, setInput] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [showRemove, setShowRemove] = useState(false);
+  const {showToast} = useContext(useToast)
   const [aiMessages, setAiMessages] = useState([
     {
       text:
@@ -72,7 +74,7 @@ const CoolAIFull = () => {
 
       const reader = new FileReader();
       reader.onloadend = () => {
-        setSelectedImage(reader.result); // Store base64 encoded image
+        setSelectedImage(reader.result); 
         setImagePreview(reader.result);
         setImageError(null);
       };
@@ -169,12 +171,12 @@ const CoolAIFull = () => {
 
   const saveRecipe = async (recipeText) => {
     if (!recipeText) {
-      alert("No recipe content found.");
+      showToast("No recipe content found.", "alert");
       return;
     }
 
     if (!loginStatus) {
-      alert("You need to log in to save recipes! 🔑");
+      showToast("You need to log in to save recipes!", "alert");
       return;
     }
 
