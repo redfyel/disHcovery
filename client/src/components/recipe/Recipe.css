@@ -1,5 +1,27 @@
 /* Recipe.css */
 
+/* Add this new container */
+.top-right-actions {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  display: flex;
+  gap: 10px;
+  z-index: 100; /* Ensure it's above other elements */
+}
+
+
+/* Modify the recipe-details to be relatively positioned */
+.recipe-details {
+  max-width: 1100px;
+  margin: 40px auto;
+  background: #FBFAF8;
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
+  position: relative; /* Make this a positioning context */
+}
+
 /* ==========================================================================
 Base Styles
 ========================================================================== */
@@ -16,18 +38,11 @@ body {
 Recipe Details Section
 ========================================================================== */
 
-.recipe-details {
-  max-width: 1100px; /* Adjust as needed */
-  margin: 40px auto;
-  background: #FBFAF8;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 0px 6px 15px rgba(0, 0, 0, 0.1);
-}
+
 
 .recipe-title {
   text-align: center;
-  font-size: 32px;
+  font-size: 36px;
   font-weight: 600;
   color: #0A122A;
   margin-bottom: 25px;
@@ -53,13 +68,93 @@ Left Column Styles
 }
 
 .rrecipe-image {
-  width: 500px; /* Adjust image size as needed */
+  width: 600px; /* Adjust image size as needed */
   height: 500px; /* Adjust image size as needed */
   object-fit: cover;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
   margin-bottom: 20px;
   align-self: center; /* Ensures the image is centered within its container */
+}
+
+/* Container for image and video button */
+.image-container {
+  position: relative;
+  display: inline-block; /* Or block, depending on your layout */
+}
+
+/* Style for the video button */
+.video-button {
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  width: 50px;
+  background-color: #698f3f; /* Semi-transparent black */
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  opacity: 2; /* Hidden by default */
+  transition: opacity 0.3s ease;
+  z-index: 10; /* Ensure it's above the image */
+}
+
+/* Show the button on hover */
+.image-container:hover .video-button {
+  opacity: 1;
+}
+
+/* Style for the video popup */
+.video-popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #F8F6F1; /* Semi-transparent black background */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000; /* Ensure it's on top of everything */
+}
+
+.video-popup-content {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  position: relative; /* For close button positioning */
+}
+
+.video-popup-content iframe {
+  /* Adjust iframe size as needed */
+  width: 80vw; /* Viewport width */
+  height: 60vh; /* Viewport height */
+  max-width: 800px;
+  max-height: 600px;
+}
+
+/* Style for the close button */
+.video-popup .close-button {
+  position: absolute;
+  top: -20px;
+  right: 5px;
+  background-color: transparent;
+  border: 2px solid #0A122A; /* Adjust border thickness as needed */
+  color: #698f3f;
+  font-size: 1.5rem; /* Adjust font size as needed */
+  cursor: pointer;
+  z-index: 1001;
+  border-radius: 50%; /* Make it a circle */
+  width: 30px;      /* Set width and height for the button */
+  height: 30px;
+  line-height: 26px; /* Vertically center the text */
+  text-align: center; /* Horizontally center the text */
+  padding: 0;        /* Remove default padding */
+}
+
+.video-popup .close-button:hover {
+  background-color: rgba(105, 143, 63, 0.2); /* Optional: Add a hover effect */
 }
 
 /* Recipe Info Section */
@@ -71,7 +166,7 @@ Left Column Styles
   margin-bottom: 25px;
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: 6px;
   border-left: 5px solid #698f3f;
   width: 100%; /* Take full width of left column */
   justify-content: center; /* Center tags horizontally */
@@ -81,11 +176,11 @@ Left Column Styles
 .tag {
   display: flex;
   align-items: center;
-  background: #e7decD;
+  background: #FBFAF8;
   padding: 6px 12px;
   border-radius: 15px;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 15px;
+  font-weight:650;
   color: #0a122a;
   box-shadow: 0px 2px 6px rgba(105, 143, 63, 0.2);
 }
@@ -208,6 +303,7 @@ Left Column Styles
 .recipe-section ol {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 .recipe-section li {
@@ -220,12 +316,18 @@ Left Column Styles
 /* Steps Section */
 .steps-section ol {
   counter-reset: step-counter;
+  
 }
 
 .steps-section li {
   counter-increment: step-counter;
   position: relative;
   padding-left: 30px;
+}
+.steps-section recipe-section{
+  border-left: 5px solid #698f3f;
+  width:auto;
+
 }
 
 .steps-section li:before {
@@ -245,9 +347,9 @@ Left Column Styles
 
 /* Allergy Warning Section */
 .allergy-warnings-section {
-  background: #f8f6f1;
+  background:#FBFAF8;
   color: #0a122a;
-  border-left: 6px solid #4e7223;
+  border-left: 6px solid #698f3f;
   padding: 16px;
   border-radius: 8px;
   box-shadow: 0 4px 12px rgba(110, 143, 63, 0.3);
@@ -276,11 +378,11 @@ Left Column Styles
 }
 
 .allergy-warnings-section li {
-  background: #e7decD;
+  background: rgb(248, 246, 241,9000);
   padding: 10px;
   margin: 5px 0;
   border-radius: 6px;
-  font-size: 16px;
+  font-size: 18px;
   display: flex;
   align-items: center;
   gap: 8px;
@@ -293,12 +395,12 @@ Left Column Styles
   flex-shrink: 0;
   width: 20px;
   height: 20px;
-  color: #4e7223;
+  color: #698f3f;
 }
 
 /* Nutrition Info Section */
 .nutrition-info {
-  background: #fbfaf8;
+  background: #FBFAF8;
   padding: 20px;
   border-radius: 12px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.12);
@@ -327,7 +429,7 @@ Left Column Styles
   gap: 12px;
   flex-wrap: wrap;
   padding: 8px 12px;
-  background: #e7decD;
+  background: #F8F6F1;
   border-radius: 8px;
   margin-bottom: 8px;
   font-size: 16px;
@@ -363,13 +465,17 @@ Left Column Styles
 /* Like Comment Share */
 .like-comment-share {
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */ /* Modified to row */
+  flex-direction: row;
   align-items: center; /* Center content */
+  justify-content: center; /*  Distribute items evenly  */
   gap: 10px;
+  margin-bottom: 20px;  /*Added*/
 }
 
 .comment-button,
-.share-button {
+.share-button,
+.like-button {  /*Added like-button*/
   /* Styles for the buttons */
   background-color: #698f3f;
   color: #fbfaf8;
@@ -380,36 +486,15 @@ Left Column Styles
   font-size: 16px;
   transition: background-color 0.3s ease;
   margin: 5px;
+  display: flex;       /*Added*/
+  align-items: center; /*Added*/
+  gap: 5px;             /*Added*/
 }
 
 .comment-button:hover,
-.share-button:hover {
-  background-color: #5a7a2e;
-}
-
-.sample-comments {
-  margin-top: 10px;
-  width: 100%;
-  max-width: 500px; /* Adjust as needed */
-}
-
-.sample-comment {
-  background-color: #f8f6f1;
-  border-radius: 8px;
-  padding: 10px;
-  margin-bottom: 8px;
-  box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
-}
-
-.comment-author {
-  font-weight: bold;
-  margin-bottom: 5px;
-  color: #698f3f;
-}
-
-.comment-text {
-  font-size: 16px;
-  color: #0a122a;
+.share-button:hover,
+.like-button:hover { /*Added like-button:hover*/
+  background-color: #5a7a2e; /*Darker shade of green*/
 }
 
 /* ==========================================================================
@@ -610,11 +695,13 @@ Ingredient Alternatives Section
 /* Adds container for nutrition and allergy sections to appear side by side */
 .nutrition-allergy-container {
   display: flex;
+  align-items: stretch; 
   justify-content: space-between;
-  gap: 20px;
+  gap: 180px;
 }
 
-.nutrition-allergy-container .allergy-/* Adds container for nutrition and allergy sections to appear side by side */
+/* Adds container for nutrition and allergy sections to appear side by side */
+.nutrition-allergy-container .allergy-
 .nutrition-allergy-container {
   display: flex;
   justify-content: space-between;
@@ -623,13 +710,11 @@ Ingredient Alternatives Section
 
 .nutrition-allergy-container .allergy-warnings-section,
 .nutrition-allergy-container .nutrition-info {
-  width: 48%; /* Adjust as needed */
+  width: 50%; /* Adjust as needed */
+  flex: 1;
 }
 
-/* ==========================================================================
-Media Queries for Responsiveness
-========================================================================== */
-
+/* Style adjustments for smaller screens */
 @media (max-width: 768px) {
   .recipe-details {
     padding: 20px;
@@ -638,6 +723,15 @@ Media Queries for Responsiveness
   .rrecipe-image {
     width: 100%;
     height: auto;
+  }
+
+  .image-container {
+    width: 100%; /* Ensure image container takes full width */
+  }
+
+  .video-button {
+    font-size: 14px; /* Smaller font size for the video button */
+    padding: 6px 10px; /* Adjust padding */
   }
 
   .recipe-section {
@@ -659,7 +753,135 @@ Media Queries for Responsiveness
   .nutrition-allergy-container .nutrition-info {
     width: 100%;
   }
+
+     /*Adjustments for Like/Comment/Share on small screens*/
+     .like-comment-share {
+      flex-direction: column; /*Stack vertically on smaller screens*/
+      align-items: center;    /*Center items*/
+    }
+  
+    .comment-button,
+    .share-button,
+    .like-button {
+      width: 100%;        /*Take full width of container*/
+      text-align: center;  /*Center the text within the button*/
+    }
 }
+/* Recipe.css (or a separate CSS file) */
+.floating-action-bar {
+  position: absolute;
+  bottom: 90px; 
+  left: 5px;
+  /* top : 200; */
+  display: flex;
+  flex-direction: column; /* Reverse order so the first item appears at the top */
+  gap: 10px;
+  opacity: 0; /* Hide initially */
+  transform: translateY(20px); /* Slide up effect */
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none; /* Prevent interaction when hidden */
+}
+
+.floating-action-bar .icon-button {
+  background-color: #698f3f;  /* Main button color */
+  color: #fbfaf8;       /* Text/icon color */
+  border: none;          /* Remove border */
+  padding: 12px;       /* Larger padding for circular shape */
+  border-radius: 50%;     /* Make it a circle */
+  width: 48px;         /* Fixed width and height */
+  height: 48px;
+  display: flex;       /* Center content */
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3); /* Add shadow */
+}
+.floating-action-bar.open {
+  transform: translateY(-10px); /* Move upwards */
+}
+
+.floating-action-bar .icon-button:hover {
+  background-color: #5a7a2e; /* Darken on hover */
+}
+
+.floating-action-bar .icon-button svg {
+  width: 24px;    /* Adjust icon size */
+  height: 24px;
+}
+
+/* Optional: Responsive adjustments */
+@media (max-width: 768px) {
+  .floating-action-bar {
+    bottom: 10px;   /* Adjust on smaller screens */
+    right: 10px;
+  }
+
+  .floating-action-bar .icon-button {
+    width: 40px;   /* Smaller buttons on smaller screens */
+    height: 40px;
+    padding: 8px;
+  }
+
+  .floating-action-bar .icon-button svg {
+    width: 18px;  /* Smaller icons */
+    height: 18px;
+  }
+}
+
+
+/* Recipe.css (or your CSS file) */
+
+.floating-action-toggle {
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  z-index: 1001;
+}
+
+.floating-action-toggle .toggle-button {
+  background-color: #698f3f;
+  color: #fbfaf8;
+  border: none;
+  padding: 30px;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.floating-action-toggle .toggle-button:hover {
+  background-color: #5a7a2e;
+}
+
+.floating-action-toggle .toggle-button svg {
+  width: 24px;
+  height: 24px;
+}
+
+.floating-action-bar {
+  position: absolute; /* Relative to the toggle container */
+  /* bottom: 400; */
+  top: 400;
+  right: -100;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  opacity: 0;       /* Initially hidden */
+  visibility: hidden;  /* Initially hidden */
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.floating-action-toggle.open .floating-action-bar {
+  opacity: 1;        /* Visible when open */
+  visibility: visible;   /* Visible when open */
+}
+
 
 /* Keyframe Animation */
 @keyframes fadeIn {
@@ -671,4 +893,4 @@ Media Queries for Responsiveness
     opacity: 1;
     transform: translateY(0);
   }
-}
+}    
