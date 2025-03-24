@@ -212,44 +212,49 @@ const Dashboard = () => {
           className="dashboard-edit-profile"
           onClick={() => setIsEditModalOpen(true)}
         >
-          Edit Details 
+          Edit Details
         </button>
 
         {/* Preferences Section */}
         <h3 className="mt-5">Your Preferences</h3>
-  {currentUser.preferences && (
-    <div className="dashboard-preferences">
-      <ul className="preferences-list">
-        <li>
-          <strong>Diet:</strong> {currentUser.preferences.diet}
-        </li>
-        <li>
-          <strong>Restrictions:</strong> {currentUser.preferences.restrictions}
-        </li>
-        <li>
-          <strong>Sex:</strong> {currentUser.preferences.sex}
-        </li>
-        <li>
-          <strong>Birth Year:</strong> {currentUser.preferences.birthYear}
-        </li>
-        <li>
-          <strong>Height:</strong>{" "}
-          {currentUser.preferences.height?.$numberInt || currentUser.preferences.height}
-        </li>
-        <li>
-          <strong>Weight:</strong>{" "}
-          {currentUser.preferences.weight?.$numberInt || currentUser.preferences.weight}
-        </li>
-        <li>
-          <strong>Activity Level:</strong> {currentUser.preferences.activityLevel}
-        </li>
-        <li>
-          <strong>Cooking Skill:</strong>{" "}
-          {currentUser.preferences.cookingSkill?.$numberInt || currentUser.preferences.cookingSkill}
-        </li>
-      </ul>
-    </div>
-  )}
+        {currentUser.preferences && (
+          <div className="dashboard-preferences">
+            <ul className="preferences-list">
+              <li>
+                <strong>Diet:</strong> {currentUser.preferences.diet}
+              </li>
+              <li>
+                <strong>Restrictions:</strong>{" "}
+                {currentUser.preferences.restrictions}
+              </li>
+              <li>
+                <strong>Sex:</strong> {currentUser.preferences.sex}
+              </li>
+              <li>
+                <strong>Birth Year:</strong> {currentUser.preferences.birthYear}
+              </li>
+              <li>
+                <strong>Height:</strong>{" "}
+                {currentUser.preferences.height?.$numberInt ||
+                  currentUser.preferences.height}
+              </li>
+              <li>
+                <strong>Weight:</strong>{" "}
+                {currentUser.preferences.weight?.$numberInt ||
+                  currentUser.preferences.weight}
+              </li>
+              <li>
+                <strong>Activity Level:</strong>{" "}
+                {currentUser.preferences.activityLevel}
+              </li>
+              <li>
+                <strong>Cooking Skill:</strong>{" "}
+                {currentUser.preferences.cookingSkill?.$numberInt ||
+                  currentUser.preferences.cookingSkill}
+              </li>
+            </ul>
+          </div>
+        )}
       </aside>
 
       <main className="dashboard-main-content">
@@ -414,7 +419,7 @@ const Dashboard = () => {
                     padding: "10px",
                   }}
                 >
-                  Back 
+                  Back
                 </button>
               </div>
             )}

@@ -125,7 +125,8 @@
 }
 
 .dashboard-liked-recipe-item:hover {
-  background-color: #E7DECD; /* E7DECD - Hover color */
+  background-color: #698F3F; 
+  color:#F8F6F1 !important;
 }
 
 .dashboard-recipe-thumbnail {
