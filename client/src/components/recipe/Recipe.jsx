@@ -1,12 +1,25 @@
 import React, { useState, useEffect, useCallback, useContext } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Share from "../share/Share"; 
+import Share from "../share/Share";
 import "./Recipe.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,faPlay,faStickyNote,faShare,faPlus,faTimes,faHeartBroken,} from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faPrint,
+  faBookmark,
+  faComment,
+  faUtensils,
+  faClock,
+  faPlay,
+  faStickyNote,
+  faShare,
+  faPlus,
+  faTimes,
+  faHeartBroken,
+} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
@@ -14,7 +27,7 @@ import Toast from "../toast/Toast";
 import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
 import Notes from "../notes/Notes";
-import Comments from "../comments/Comments"; 
+import Comments from "../comments/Comments";
 
 const Recipe = () => {
   const { title } = useParams();
@@ -183,13 +196,8 @@ const Recipe = () => {
       setIsSaved(!isSaved); // Toggle the isSaved state
       showToast("Recipe saved successfully!", "success");
     } catch (err) {
-      showToast(`Recipe could not be saved! ${err.message}`, "error");
+      showToast(`Recipe could not be saved! Please try again later. ${err.message}`, "error");
     }
-  };
-
-  //handle share options
-  const handleShare = async () => {
-    setShowShareOptions(!showShareOptions);
   };
 
   // Toggle ingredient selection for AI alternatives
@@ -211,7 +219,7 @@ const Recipe = () => {
   // Get AI-based ingredient alternatives
   const fetchIngredientAlternatives = async () => {
     if (selectedIngredients.length === 0) {
-      alert("Please select at least one ingredient.");
+      showToast("Please select at least one ingredient.", "info");
       return;
     }
     setIsFetchingAlternatives(true);
@@ -231,23 +239,23 @@ const Recipe = () => {
       setIngredientAlternatives(data.alternatives);
       setShowIngredientSelection(false);
     } catch (error) {
-      console.error("Error fetching ingredient alternatives:", error);
-      alert("Failed to get ingredient alternatives.");
+      // console.error("Error fetching ingredient alternatives:", error);
+      showToast("Failed to get ingredient alternatives. Please try again later.", "error");
     } finally {
       setIsFetchingAlternatives(false);
     }
   };
 
   const handleLikeRecipe = async () => {
-    if (!currentUser) {
-      alert("Please log in to like recipes.");
+    if (!loginStatus) {
+      showToast("Please log in to like recipes.", "alert");
       return;
     }
-    if (!token) {
-      console.error("No token found");
+    if(isLiked){
+      showToast("Recipe successfully removed from liked recipes.", "success");
       return;
     }
-
+    
     try {
       const response = await fetch(
         "http://localhost:4000/user-api/like-recipe",
@@ -264,15 +272,10 @@ const Recipe = () => {
       if (!response.ok) {
         throw new Error("Failed to update like status");
       }
-
-      const data = await response.json();
-
-      setIsLiked(!isLiked); 
-
-      console.log("Like status updated:", data);
+      setIsLiked(!isLiked);
+      showToast("Recipe successfully liked!", "success");
     } catch (error) {
-      console.error("Error toggling like status:", error);
-      alert("Error updating like status. Please try again later.");
+      showToast(`Recipe could not be liked. Please try again later.${error.message}`, "error");
     }
   };
 
@@ -283,7 +286,6 @@ const Recipe = () => {
   // For easy references
   const recipeId = recipe?._id;
   const recipeTitle = recipe?.title;
-  const nutrition = recipe?.nutritionInformation;
   const userId = currentUser?._id;
 
   return (
@@ -329,8 +331,12 @@ const Recipe = () => {
             <FontAwesomeIcon icon={faShare} />
           </button>
           {showShareOptions && (
-                 <Share recipeId={recipeId} recipeTitle={recipeTitle} recipeImage={recipe?.image} />
-             )}
+            <Share
+              recipeId={recipeId}
+              recipeTitle={recipeTitle}
+              recipeImage={recipe?.image}
+            />
+          )}
         </div>
       </div>
 
@@ -524,14 +530,6 @@ const Recipe = () => {
       <div className="recipe-right-column">
         <div className="like-comment-share">
           <button
-            className="icon-button"
-            onClick={handleLikeRecipe}
-            disabled={!loginStatus}
-          >
-            <FontAwesomeIcon icon={isLiked ? faHeart : faHeartBroken} />{" "}
-            {isLiked ? "Unlike" : "Like"}
-          </button>
-          <button
             className="comment-button"
             onClick={() => setShowComments(!showComments)}
           >
@@ -552,7 +550,7 @@ const Recipe = () => {
             {showNotes && <Notes userId={userId} recipeId={recipeId} />}
           </div>
         )}
-         {showComments && <Comments recipeId={recipeId} />}
+        {showComments && <Comments recipeId={recipeId} />}
       </div>
       <button onClick={() => navigate(-1)} className="back-button">
         Go Back
