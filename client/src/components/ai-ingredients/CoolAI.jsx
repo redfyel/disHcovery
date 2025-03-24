@@ -54,7 +54,7 @@ export default function CoolAI() {
             className="ai-but rounded-circle p-3"
             onClick={() => setOpen(true)}
           >
-            <HiSparkles size={30} color="#0A122A" /> {/* Dark icon */}
+            <HiSparkles size={30} color="#0A122A" /> 
           </button>
         </OverlayTrigger>
       ) : (
@@ -62,8 +62,8 @@ export default function CoolAI() {
           className="card p-4 shadow-lg"
           style={{
             width: "22rem",
-            backgroundColor: "#FBFAF8", /* Light background */
-            color: "#0A122A", /* Dark text */
+            backgroundColor: "#FBFAF8", 
+            color: "#0A122A", 
           }}
         >
           <button
@@ -80,10 +80,9 @@ export default function CoolAI() {
           </p>
           {/* Show login warning if user is not logged in */}
           {!loginStatus && (
-            <div className="alert alert-warning text-center" role="alert" style={{ backgroundColor: "#E7DECD", color: "#0A122A"}}>
+            // <div className="alert alert-warning text-center" role="alert" style={{ backgroundColor: "#F6F8F1", color: "#0A122A"}}>
               <AccessDenied compact />
-              {/* Please <a href="/login" className="fw-bold">log in</a> to use AI recipes! */}
-            </div>
+            // </div>
           )}
           {/* Input Field */}
           <div className="d-flex align-items-center mt-3">
