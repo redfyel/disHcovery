@@ -46,7 +46,7 @@ const NoRecipesMessage = ({ type }) => {
           <GrPowerReset size={20} /> Reset Filters
         </>
       ),
-      buttonAction: () => navigate("/recipes"),
+      buttonAction: resetFilters,
     },
     ai: {
       text: "No AI-generated recipes yet.",
