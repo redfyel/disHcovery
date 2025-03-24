@@ -6,14 +6,22 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
-import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,} from "@fortawesome/free-solid-svg-icons";
+import {
+  faHeart,
+  faPrint,
+  faBookmark,
+  faComment,
+  faUtensils,
+  faClock,
+} from "@fortawesome/free-solid-svg-icons";
 import { TiWarning } from "react-icons/ti";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import Loading from "../loading/Loading";
 import Toast from "../toast/Toast";
 import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
-import Notes from "../notes/Notes"; 
+import Notes from "../notes/Notes";
+import Comments from "../comments/Comments"; // Import Comments
 
 const Recipe = () => {
   const { title } = useParams();
@@ -24,19 +32,15 @@ const Recipe = () => {
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
-  const { toast, showToast } = useToast();
   const [showNotes, setShowNotes] = useState(false);
+  const [showComments, setShowComments] = useState(false); // added
+  const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
   const [selectedIngredients, setSelectedIngredients] = useState([]);
   const [ingredientAlternatives, setIngredientAlternatives] = useState({});
   const [showShareOptions, setShowShareOptions] = useState(false);
   const [isFetchingAlternatives, setIsFetchingAlternatives] = useState(false);
-  const [comments, setComments] = useState([
-    { id: 1, author: "Emily R.", text: "This recipe is amazing!" },
-    { id: 2, author: "David L.", text: "I added extra spice." },
-  ]);
 
-  // Fetch the recipe from the API
   const fetchRecipe = useCallback(async (recipeTitle) => {
     try {
       const response = await fetch(
@@ -98,7 +102,7 @@ const Recipe = () => {
       // Check if recipe.likedBy is an array before using includes
       setIsLiked(
         Array.isArray(recipe.likedBy)
-          ? recipe.likedBy.includes(currentUser.id)
+          ? recipe.likedBy.includes(currentUser._id)
           : false
       );
     }
@@ -118,7 +122,7 @@ const Recipe = () => {
     }
     try {
       const response = await fetch(
-        `http://localhost:4000/user-api/liked-recipes/${currentUser.id}`,
+        `http://localhost:4000/user-api/liked-recipes/${currentUser._id}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -270,7 +274,7 @@ const Recipe = () => {
   const recipeId = recipe?._id;
   const recipeTitle = recipe?.title;
   const nutrition = recipe?.nutritionInformation;
-  const userId = currentUser?._id;  // Get the user ID
+  const userId = currentUser?._id; 
 
   return (
     <div className="recipe-details">
@@ -460,6 +464,7 @@ const Recipe = () => {
             ))}
           </ol>
         </div>
+
         {/* RECIPE VIDEO SECTION */}
         {recipe.videoURL ? (
           <div className="recipe-video recipe-section">
@@ -484,42 +489,28 @@ const Recipe = () => {
           >
             <FontAwesomeIcon icon={faHeart} /> {isLiked ? 'Unlike' : 'Like'}
           </button>
-          <button className="comment-button">
+          <button className="comment-button" onClick={()=> setShowComments(!showComments)}>
             <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} />{" "}
-            Comment
+            Comments
           </button>
-          <div className="sample-comments">
-            {comments.map((comment) => (
-              <div key={comment.id} className="sample-comment">
-                <p className="comment-author">{comment.author}</p>
-                <p className="comment-text">{comment.text}</p>
-              </div>
-            ))}
-          </div>
-          <button onClick={toggleShareOptions} className="share-button">
-            Share
-          </button>
-          {showShareOptions && (
-            <Share
-              recipeId={recipeId}
-              recipeTitle={recipeTitle}
-              recipeImage={recipe.image}
-            />
-          )}
-        </div>
 
-      {/* Notes Feature */}
-{loginStatus && recipeId && userId && (
-  <div className="notes-section">
-    <button className="notes-toggle-btn" onClick={() => setShowNotes(!showNotes)}>
-      {showNotes ? "Hide Notes" : "Add Notes"}
-    </button>
-    {showNotes && <Notes userId={userId} recipeId={recipeId} />}
-  </div>
-)}
+       </div>
+
+        {/* Notes Feature */}
+        {loginStatus && recipeId && userId && (
+          <div className="notes-section">
+            <button
+              className="notes-toggle-btn"
+              onClick={() => setShowNotes(!showNotes)}
+            >
+              {showNotes ? "Hide Notes" : "Add Notes"}
+            </button>
+            {showNotes && <Notes userId={userId} recipeId={recipeId} />}
+          </div>
+        )}
 
       </div>
-
+      {showComments && <Comments recipeId={recipeId} />}
       <button onClick={() => navigate(-1)} className="back-button">
         Go Back
       </button>

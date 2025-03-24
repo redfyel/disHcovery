@@ -28,6 +28,7 @@ mongoclient.connect().then((connectionObj)=>{
     const ingredientsCollection  = db.collection('ingredients')
     const aiRecipesCollection = db.collection('ai-recipes')
     const notesCollection = db.collection('notes')
+    const commentsCollection = db.collection('comments')
 
 
     // share collection objects with the API
@@ -36,7 +37,7 @@ mongoclient.connect().then((connectionObj)=>{
     app.set('ingredientsCollection', ingredientsCollection)
     app.set('aiRecipesCollection', aiRecipesCollection)
     app.set('notesCollection', notesCollection)
-    
+    app.set('commentsCollection', commentsCollection)
 
 
     // start HTTP server
@@ -60,6 +61,8 @@ app.use('/airecipes-api', airecipesApp)
 const notesApp = require('./APIs/notesAPI')
 app.use('/notes-api', notesApp)
 
+const commentsApp = require('./APIs/commentsAPI')
+app.use('/comments-api', commentsApp)
 
 // error handling middleware
 // app.use((err, req, res, next) => res.status(500).send({message : "An error ocuured: ", errorMessage: err.message}))
