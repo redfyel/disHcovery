@@ -13,8 +13,8 @@ import Healthy from "../../assets/images/Healthy.jpg";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import UserEditModal from "../dashboard/UserEditModal";
 import AccessDenied from "../protected/AccessDenied";
-import CoolAI from "../ai-ingredients/CoolAI";
-import "./Dashboard.css"; // Ensure your CSS is imported
+import NoRecipesMessage from "../no-recipes/NoRecipesMessage";
+import "./Dashboard.css";
 
 const Dashboard = () => {
   const navigate = useNavigate();
@@ -63,8 +63,9 @@ const Dashboard = () => {
     }
   };
 
+  // Roulette
   useEffect(() => {
-    async function fetchRecipes() {
+    async function fetchRouRecipes() {
       try {
         const res = await fetch("http://localhost:4000/recipe-api/recipes");
         if (!res.ok) throw new Error("Network response was not ok");
@@ -78,7 +79,7 @@ const Dashboard = () => {
       }
     }
 
-    fetchRecipes();
+    fetchRouRecipes();
   }, []);
 
   const handleSpinClick = () => {
@@ -106,7 +107,7 @@ const Dashboard = () => {
           return;
         }
 
-        console.log("Sending token:", token);
+        // console.log("Sending token:", token);
 
         const res = await fetch("http://localhost:4000/user-api/spin", {
           method: "POST",
@@ -123,7 +124,7 @@ const Dashboard = () => {
           throw new Error(data.message || "Failed to save spun recipe");
         }
 
-        console.log("Recipe successfully saved to user:", data);
+        // console.log("Recipe successfully saved to user:", data);
 
         setCurrentUser((prevUser) => ({
           ...prevUser,
@@ -142,13 +143,20 @@ const Dashboard = () => {
     }
   };
 
+  const onRecipeSelect = (recipe) => {
+    if (!recipe || !recipe.title) return;
+    const sanitizedTitle = recipe.title
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-");
+    navigate(`/recipe/${sanitizedTitle}`);
+  };
+
+  // liked recipes
   useEffect(() => {
     if (!loginStatus || !currentUser?._id) return;
 
     const fetchLikedRecipes = async () => {
       try {
-        console.log("Fetching recipes for user:", currentUser._id);
-
         const likedRes = await fetch(
           `http://localhost:4000/user-api/liked-recipes/${currentUser._id}`,
           {
@@ -193,52 +201,91 @@ const Dashboard = () => {
 
   return loginStatus ? (
     <div className="dashboard">
-      <aside className="sidebar">
-      <CgProfile className="profile-icon large" style={{ fontSize: "100px", width: "100px", height: "100px" }} />
-        <h2 className="user-name">{currentUser.username}</h2>
-        <p className="user-email">{currentUser.email}</p>
+      <aside className="dashboard-sidebar">
+        <CgProfile
+          className="profile-icon large"
+          style={{ fontSize: "100px", width: "100px", height: "100px" }}
+        />
+        <h2 className="dashboard-user-name">{currentUser.username}</h2>
+        <p className="dashboard-user-email">{currentUser.email}</p>
         <button
-          className="edit-profile"
+          className="dashboard-edit-profile"
           onClick={() => setIsEditModalOpen(true)}
         >
-          Edit Details ✎
+          Edit Details 
         </button>
+
+        {/* Preferences Section */}
+        <h3 className="mt-5">Your Preferences</h3>
+  {currentUser.preferences && (
+    <div className="dashboard-preferences">
+      <ul className="preferences-list">
+        <li>
+          <strong>Diet:</strong> {currentUser.preferences.diet}
+        </li>
+        <li>
+          <strong>Restrictions:</strong> {currentUser.preferences.restrictions}
+        </li>
+        <li>
+          <strong>Sex:</strong> {currentUser.preferences.sex}
+        </li>
+        <li>
+          <strong>Birth Year:</strong> {currentUser.preferences.birthYear}
+        </li>
+        <li>
+          <strong>Height:</strong>{" "}
+          {currentUser.preferences.height?.$numberInt || currentUser.preferences.height}
+        </li>
+        <li>
+          <strong>Weight:</strong>{" "}
+          {currentUser.preferences.weight?.$numberInt || currentUser.preferences.weight}
+        </li>
+        <li>
+          <strong>Activity Level:</strong> {currentUser.preferences.activityLevel}
+        </li>
+        <li>
+          <strong>Cooking Skill:</strong>{" "}
+          {currentUser.preferences.cookingSkill?.$numberInt || currentUser.preferences.cookingSkill}
+        </li>
+      </ul>
+    </div>
+  )}
       </aside>
 
-      <main className="main-content">
-        <h2 className="homepage-section-title">What's Cooking!!</h2>
-        <section className="categories-section">
-          <div className="categories-grid">
+      <main className="dashboard-main-content">
+        <h2 className="dashboard-homepage-section-title">What's Cooking?</h2>
+        <section className="dashboard-categories-section">
+          <div className="dashboard-categories-grid">
             {categories.map((category, index) => (
-              <div key={index} className="category-card">
+              <div key={index} className="dashboard-category-card">
                 <Link
                   to={`/recipes/category/${category.name.toLowerCase()}`}
                   aria-label={`Explore ${category.name}`}
                 >
-                  <div className="category-circle">
+                  <div className="dashboard-category-circle">
                     <img
                       src={category.img}
                       alt={category.name}
-                      className="category-image"
+                      className="dashboard-category-image"
                       loading="lazy"
                     />
                   </div>
-                  <h5 className="category-name">{category.name}</h5>
+                  <h5 className="dashboard-category-name">{category.name}</h5>
                 </Link>
               </div>
             ))}
           </div>
         </section>
 
-        <section className="liked-recipes">
-          <div className="liked-recipes-container">
+        <section className="dashboard-liked-recipes">
+          <div className="dashboard-liked-recipes-container">
             <h2>Your Liked Recipes</h2>
             {likedRecipes.length > 0 ? (
-              <ul className="liked-recipes-list">
+              <ul className="dashboard-liked-recipes-list">
                 {likedRecipes.map((recipe) => (
                   <li
                     key={recipe._id}
-                    className="liked-recipe-item"
+                    className="dashboard-liked-recipe-item"
                     onClick={() =>
                       navigate(
                         `/recipe/${encodeURIComponent(
@@ -250,168 +297,222 @@ const Dashboard = () => {
                     <img
                       src={recipe.image}
                       alt={recipe.title}
-                      className="recipe-thumbnail"
+                      className="dashboard-recipe-thumbnail"
                     />
-                    <span className="recipe-title">{recipe.title}</span>
+                    <span className="dashboard-recipe-title">
+                      {recipe.title}
+                    </span>
                   </li>
                 ))}
               </ul>
             ) : (
-              <p>No liked recipes yet.</p>
+              <NoRecipesMessage type="liked" />
             )}
           </div>
         </section>
       </main>
 
-      <aside className="right-sidebar">
-        <section className="fridge-section">
-          <div className="recipe-history">
-            <div className="d-flex justify-content-center mt-3">
-              {recipes.length > 0 && (
-                <Wheel
-                  mustStartSpinning={mustSpin}
-                  prizeNumber={prizeNumber}
-                  data={recipes.map((r) => ({
-                    option:
-                      r.title.length > 17
-                        ? r.title.substring(0, 20) + "..."
-                        : r.title,
-                  }))}
-                  onStopSpinning={handleStopSpinning}
-                  outerBorderColor="#0A122A"
-                  outerBorderWidth={8}
-                  innerBorderColor="#698F3F"
-                  radiusLineColor="#fff"
-                  radiusLineWidth={2}
-                  textDistance={55}
-                  fontSize={16}
-                  backgroundColors={[
-                    "#0A122A",
-                    "#E7DECD",
-                    "#698F3F",
-                    "#FBFAF8",
-                  ]}
-                  textColors={["#E7DECD", "#0A122A"]}
-                  pointerProps={{ src: pointerIcon }}
-                />
-              )}
-            </div>
-
-            <div className="d-flex flex-column">
-              <button
-                onClick={handleSpinClick}
-                className="btn w-100 mt-2"
-                style={{
-                  backgroundColor: "#0A122A",
-                  color: "#F8F6F1",
-                  fontSize: "18px",
-                  padding: "10px",
-                  textAlign: "center",
-                }}
+      <aside className="dashboard-right-sidebar">
+        <div className="dashboard-recipe-history">
+          {/* Container that holds either the roulette wheel or the result */}
+          <div className="d-flex justify-content-center mt-3">
+            {!selectedRecipe ? (
+              <div
+                style={{ transform: "scale(0.85)", transformOrigin: "center" }}
               >
-                Spin
-              </button>
-            </div>
-            <button
-              className="w-100"
-              style={{
-                backgroundColor: "#0A122A",
-                color: "#F8F6F1",
-                fontSize: "18px",
-                padding: "10px",
-                marginTop: "10px",
-              }}
-              onClick={() => setShowDropdown(!showDropdown)}
-            >
-              Past Recipes {showDropdown ? "▲" : "▼"}
-            </button>
-            {showDropdown && (
-              <div className="recipe-history-dropdown" ref={dropdownRef}>
-                {recipeHistory.length > 0 ? (
-                  recipeHistory.map((recipe, index) => (
-                    <div key={index} className="recipe-history-item">
-                      <Link
-                        to={`/recipe/${encodeURIComponent(
-                          recipe.title.replace(/\s+/g, "-").toLowerCase()
-                        )}`}
-                        className="dropdown-link"
-                      >
-                        {recipe.title}
-                      </Link>
-                    </div>
-                  ))
-                ) : (
-                  <div className="recipe-history-item">No recipes yet!</div>
+                {recipes && recipes.filter((r) => r && r.title).length > 0 && (
+                  <Wheel
+                    mustStartSpinning={mustSpin}
+                    prizeNumber={prizeNumber}
+                    data={recipes
+                      .filter((r) => r && r.title)
+                      .map((r) => ({
+                        option:
+                          r.title.length > 17
+                            ? r.title.substring(0, 20) + "..."
+                            : r.title,
+                      }))}
+                    onStopSpinning={handleStopSpinning}
+                    outerBorderColor="#0A122A"
+                    outerBorderWidth={8}
+                    innerBorderColor="#698F3F"
+                    radiusLineColor="#fff"
+                    radiusLineWidth={2}
+                    textDistance={55}
+                    fontSize={16}
+                    backgroundColors={[
+                      "#0A122A",
+                      "#E7DECD",
+                      "#698F3F",
+                      "#FBFAF8",
+                    ]}
+                    textColors={["#E7DECD", "#0A122A"]}
+                    pointerProps={{ src: pointerIcon }}
+                  />
+                )}
+              </div>
+            ) : (
+              <div style={{ textAlign: "center" }}>
+                <h1 className="mt-2 rou-recipe-title">
+                  You got{" "}
+                  <span className="rou-recipe-name">
+                    {selectedRecipe.title}
+                  </span>
+                  !
+                </h1>
+                <p style={{ color: "#0A122A" }}>Your dinner fate is sealed!</p>
+                {selectedRecipe.image && (
+                  <img
+                    src={selectedRecipe.image}
+                    alt={selectedRecipe.title}
+                    className="img-fluid rounded shadow mt-3"
+                    style={{ maxHeight: "250px", objectFit: "cover" }}
+                  />
                 )}
               </div>
             )}
           </div>
 
-          <p>What's in your fridge?</p>
-          <CoolAI />
-          <div
-            className="card p-4 shadow-lg"
-            style={{
-              width: "22rem",
-              backgroundColor: "#FBFAF8",
-              color: "#0A122A",
-            }}
-          >
-            <button className="btn-close position-absolute top-0 end-0 m-2"></button>
-
-            <h4
-              className="text-center fw-bold"
-              style={{ color: "#0A122A" }}
-            >
-              ✨ disHcovery
-            </h4>
-            <p
-              className="text-center text-muted"
-              style={{ color: "#698F3F" }}
-            >
-              Turn your ingredients into a delicious surprise!
-            </p>
-
-            {!loginStatus && (
-              <div
-                className="alert alert-warning text-center"
-                role="alert"
+          {/* Button section */}
+          <div className="d-flex flex-column mt-3">
+            {!selectedRecipe ? (
+              <button
+                onClick={handleSpinClick}
+                className="btn w-100"
                 style={{
-                  backgroundColor: "#E7DECD",
-                  color: "#0A122A",
+                  backgroundColor: "#0A122A",
+                  color: "#FBFAF8",
+                  fontSize: "20px",
+                  padding: "10px",
                 }}
               >
-                <AccessDenied compact />
+                Spin & Feast!
+              </button>
+            ) : (
+              <div className="d-flex flex-column">
+                <button
+                  onClick={() => onRecipeSelect(selectedRecipe)}
+                  className="btn w-100 mt-3"
+                  style={{
+                    backgroundColor: "#698F3F",
+                    color: "#FBFAF8",
+                    fontSize: "18px",
+                    padding: "10px",
+                  }}
+                >
+                  Get Cooking
+                </button>
+                <button
+                  onClick={() => {
+                    setSelectedRecipe(null);
+                  }}
+                  className="btn w-100 mt-2"
+                  style={{
+                    backgroundColor: "#0A122A",
+                    color: "#F8F6F1",
+                    fontSize: "18px",
+                    padding: "10px",
+                  }}
+                >
+                  Back 
+                </button>
               </div>
             )}
-
-            <div className="d-flex align-items-center mt-3">
-              <input
-                type="text"
-                placeholder="Text 'hi' to get started"
-                value={input}
-                onChange={handleInput}
-                onKeyDown={handleKeyDown}
-                className="form-control text-center"
-                style={{
-                  width: "85%",
-                  backgroundColor: "#F8F6F1",
-                  color: "#0A122A",
-                  borderColor: "#E7DECD",
-                }}
-                disabled={!loginStatus}
-              />
-              <button
-                className="btn w-25 ms-2"
-                style={{ backgroundColor: "#698F3F", color: "#FBFAF8" }}
-                onClick={handleSend}
-                disabled={!loginStatus}
-              >
-                Send
-              </button>
-            </div>
           </div>
-        </section>
+
+          {/* Past spun recipes dropdown */}
+          <button
+            className="w-50 mt-3"
+            style={{
+              backgroundColor: "#0A122A",
+              color: "#F8F6F1",
+              fontSize: "18px",
+              padding: "10px",
+              marginTop: "10px",
+            }}
+            onClick={() => setShowDropdown(!showDropdown)}
+          >
+            Past Spun Recipes {showDropdown ? "▲" : "▼"}
+          </button>
+          {showDropdown && (
+            <div
+              className="dashboard-recipe-history-dropdown"
+              ref={dropdownRef}
+            >
+              {recipeHistory.length > 0 ? (
+                recipeHistory.map((recipe, index) => (
+                  <div key={index} className="dashboard-recipe-history-item">
+                    <Link
+                      to={`/recipe/${encodeURIComponent(
+                        recipe.title.replace(/\s+/g, "-").toLowerCase()
+                      )}`}
+                      className="dashboard-dropdown-link"
+                    >
+                      {recipe.title}
+                    </Link>
+                  </div>
+                ))
+              ) : (
+                <NoRecipesMessage type="roulette" />
+              )}
+            </div>
+          )}
+        </div>
+        <hr />
+        <h2>What's in your fridge?</h2>
+        <div
+          className="card p-4 shadow-lg"
+          style={{
+            width: "22rem",
+            backgroundColor: "#FBFAF8",
+            color: "#0A122A",
+          }}
+        >
+          <button className="btn-close position-absolute top-0 end-0 m-2"></button>
+          <h4 className="text-center fw-bold" style={{ color: "#0A122A" }}>
+            ✨ disHcovery
+          </h4>
+          <p className="text-center text-muted" style={{ color: "#698F3F" }}>
+            Turn your ingredients into a delicious surprise!
+          </p>
+          {!loginStatus && (
+            <div
+              className="alert alert-warning text-center"
+              role="alert"
+              style={{
+                backgroundColor: "#E7DECD",
+                color: "#0A122A",
+              }}
+            >
+              <AccessDenied compact />
+            </div>
+          )}
+          <div className="d-flex align-items-center mt-3">
+            <input
+              type="text"
+              placeholder="Text 'hi' to get started"
+              value={input}
+              onChange={handleInput}
+              onKeyDown={handleKeyDown}
+              className="form-control text-center"
+              style={{
+                width: "85%",
+                backgroundColor: "#F8F6F1",
+                color: "#0A122A",
+                borderColor: "#E7DECD",
+              }}
+              disabled={!loginStatus}
+            />
+            <button
+              className="btn w-25 ms-2"
+              style={{ backgroundColor: "#698F3F", color: "#FBFAF8" }}
+              onClick={handleSend}
+              disabled={!loginStatus}
+            >
+              Send
+            </button>
+          </div>
+        </div>
       </aside>
 
       {isEditModalOpen && (
