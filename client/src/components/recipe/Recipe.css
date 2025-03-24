@@ -893,4 +893,25 @@ Ingredient Alternatives Section
     opacity: 1;
     transform: translateY(0);
   }
-}    
+}
+
+/* notes */
+.notes-section {
+  margin-top: 15px;
+  text-align: center;
+}
+
+.notes-toggle-btn {
+  background-color: #698F3F; /* Olive Green */
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  transition: 0.3s;
+}
+
+.notes-toggle-btn:hover {
+  background-color: #556B2F;
+}

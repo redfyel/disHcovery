@@ -142,6 +142,7 @@ const Filters = ({ onFilterChange }) => {
                 name="mealType"
                 value={item}
                 checked={selectedFilters.mealType === item}
+                onChange={() => {}}
                 onClick={() => handleRadioFilter("mealType", item)}
               />
               <span>{item}</span>
@@ -183,10 +184,10 @@ const Filters = ({ onFilterChange }) => {
           {dietFilters.map((item) => (
             <label key={item} className="filter-option diet-filter-option">
               <input
-                type="checkbox"
-                value={item}
-                checked={selectedFilters.dietFilters.includes(item)}
-                onChange={() => toggleCheckboxFilter("dietFilters", item)}
+               type="checkbox"
+               value={item}
+               checked={selectedFilters.dietFilters.includes(item)}
+               onChange={() => toggleCheckboxFilter("dietFilters", item)}
               />
               <span>{item}</span>
             </label>

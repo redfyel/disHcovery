@@ -95,7 +95,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
           throw new Error(data.message || "Failed to save spun recipe");
         }
 
-        console.log("Recipe successfully saved to user:", data);
+        // console.log("Recipe successfully saved to user:", data);
 
         // Update user state with new recipe
         setCurrentUser((prevUser) => ({

@@ -26,6 +26,8 @@ import Loading from "../loading/Loading";
 import Toast from "../toast/Toast";
 import { useToast } from "../../contexts/ToastProvider";
 import { motion } from "framer-motion";
+import Notes from "../notes/Notes";
+import Comments from "../comments/Comments"; // Import Comments
 
 const Recipe = () => {
   const { title } = useParams();
@@ -36,6 +38,8 @@ const Recipe = () => {
   const [error, setError] = useState(null);
   const [isSaved, setIsSaved] = useState(false);
   const [isLiked, setIsLiked] = useState(false);
+  const [showNotes, setShowNotes] = useState(false);
+  const [showComments, setShowComments] = useState(false); // added
    const [showShareOptions, setShowShareOptions] = useState(false);
   const { toast, showToast } = useToast();
   const [showIngredientSelection, setShowIngredientSelection] = useState(false);
@@ -54,7 +58,6 @@ const Recipe = () => {
   // Function to close the video popup
   const closeVideoPopup = () => setShowVideoPopup(false);
 
-  // Fetch the recipe from the API
   const fetchRecipe = useCallback(async (recipeTitle) => {
     try {
       const response = await fetch(
@@ -114,13 +117,13 @@ const Recipe = () => {
   useEffect(() => {
     if (recipe && recipe.likedBy && currentUser) {
       // Check if recipe.likedBy is an array before using includes
-      setIsLiked(Array.isArray(recipe.likedBy) ? recipe.likedBy.includes(currentUser.id) : false);
+      setIsLiked(
+        Array.isArray(recipe.likedBy)
+          ? recipe.likedBy.includes(currentUser._id)
+          : false
+      );
     }
   }, [recipe, currentUser]);
-
-  
-
-  
 
   useEffect(() => {
     if (currentUser && token) {
@@ -135,9 +138,12 @@ const Recipe = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:4000/user-api/liked-recipes/${currentUser.id}`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
+      const response = await fetch(
+        `http://localhost:4000/user-api/liked-recipes/${currentUser._id}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        }
+      );
       const data = await response.json();
       console.log("Liked Recipes:", data.payload);
     } catch (error) {
@@ -163,8 +169,7 @@ const Recipe = () => {
   // Save recipe
   const handleSaveRecipe = async () => {
     if (!loginStatus) {
-      // setToast({ message: "Please log in to save recipes.", type: "alert" });
-      showToast("Please log in to save a recipe.", "alert");
+      showToast("Please log in to save recipes.", "alert");
       return;
     }
 
@@ -255,6 +260,45 @@ const Recipe = () => {
     }
   };
 
+  const handleLikeRecipe = async () => {
+    if (!currentUser) {
+      alert("Please log in to like recipes.");
+      return;
+    }
+    if (!token) {
+      console.error("No token found");
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        "http://localhost:4000/user-api/like-recipe",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ recipe }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to update like status");
+      }
+
+      const data = await response.json();
+
+      setIsLiked(true);
+
+      console.log("Like status updated:", data);
+    } catch (error) {
+      console.error("Error toggling like status:", error);
+      alert("Error updating like status. Please try again later.");
+    }
+  };
+
+  // Toggle share options
   const toggleShareOptions = () => setShowShareOptions((prev) => !prev);
   const toggleFab = () => setIsFabOpen(!isFabOpen);
 
@@ -264,6 +308,7 @@ const Recipe = () => {
   const recipeId = recipe?._id;
   const recipeTitle = recipe?.title;
   const nutrition = recipe?.nutritionInformation;
+  const userId = currentUser?._id; 
 
   return (
     <div className="recipe-details">
@@ -477,8 +522,41 @@ const Recipe = () => {
               allowFullScreen
             ></iframe>
           </div>
-        </div>
-      )}
+        ) : null}
+
+        <div className="like-comment-share">
+          <button
+            className="icon-button"
+            onClick={handleLikeRecipe}
+            disabled={!loginStatus}
+          >
+            <FontAwesomeIcon icon={faHeart} /> {isLiked ? 'Unlike' : 'Like'}
+          </button>
+          <button className="comment-button" onClick={()=> setShowComments(!showComments)}>
+            <FontAwesomeIcon icon={faComment} style={{ marginRight: "5px" }} />{" "}
+            Comments
+          </button>
+
+       </div>
+
+        {/* Notes Feature */}
+        {loginStatus && recipeId && userId && (
+          <div className="notes-section">
+            <button
+              className="notes-toggle-btn"
+              onClick={() => setShowNotes(!showNotes)}
+            >
+              {showNotes ? "Hide Notes" : "Add Notes"}
+            </button>
+            {showNotes && <Notes userId={userId} recipeId={recipeId} />}
+          </div>
+        )}
+
+      </div>
+      {showComments && <Comments recipeId={recipeId} />}
+      <button onClick={() => navigate(-1)} className="back-button">
+        Go Back
+      </button>
     </div>
   );
 };

@@ -16,7 +16,7 @@ function UserLoginStatus({children}){
                 body : JSON.stringify(userCredentials)
             })
             let result = await res.json()
-            console.log(result);
+            // console.log(result);
 
             // user logged in successfully
             if(result.message === "login success"){
