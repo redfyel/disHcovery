@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
 import "./Dashboard.css";
 import { userLoginContext } from "../../contexts/UserLoginContext";
+import { useToast } from "../../contexts/ToastProvider";
 
 const UserEditModal = ({ onClose, onSave }) => {
-  const { loginStatus, currentUser, setCurrentUser, token } =
-    useContext(userLoginContext);
+  const { loginStatus, currentUser, setCurrentUser, token } = useContext(userLoginContext);
+  const { showToast } = useToast();
+  
 
   // Initialize state with current user data
   const [formData, setFormData] = useState({
@@ -43,14 +45,14 @@ const UserEditModal = ({ onClose, onSave }) => {
 
       const data = await response.json();
       if (response.ok) {
-        setCurrentUser(data.updatedUser); // Update context with new user data
+        setCurrentUser(data.updatedUser); 
         onSave(data.updatedUser);
       } else {
-        alert(data.message || "Failed to update profile");
+        showToast("Failed to update profile", "error");
       }
     } catch (error) {
       console.error("Error updating profile:", error);
-      alert("An error occurred while updating profile.");
+      showToast("An error occurred while updating profile.", "error");
     }
   };
 
@@ -59,7 +61,10 @@ const UserEditModal = ({ onClose, onSave }) => {
       <div className="modal-container">
         <div className="modal-header">
           <h2>Edit Profile</h2>
-          <button className="close-btn" onClick={onClose}>✖</button>
+          <button
+            onClick={onClose}
+            className="btn-close p-2"
+          ></button>
         </div>
 
         <div className="modal-body">
