@@ -3,8 +3,8 @@
     top: 20px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(20, 20, 20, 0.9); /* Deeper black with a hint of transparency */
-    color: white;
+    background: rgba(10, 18, 42, 0.9); /* Deep blue with transparency */
+    color: #FBFAF8; /* Off-white text */
     padding: 16px 28px;
     border-radius: 14px;
     display: flex;
@@ -21,21 +21,22 @@
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Enhancing background colors for a more refined look */
+/* Custom color themes using the disHcovery palette */
 .toast-container.success {
-    background: linear-gradient(135deg, #44d77f, #2eb872);
+    background: linear-gradient(135deg, #698F3F, #8ABF60); /* Olive green shades */
 }
 
 .toast-container.error {
-    background: linear-gradient(135deg, #ff6b6b, #e84118);
+    background: linear-gradient(135deg, #E74C3C, #C0392B); 
+    color : #F8F6F1;
 }
 
 .toast-container.info {
-    background: linear-gradient(135deg, #6fa3ef, #2980b9);
+    background: linear-gradient(135deg, #0A122A, #2C3E50); /* Dark blue & deep slate */
 }
 
 .toast-container.alert {
-    background: linear-gradient(135deg, #f7b733, #e67e22);
+    background: linear-gradient(135deg, #E7DECD, #D5C7A3); /* Soft beige tones */
 }
 
 .close-btn {
@@ -52,7 +53,7 @@
     opacity: 0.6;
 }
 
-/* Soft fade-in animation */
+/* Smooth fade-in effect */
 @keyframes fadeIn {
     from {
         opacity: 0;
