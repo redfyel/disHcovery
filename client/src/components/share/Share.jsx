@@ -32,7 +32,8 @@ const Share = ({ recipeTitle }) => {
 
         checkRecipeExists();
     }, [apiUrl, showToast]);
-
+    const websiteName = "disHcovery";
+    
     const shareMessages = [
         `Discover an amazing recipe on ${websiteName}. A must-try dish: ${shareUrl}`,
         `Found something delicious on ${websiteName}. Try this recipe: ${shareUrl}`,
