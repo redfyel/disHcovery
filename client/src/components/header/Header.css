@@ -66,10 +66,7 @@
   color: #333;
 }
 
-/* User Icon */
-.user-icon {
-  margin-left: 10px;
-}
+
 
 /* 🌟 Responsive Fix for Small Screens */
 @media (max-width: 768px) {
