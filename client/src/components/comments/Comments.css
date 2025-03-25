@@ -1,48 +1,116 @@
 .comments-container {
-    margin-top: 20px;
-    padding: 15px;
-    border: 1px solid #E7DECD;
-    border-radius: 8px;
-    background-color: #FBFAF8;
-  }
-  
-  .comments-list {
-    list-style: none;
-    padding: 0;
-  }
-  
-  .comment {
-    margin-bottom: 10px;
-    padding: 8px;
-    border-bottom: 1px solid #E7DECD;
-  }
-  
-  .comment-author {
-    font-weight: bold;
-    margin-right: 5px;
-  }
-  
-  .comment-text {
-    margin: 0;
-  }
-  
-  .add-comment-form {
-    margin-top: 15px;
-  }
-  
-  .add-comment-form textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #E7DECD;
-    border-radius: 4px;
-    margin-bottom: 8px;
-  }
-  
-  .add-comment-form button {
-    background-color: #0A122A;
-    color: #FBFAF8;
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+  margin-top: 20px;
+  padding: 20px;
+  border: 1px solid #E7DECD;
+  border-radius: 12px;
+  background-color: #FBFAF8;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.comments-title {
+  font-size: 1.6rem;
+  color: #0A122A;
+  margin-bottom: 15px;
+  font-family: "Comic Sans MS", "Poppins", sans-serif; /* Fun font */
+  text-align: center;
+}
+
+.comments-list {
+  list-style: none;
+  padding: 0;
+  max-height: 250px;
+  overflow-y: auto;
+}
+
+.comment {
+  margin-bottom: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background-color: #F8F6F1;
+  border: 1px solid #E7DECD;
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.08);
+  transition: transform 0.2s ease-in-out, background-color 0.2s ease-in-out;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+.comment:hover{
+  background-color: #FBFAF8;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background-color: #698F3F;
+  display: flex;
+  align-items: center;
+  margin-top: 0px;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  color: white;
+  font-weight: bold;
+}
+
+.comment-content {
+  flex: 1;
+}
+
+.comment-author {
+  font-weight: bold;
+  color: #698F3F;
+  font-size: 1.2rem;
+}
+
+.comment-text {
+  margin: 2px 0;
+  color: #0A122A;
+  font-weight: 500;
+  font-size: 1rem;
+}
+
+.no-comments {
+  text-align: center;
+  font-style: italic;
+  color: #888;
+}
+
+.add-comment-form {
+  margin-top: 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; 
+}
+
+.add-comment-form textarea {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #E7DECD;
+  border-radius: 6px;
+  resize: none;
+  background-color: #F8F6F1;
+  transition: border-color 0.3s ease-in-out;
+}
+
+.add-comment-form textarea:focus {
+  border-color: #698F3F;
+  outline: none;
+}
+
+.add-comment-form button {
+  background-color: #0A122A;
+  color: #FBFAF8;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 6px;
+  margin-top: 34px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease-in-out;
+}
+
+.add-comment-form button:hover {
+  background-color: #698F3F;
+}
