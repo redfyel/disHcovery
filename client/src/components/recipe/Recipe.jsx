@@ -81,9 +81,13 @@ const Recipe = () => {
   // Check if the recipe is already saved
   const checkIfRecipeIsSaved = useCallback(
     async (recipeId) => {
-      if (!loginStatus || !recipeId) return;
-
+      if (!loginStatus || !recipeId) {
+        // console.log("Skipping checkIfRecipeIsSaved: Missing loginStatus or recipeId");
+        return;
+      }
+  
       try {
+        // console.log(`Checking if recipe ${recipeId} is saved...`);
         const response = await fetch(
           "http://localhost:4000/user-api/is-recipe-saved",
           {
@@ -92,22 +96,26 @@ const Recipe = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ recipeId: recipeId }), 
+            body: JSON.stringify({ recipeId: recipeId }),
           }
         );
-
+  
+        // console.log("Response Status:", response.status);
+  
         if (!response.ok) {
           throw new Error("Failed to check if recipe is saved.");
         }
-
+  
         const data = await response.json();
-        setIsSaved(data.isSaved); // Assuming the backend returns { isSaved: true/false }
+        // console.log("Received Data:", data);
+        setIsSaved(data.isSaved);
       } catch (error) {
         console.error("Error checking if recipe is saved:", error);
       }
     },
     [loginStatus, token]
   );
+  
 
   const checkIfRecipeIsLiked = useCallback(
     async (recipeId) => {
@@ -154,45 +162,41 @@ const Recipe = () => {
 
   const handleLikeRecipe = async () => {
     if (!loginStatus) {
-      showToast("Please log in to like/unlike recipes.", "alert");
-      return;
+        return showToast("Please log in to like/unlike recipes.", "alert");
+    }
+
+    if (!token) {
+        return showToast("Authentication error: No token found. Please log in again.", "error");
     }
 
     const endpoint = isLiked ? "dislike-recipe" : "like-recipe";
+    const requestBody = isLiked ? { recipeId: recipe._id } : { recipe };
 
     try {
-      const response = await fetch(
-        `http://localhost:4000/user-api/${endpoint}`,
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ recipeId: recipe._id}),
+        const response = await fetch(`http://localhost:4000/user-api/${endpoint}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`, 
+            },
+            body: JSON.stringify(requestBody),
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(`Failed to update like status. ${errorData?.message || 'Unknown error'}`);
         }
-      );
 
-      if (!response.ok) {
-        const errorData = await response.json(); // Try to get error message from backend
-        throw new Error(
-          `Failed to update like status.  Status: ${response.status}, Message: ${errorData?.message || 'Unknown error'}`
-        );
-      }
+        setIsLiked((prevIsLiked) => !prevIsLiked);
+        showToast(isLiked ? "Recipe unliked successfully!" : "Recipe liked successfully!", "success");
 
-      setIsLiked((prevIsLiked) => !prevIsLiked);
-
-      const message = isLiked
-        ? "Recipe successfully liked!"
-        : "Recipe successfully removed from liked recipes.";
-      showToast(message, "success");
     } catch (error) {
-      showToast(
-        `Recipe like/dislike operation failed. Please try again later.${error.message}`,
-        "error"
-      );
+        showToast(`Recipe like/dislike operation failed. ${error.message}`, "error");
     }
-  };
+};
+
+
+
 
   // Helper to store recipe for printing
   const handlePrint = () => {
@@ -589,31 +593,32 @@ const Recipe = () => {
 
         <div className="nutrition-allergy-container">
           {/* allergy warnings section */}
-          <motion.div
-            className="allergy-warnings-section recipe-section"
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ type: "spring", stiffness: 120 }}
-          >
-            <h3 className="allergy-title">
-              <TiWarning size={20} />
-              Allergy Warnings
-            </h3>
-            <ul>
-              {recipe.allergyWarnings?.map((warning, index) => (
-                <motion.li
-                  key={index}
-                  initial={{ x: -10, opacity: 0 }}
-                  animate={{ x: 0, opacity: 1 }}
-                  transition={{ delay: index * 0.15 }}
-                >
-                  <TiWarning size={20} />
-                  {warning}
-                </motion.li>
-              ))}
-            </ul>
-          </motion.div>
-
+        {recipe.allergyWarnings && recipe.allergyWarnings.length > 0 && (
+  <motion.div
+    className="allergy-warnings-section recipe-section"
+    initial={{ opacity: 0, scale: 0.9 }}
+    animate={{ opacity: 1, scale: 1 }}
+    transition={{ type: "spring", stiffness: 120 }}
+  >
+    <h3 className="allergy-title">
+      <TiWarning size={20} />
+      Allergy Warnings
+    </h3>
+    <ul>
+      {recipe.allergyWarnings?.map((warning, index) => (
+        <motion.li
+          key={index}
+          initial={{ x: -10, opacity: 0 }}
+          animate={{ x: 0, opacity: 1 }}
+          transition={{ delay: index * 0.15 }}
+        >
+          <TiWarning size={20} />
+          {warning}
+        </motion.li>
+      ))}
+    </ul>
+  </motion.div>
+)}
           <div className="nutrition-info">
             <h3>Nutrition Facts</h3>
             {recipe.nutritionInformation &&

@@ -2,30 +2,12 @@ let exp = require("express");
 let userApp = exp.Router();
 const { Db, ObjectId } = require("mongodb");
 const bcryptjs = require("bcryptjs");
-const jwt = require("jsonwebtoken"); // Ensure JWT is required
+const jwt = require("jsonwebtoken");
+// const tokenVerify = require('../middlewares/tokenVerify.js')
 const expressAsyncHandler = require("express-async-handler");
 
 //add a body parser middleware
 userApp.use(exp.json());
-
-// Middleware to verify JWT token (DRY principle - reuse this)
-const verifyToken = (req, res, next) => {
-  const authHeader = req.headers['authorization'];
-  const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
-
-  if (!token) {
-    return res.status(401).json({ message: 'No token provided.' });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => { // Use environment variable!
-    if (err) {
-      return res.status(403).json({ message: 'Invalid token.' }); // 403 Forbidden for invalid token
-    }
-
-    req.user = user; // Attach user data to the request
-    next(); // Proceed to the next middleware/route handler
-  });
-};
 
 //login route
 userApp.post(
@@ -93,11 +75,31 @@ userApp.post(
   })
 );
 
+
+ // Middleware to verify JWT token (DRY principle - reuse this)
+ const tokenVerify = expressAsyncHandler(async (req, res, next) => {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+      return res.status(401).json({ message: "Unauthorized: Invalid token format" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+      const decoded = jwt.verify(token, process.env.SECRET_KEY);
+      req.userId = new ObjectId(decoded.userId); // Attach userId to request
+      next();
+  } catch (error) {
+      return res.status(401).json({ message: "Invalid or expired token", error });
+  }
+});
+
 userApp.post(
   "/preferences",
-  verifyToken,
+  tokenVerify,
   expressAsyncHandler(async (req, res) => {
-    // Apply verifyToken middleware
+    // Apply tokenVerify middleware
     const usersCollection = req.app.get("usersCollection");
     const { userId, ...preferences } = req.body;
 
@@ -139,7 +141,7 @@ userApp.post(
 
 userApp.post(
   "/spin",
-  verifyToken,
+  tokenVerify,
   expressAsyncHandler(async (req, res) => {
     // Apply verifyToken middleware
 
@@ -179,74 +181,76 @@ userApp.post(
     }
   })
 );
+userApp.post( "/save-recipe",tokenVerify, expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { recipe } = req.body;
+  const userId = req.userId; // Get userId from req
 
-userApp.post( "/save-recipe",verifyToken, expressAsyncHandler(async (req, res) => {
-    // Apply verifyToken middleware
-    const usersCollection = req.app.get("usersCollection");
-    const { recipe } = req.body;
-    const userId = req.userId; // Get userId from req
+  try {
+    const user = await usersCollection.findOne({ _id: userId });
 
-    try {
-      const user = await usersCollection.findOne({ _id: userId });
-
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
-
-      // Check if the recipe is already saved
-      const isAlreadySaved = user.saved_recipes.some(
-        (savedRecipe) => savedRecipe._id.toString() === recipe._id
-      ); 
-
-      if (isAlreadySaved) {
-        return res.status(400).json({ message: "Recipe already saved" });
-      }
-
-      const updateResult = await usersCollection.updateOne(
-        { _id: userId },
-        { $push: { saved_recipes: recipe } }
-      );
-
-      if (updateResult.modifiedCount === 0) {
-        return res
-          .status(500)
-          .json({ message: "Failed to update user saved recipes" });
-      }
-
-      res
-        .status(200)
-        .json({ message: "Recipe saved successfully!", updatedUser: user });
-    } catch (error) {
-      console.error("Error in /save-recipe:", error); // Log the error on the server
-      res.status(500).json({ message: "Internal server error", error }); // General error for the client
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
-  })
-);
 
+    // Check if the recipe is already saved
+    const isAlreadySaved = user.saved_recipes.some(
+      (savedRecipe) => savedRecipe._id.toString() === recipe._id
+    ); 
+
+    if (isAlreadySaved) {
+      return res.status(400).json({ message: "Recipe already saved" });
+    }
+
+    const updateResult = await usersCollection.updateOne(
+      { _id: userId },
+      { $push: { saved_recipes: recipe } }
+    );
+
+    if (updateResult.modifiedCount === 0) {
+      return res
+        .status(500)
+        .json({ message: "Failed to update user saved recipes" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Recipe saved successfully!", updatedUser: user });
+  } catch (error) {
+    console.error("Error in /save-recipe:", error); // Log the error on the server
+    res.status(500).json({ message: "Internal server error", error }); // General error for the client
+  }
+})
+);
 // New /is-recipe-saved route
-userApp.post( "/is-recipe-saved",verifyToken,expressAsyncHandler(async (req, res) => {
-    const usersCollection = req.app.get("usersCollection");
-    const { recipeId } = req.body;
-    const userId = req.userId; // Get userId from req
+userApp.post("/is-recipe-saved", tokenVerify, expressAsyncHandler(async (req, res) => {
+  const usersCollection = req.app.get("usersCollection");
+  const { recipeId } = req.body;
+  const userId = req.userId; 
 
-    try {
-      const user = await usersCollection.findOne({ _id: userId });
+  // console.log(`Checking if recipe ${recipeId} is saved for user ${userId}...`);
 
-      if (!user) {
-        return res.status(404).json({ message: "User not found" });
-      }
+  try {
+    const user = await usersCollection.findOne({ _id: new ObjectId(userId) });
 
-      const isSaved = user.saved_recipes.some(
-        (savedRecipe) => savedRecipe._id.toString() === recipeId
-      ); // **IMPORTANT: Compare ObjectIds correctly!**
-
-      res.status(200).json({ isSaved: isSaved });
-    } catch (error) {
-      console.error("Error in /is-recipe-saved:", error); // Log the error on the server
-      res.status(500).json({ message: "Internal server error", error }); // General error for the client
+    if (!user) {
+      // console.log(`User ${userId} not found`);
+      return res.status(404).json({ message: "User not found" });
     }
-  })
+
+    const isSaved = user.saved_recipes.some(
+      (savedRecipe) => savedRecipe._id.toString() === recipeId
+    );
+
+    // console.log(`Recipe ${recipeId} is ${isSaved ? "already" : "not"} saved.`);
+    res.status(200).json({ isSaved: isSaved });
+  } catch (error) {
+    console.error("Error checking saved recipe:", error);
+    res.status(500).json({ message: "Internal Server Error", error });
+  }
+})
 );
+
 
 // fetch saved roulette recipes
 userApp.get(
@@ -367,7 +371,7 @@ userApp.put(
   })
 );
 // to be liked
-userApp.post("/like-recipe",verifyToken,expressAsyncHandler(async (req, res) => {
+userApp.post("/like-recipe",tokenVerify,expressAsyncHandler(async (req, res) => {
     const usersCollection = req.app.get("usersCollection");
     const { recipe } = req.body;
     const userId = req.userId; 
@@ -408,7 +412,7 @@ userApp.post("/like-recipe",verifyToken,expressAsyncHandler(async (req, res) => 
   })
 );
 
-userApp.post("/is-recipe-liked",verifyToken,expressAsyncHandler(async (req, res) => {
+userApp.post("/is-recipe-liked",tokenVerify,expressAsyncHandler(async (req, res) => {
         const usersCollection = req.app.get("usersCollection");
         const { recipeId } = req.body;
         const userId = req.userId;
@@ -437,51 +441,43 @@ userApp.post("/is-recipe-liked",verifyToken,expressAsyncHandler(async (req, res)
     })
 );
 
-userApp.post("/dislike-recipe",verifyToken, expressAsyncHandler(async (req, res) => {
-        const usersCollection = req.app.get("usersCollection");
-        const { recipeId } = req.body;
-        const userId = req.userId;
-        try {
-            const user = await usersCollection.findOne({ _id: userId });
-   
-            if (!user) {
-                // console.log("Backend: dislike-recipe - User not found");
-                return res.status(404).json({ message: "User not found" });
-            }
-   
-            // Construct ObjectId from string, handling potential errors
-            let recipeObjectId;
-            try {
-                recipeObjectId = new ObjectId(recipeId);
-                // console.log("Backend: dislike-recipe - recipeObjectId created:", recipeObjectId);
-            } catch (error) {
-                // console.error("Backend: dislike-recipe - Invalid recipeId format", error);
-                return res.status(400).json({ message: "Invalid recipeId format" });
-            }
-   
-            // Remove the recipe from the liked_recipes array
-            const updateResult = await usersCollection.updateOne(
-                { _id: userId },
-                { $pull: { liked_recipes: { _id: recipeObjectId } } }
-            );
-   
-            console.log("Backend: dislike-recipe - Update Result:", updateResult);
-   
-            if (updateResult.modifiedCount === 0) {
-                // If modifiedCount is 0, it could mean the recipe wasn't liked in the first place
-                // console.log("Backend: dislike-recipe - Recipe not found in liked_recipes, or user already unliked");
-                return res.status(404).json({ message: "Recipe not found in liked_recipes, or user already unliked" });
-            }
-   
-            // Fetch the updated user document
-            const updatedUser = await usersCollection.findOne({ _id: userId });
-   
-            res.status(200).json({ message: "Recipe disliked successfully!", updatedUser });
-   
-        } catch (error) {
-            console.error("Error in /dislike-recipe:", error);
-            res.status(500).json({ message: "Internal server error", error });
-        }
-    })
-   );
+userApp.post(
+  "/dislike-recipe",
+  tokenVerify,
+  expressAsyncHandler(async (req, res) => {
+    const usersCollection = req.app.get("usersCollection");
+    const { recipeId } = req.body;
+    const userId = req.userId;
+
+    if (!recipeId) {
+      return res.status(400).json({ message: "Recipe ID is required" });
+    }
+
+    try {
+      const user = await usersCollection.findOne({ _id: userId });
+
+      if (!user) {
+        return res.status(404).json({ message: "User not found" });
+      }
+
+      // Remove the recipe from liked_recipes
+      const updateResult = await usersCollection.updateOne(
+        { _id: userId },
+        { $pull: { liked_recipes: { _id: recipeId } } } // Remove the recipe with the matching id
+      );
+
+      if (updateResult.modifiedCount === 0) {
+        return res
+          .status(404)
+          .json({ message: "Recipe not found in liked list or already removed" });
+      }
+
+      res.status(200).json({ message: "Recipe unliked successfully" });
+    } catch (error) {
+      console.error("Error in /dislike-recipe:", error);
+      res.status(500).json({ message: "Internal server error" });
+    }
+  })
+);
+
 module.exports = userApp;
