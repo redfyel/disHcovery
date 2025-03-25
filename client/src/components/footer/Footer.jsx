@@ -150,9 +150,9 @@ const Footer = () => {
 
       {/* Centered Copyright */}
       <div className="text-center mt-4">
-        <p className="text-xxs opacity-60">
+        {/* <p className="text-xxs opacity-60"> */}
         © {new Date().getFullYear()} DisHcovery. All Rights Reserved.
-        </p>
+        {/* </p> */}
       </div>
 
       {/* Keyframe Animations and Styles */}
