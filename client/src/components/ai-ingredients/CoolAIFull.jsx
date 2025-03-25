@@ -14,7 +14,7 @@ const CoolAIFull = () => {
   const [input, setInput] = useState("");
   const [recipes, setRecipes] = useState([]);
   const [showRemove, setShowRemove] = useState(false);
-  const {showToast} = useContext(useToast)
+  const {showToast} = useToast()
   const [aiMessages, setAiMessages] = useState([
     {
       text:
@@ -284,7 +284,8 @@ const CoolAIFull = () => {
       instructionsList = instructionsText
         .split("\n")
         .map((item) => item.trim().replace(/^\d+\.\s*/, ""))
-        .filter((item) => item !== "");
+        .filter((item) => item !== "")
+        .map((item, index) => `${index + 1}. ${item}`);
     }
 
     return (
@@ -311,9 +312,9 @@ const CoolAIFull = () => {
         <div className="instructions">
           <h3>Instructions:</h3>
           <ol>
-            {instructionsList.map((step, index) => (
-              <li key={index}>{step}</li>
-            ))}{" "}
+          {instructionsList.map((step, index) => (
+  <li key={index}>{step}</li>
+))}
           </ol>
         </div>
         <div className="recipe-actions">
@@ -461,8 +462,8 @@ const CoolAIFull = () => {
       <AnimatePresence>
         {showIngredientSelection && (
           <motion.div
-            id="ingredient-selection"
-            className="ingredient-selection"
+            id="ai-ingredient-selection"
+            className="ai-ingredient-selection"
             key="ingredientSelection"
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
@@ -480,15 +481,15 @@ const CoolAIFull = () => {
                   <FaChevronLeft />
                 </button>
 
-                <div id="category-card" className="category-card">
+                <div id="ai-category-card" className="ai-category-card">
                   <h5 className="text-center">
                     {categories[currentIndex].category}
                   </h5>
-                  <div id="ingredient-grid" className="ingredient-grid">
+                  <div id="ai-ingredient-grid" className="ai-ingredient-grid">
                     {categories[currentIndex]?.ingredients?.map((item) => (
                       <motion.div
                         key={item.name}
-                        className={`ingredient-card ${
+                        className={`ai-ingredient-card ${
                           ingredients.includes(item.name) ? "selected" : ""
                         }`}
                         onClick={() => selectIngredient(item)}
@@ -498,9 +499,9 @@ const CoolAIFull = () => {
                         <img
                           src={item.image}
                           alt={item.name}
-                          className="ingredient-image"
+                          className="ai-ingredient-image"
                         />
-                        <p className="ingredient-name">{item.name}</p>
+                        <p className="ai-ingredient-name">{item.name}</p>
                       </motion.div>
                     ))}
                   </div>
@@ -527,8 +528,8 @@ const CoolAIFull = () => {
 
             {/* Selected Ingredients */}
             <div
-              id="selected-ingredients-container"
-              className="selected-ingredients-container"
+              id="ai-selected-ingredients-container"
+              className="ai-selected-ingredients-container"
             >
               <div className="d-flex justify-content-between align-items-center">
                 <h5>🛒 My Ingredients:</h5>
@@ -543,7 +544,7 @@ const CoolAIFull = () => {
                 )}
               </div>
 
-              <div id="selected-ingredients" className="selected-ingredients">
+              <div id="ai-selected-ingredients" className="ai-selected-ingredients">
                 {ingredients.length > 0 ? (
                   ingredients.map((ingredient, index) => {
                     const found = categories
@@ -552,7 +553,7 @@ const CoolAIFull = () => {
                     return (
                       <motion.div
                         key={index}
-                        className="ingredient-item"
+                        className="ai-ingredient-item"
                         layout
                         transition={{ duration: 0.2 }}
                       >
@@ -560,12 +561,12 @@ const CoolAIFull = () => {
                           <img
                             src={found.image}
                             alt={ingredient}
-                            className="ingredient-image-small"
+                            className="ai-ingredient-image-small"
                           />
                         ) : (
-                          <div className="custom-ingredient-placeholder">+</div>
+                          <div className="ai-custom-ingredient-placeholder">+</div>
                         )}
-                        <span className="ingredient-name">{ingredient}</span>
+                        <span className="ai-ingredient-name">{ingredient}</span>
 
                         {showRemove && (
                           <button
