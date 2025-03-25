@@ -37,10 +37,10 @@ function Comments({ recipeId }) {
 
   const handleAddComment = async () => {
     if (!loginStatus) {
-      showToast("Please log in to add a comment.", "alert"); // This should now trigger properly
+      showToast("Please log in to add a comment.", "alert"); 
       return;
     }
-    if (!newComment.trim()) return; // This now comes after login check
+    if (!newComment.trim()) return; 
   
     try {
       const response = await fetch("http://localhost:4000/comments-api/", {
