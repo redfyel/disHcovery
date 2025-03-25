@@ -176,14 +176,14 @@ const Dashboard = () => {
     fetchLikedRecipes();
   }, [loginStatus, currentUser, token]);
 
-  const categories = [
-    { name: "Breakfast", img: Breakfast },
-    { name: "Lunch", img: Lunch },
-    { name: "Dinner", img: Dinner },
-    { name: "Snacks", img: Snacks },
-    { name: "Desserts", img: Desserts },
-    { name: "Healthy", img: Healthy },
-  ];
+   const categories = [
+      { name: "Breakfast", img: Breakfast },
+      { name: "Lunch", img: Lunch },
+      { name: "Dinner", img: Dinner },
+      { name: "Snack", img: Snacks },
+      { name: "Dessert", img: Desserts },
+      { name: "Healthy", img: Healthy },
+    ];
 
   useEffect(() => {
     const handleClickOutside = (event) => {
