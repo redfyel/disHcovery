@@ -1,6 +1,6 @@
 // PreferencesModal.jsx
 import React from "react";
-import UserPreferences from "./UserPreferences";
+import UserPreferences from "./userpreferences";
 import "./PreferencesModal.css"; 
 
 const PreferencesModal = ({ onClose }) => {
