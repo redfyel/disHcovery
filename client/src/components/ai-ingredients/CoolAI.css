@@ -1,6 +1,8 @@
-/* Tooltip Background */
-.tooltip-inner {
-    background-color: #698F3F !important; 
+/* ==========================
+   TOOLTIP BACKGROUND & TEXT
+   ========================== */
+   .tooltip-inner {
+    background-color: #698F3F !important;
     color: #fbfaf8 !important;
     padding: 8px 12px;
     border-radius: 5px;
@@ -9,23 +11,40 @@
     text-align: center;
   }
   
-  /* Fix for Bootstrap's Tooltip Arrow */
+  /* ==========================
+     GENERAL TOOLTIP ARROW STYLING
+     ========================== */
   .tooltip .tooltip-arrow::before {
-    border-top-color: #698F3F !important;
-    border-bottom-color: #698F3F !important;
+    content: "";
+    position: absolute;
+    border: 0.5em solid transparent;
   }
   
-  /* Extra Fix for Some Bootstrap Versions */
-  .tooltip::before {
-    border-color: #698F3F !important;
-    background-color: #698F3F !important;
+  /* ==========================
+     ARROW FOR LEFT-PLACED TOOLTIP (Arrow on Right)
+     ========================== */
+  .tooltip[data-popper-placement^="left"] .tooltip-arrow::before {
+    border-left-color: #698F3F !important;
   }
-  .ai-but{
-    /* border:1px solid #698F3F; */
-    border:none;
+  
+  /* ==========================
+     ARROW FOR BOTTOM-PLACED TOOLTIP (Arrow on Top)
+     ========================== */
+  .tooltip[data-popper-placement^="top"] .tooltip-arrow::before {
+    /* Reset border settings */
+    border: 0.5em solid transparent;
+    /* Color only the top border to form a triangle pointing upward */
+    border-top-color: #698F3F !important;
+  }
+  
+  /* ==========================
+     AI BUTTON STYLES
+     ========================== */
+  .ai-but {
+    border: none;
     background-color: #F8F6F1;
-}
-.ai-but:hover{
+  }
+  .ai-but:hover {
     border: 2px solid #698F3F;
-}
-
+  }
+  
