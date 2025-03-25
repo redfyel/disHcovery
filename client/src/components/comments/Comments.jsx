@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import './Comments.css';
-import { useToast } from "../../contexts/ToastContext";
+import { useToast } from "../../contexts/ToastProvider";
 
 
 
@@ -11,7 +11,7 @@ function Comments({ recipeId }) {
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const { loginStatus,currentUser } = useContext(userLoginContext);
-    const {showToast} = useContext(useToast)
+    const {showToast} = useToast()
 
     useEffect(() => {
         async function loadComments() {
