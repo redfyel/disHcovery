@@ -20,7 +20,7 @@ const Notes = ({ userId, recipeId, initialOpen = false, setShowNotes }) => {
   useEffect(() => {
     async function loadNote() {
       try {
-        const response = await fetch(`http://localhost:4000/notes-api/notes/${userId}`);
+        const response = await fetch(`https://dishcovery-j22s.onrender.com/notes-api/notes/${userId}`);
         if (response.ok) {
           const data = await response.json();
           const userNotes = data.payload;
@@ -43,7 +43,7 @@ const Notes = ({ userId, recipeId, initialOpen = false, setShowNotes }) => {
       setIsSaving(true);
       const timeout = setTimeout(async () => {
         try {
-          const response = await fetch("http://localhost:4000/notes-api/notes", {
+          const response = await fetch("https://dishcovery-j22s.onrender.com/notes-api/notes", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, recipeId, userNotes: note })

@@ -14,7 +14,7 @@ function Register() {
 
   async function onUserRegister(newUser) {
     try {
-      let res = await fetch(`http://localhost:4000/user-api/register`, {
+      let res = await fetch(`https://dishcovery-j22s.onrender.com/user-api/register`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(newUser),

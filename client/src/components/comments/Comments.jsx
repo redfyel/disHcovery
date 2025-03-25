@@ -18,7 +18,7 @@ function Comments({ recipeId }) {
     async function loadComments() {
       setLoading(true);
       try {
-        const response = await fetch(`http://localhost:4000/comments-api/${recipeId}`);
+        const response = await fetch(`https://dishcovery-j22s.onrender.com/comments-api/${recipeId}`);
         if (response.ok) {
           const data = await response.json();
           setComments(data.payload);
@@ -43,7 +43,7 @@ function Comments({ recipeId }) {
     if (!newComment.trim()) return; 
   
     try {
-      const response = await fetch("http://localhost:4000/comments-api/", {
+      const response = await fetch("https://dishcovery-j22s.onrender.com/comments-api/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

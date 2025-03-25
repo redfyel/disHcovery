@@ -22,7 +22,7 @@ const SavedRecipes = () => {
       try {
         // Fetch Saved Recipes
         const savedRes = await fetch(
-          `http://localhost:4000/user-api/saved-recipes/${currentUser._id}`
+          `https://dishcovery-j22s.onrender.com/user-api/saved-recipes/${currentUser._id}`
         );
         if (!savedRes.ok)
           throw new Error(`Error ${savedRes.status}: ${savedRes.statusText}`);
@@ -31,7 +31,7 @@ const SavedRecipes = () => {
 
         // Fetch Roulette Recipes
         const rouletteRes = await fetch(
-          `http://localhost:4000/user-api/saved-roulette-recipes/${currentUser._id}`
+          `https://dishcovery-j22s.onrender.com/user-api/saved-roulette-recipes/${currentUser._id}`
         );
         if (!rouletteRes.ok)
           throw new Error(
@@ -42,7 +42,7 @@ const SavedRecipes = () => {
 
         // Fetch AI Recipes
         const aiRes = await fetch(
-          `http://localhost:4000/airecipes-api/ai-recipes/${currentUser.username}`
+          `https://dishcovery-j22s.onrender.com/airecipes-api/ai-recipes/${currentUser.username}`
         );
         if (!aiRes.ok)
           throw new Error(`Error ${aiRes.status}: ${aiRes.statusText}`);

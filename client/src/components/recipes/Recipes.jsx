@@ -41,17 +41,17 @@ const Recipes = () => {
     const fetchRecipes = async () => {
       try {
         setLoading(true);
-        let url = "http://localhost:4000/recipe-api/recipes";
+        let url = "https://dishcovery-j22s.onrender.com/recipe-api/recipes";
         if (category) {
-          url = `http://localhost:4000/recipe-api/recipes/category/${category}`;
+          url = `https://dishcovery-j22s.onrender.com/recipe-api/recipes/category/${category}`;
       }
 
         if (location.search) {
-          url = `http://localhost:4000/recipe-api/recipes/explore`;
+          url = `https://dishcovery-j22s.onrender.com/recipe-api/recipes/explore`;
           url += location.search;
           // console.log("Fetching URL with query:", url);
         } else if (ingredients) {
-          url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
+          url = `https://dishcovery-j22s.onrender.com/recipe-api/recipes/by-ingredients/${ingredients}`;
           // console.log("Fetching URL by ingredients:", url);
         }
 

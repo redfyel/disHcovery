@@ -45,7 +45,7 @@ export default function UserPreferences({ onComplete }) {
 
         try {
             const response = await fetch(
-                "http://localhost:4000/user-api/preferences",
+                "https://dishcovery-j22s.onrender.com/user-api/preferences",
                 {
                     method: "POST",
                     headers: {

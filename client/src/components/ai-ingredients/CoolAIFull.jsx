@@ -38,7 +38,7 @@ const CoolAIFull = () => {
   }
 
   useEffect(() => {
-    fetch("http://localhost:4000/ingredient-api/ingredients")
+    fetch("https://dishcovery-j22s.onrender.com/ingredient-api/ingredients")
       .then((res) => res.json())
       .then((data) => {
         setCategories(data);
@@ -113,7 +113,7 @@ const CoolAIFull = () => {
       if (selectedImage) {
         // API call for image-based recipe generation
         response = await fetch(
-          "http://localhost:4000/airecipes-api/generate-recipe-from-image",
+          "https://dishcovery-j22s.onrender.com/airecipes-api/generate-recipe-from-image",
           {
             method: "POST",
             headers: {
@@ -124,7 +124,7 @@ const CoolAIFull = () => {
         );
       } else {
         response = await fetch(
-          "http://localhost:4000/airecipes-api/generate-recipe",
+          "https://dishcovery-j22s.onrender.com/airecipes-api/generate-recipe",
           {
             method: "POST",
             headers: {
@@ -210,7 +210,7 @@ const CoolAIFull = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/airecipes-api/save-recipe",
+        "https://dishcovery-j22s.onrender.com/airecipes-api/save-recipe",
         {
           method: "POST",
           headers: {

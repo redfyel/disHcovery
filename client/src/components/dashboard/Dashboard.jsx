@@ -67,7 +67,7 @@ const Dashboard = () => {
   useEffect(() => {
     async function fetchRouRecipes() {
       try {
-        const res = await fetch("http://localhost:4000/recipe-api/recipes");
+        const res = await fetch("https://dishcovery-j22s.onrender.com/recipe-api/recipes");
         if (!res.ok) throw new Error("Network response was not ok");
         const data = await res.json();
         const shuffled = data.payload
@@ -109,7 +109,7 @@ const Dashboard = () => {
 
         // console.log("Sending token:", token);
 
-        const res = await fetch("http://localhost:4000/user-api/spin", {
+        const res = await fetch("https://dishcovery-j22s.onrender.com/user-api/spin", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -158,7 +158,7 @@ const Dashboard = () => {
     const fetchLikedRecipes = async () => {
       try {
         const likedRes = await fetch(
-          `http://localhost:4000/user-api/liked-recipes/${currentUser._id}`,
+          `https://dishcovery-j22s.onrender.com/user-api/liked-recipes/${currentUser._id}`,
           {
             headers: { Authorization: `Bearer ${token}` },
           }

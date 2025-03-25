@@ -34,7 +34,7 @@ const UserEditModal = ({ onClose, onSave }) => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch("http://localhost:4000/user-api/edit-profile", {
+      const response = await fetch("https://dishcovery-j22s.onrender.com/user-api/edit-profile", {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

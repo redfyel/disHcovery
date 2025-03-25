@@ -62,7 +62,7 @@ const Recipe = () => {
     async (recipeTitle) => {
       try {
         const response = await fetch(
-          `http://localhost:4000/recipe-api/recipe/${recipeTitle}`
+          `https://dishcovery-j22s.onrender.com/recipe-api/recipe/${recipeTitle}`
         );
         if (!response.ok) {
           throw new Error("Recipe not found");
@@ -89,7 +89,7 @@ const Recipe = () => {
       try {
         // console.log(`Checking if recipe ${recipeId} is saved...`);
         const response = await fetch(
-          "http://localhost:4000/user-api/is-recipe-saved",
+          "https://dishcovery-j22s.onrender.com/user-api/is-recipe-saved",
           {
             method: "POST",
             headers: {
@@ -124,7 +124,7 @@ const Recipe = () => {
       }
       try {
         const response = await fetch(
-          "http://localhost:4000/user-api/is-recipe-liked",
+          "https://dishcovery-j22s.onrender.com/user-api/is-recipe-liked",
           {
             method: "POST",
             headers: {
@@ -173,7 +173,7 @@ const Recipe = () => {
     const requestBody = isLiked ? { recipeId: recipe._id } : { recipe };
 
     try {
-        const response = await fetch(`http://localhost:4000/user-api/${endpoint}`, {
+        const response = await fetch(`https://dishcovery-j22s.onrender.com/user-api/${endpoint}`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
@@ -307,7 +307,7 @@ const Recipe = () => {
 
     try {
       const response = await fetch(
-        "http://localhost:4000/user-api/save-recipe",
+        "https://dishcovery-j22s.onrender.com/user-api/save-recipe",
         {
           method: "POST",
           headers: {
@@ -355,7 +355,7 @@ const Recipe = () => {
     setIsFetchingAlternatives(true);
     try {
       const response = await fetch(
-        "http://localhost:4000/airecipes-api/get-ingredient-alternatives",
+        "https://dishcovery-j22s.onrender.com/airecipes-api/get-ingredient-alternatives",
         {
           method: "POST",
           headers: {
