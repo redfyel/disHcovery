@@ -1,9 +1,21 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useRef, useEffect } from "react"; 
+import { motion } from "framer-motion";
+import { CheckCircleIcon, DocumentTextIcon, XIcon } from "@heroicons/react/solid";
+import "./Notes.css";
 
-function Notes({ userId, recipeId }) {
-  const [note, setNote] = useState('');
+const Notes = ({ userId, recipeId, initialOpen = false, setShowNotes }) => {
+  const [isOpen, setIsOpen] = useState(initialOpen);
+  const [note, setNote] = useState("");
   const [isSaving, setIsSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
+  const textareaRef = useRef(null);
   const hasInteracted = useRef(false);
+
+  useEffect(() => {
+    if (isOpen && textareaRef.current) {
+      textareaRef.current.focus();
+    }
+  }, [isOpen]);
 
   useEffect(() => {
     async function loadNote() {
@@ -12,7 +24,7 @@ function Notes({ userId, recipeId }) {
         if (response.ok) {
           const data = await response.json();
           const userNotes = data.payload;
-          setNote(userNotes[recipeId] || '');
+          setNote(userNotes[recipeId] || "");
           hasInteracted.current = false;
         } else {
           console.error("Failed to load notes:", response.status);
@@ -21,17 +33,19 @@ function Notes({ userId, recipeId }) {
         console.error("Error fetching notes:", error);
       }
     }
-    loadNote();
+    if (userId) {
+      loadNote();
+    }
   }, [userId, recipeId]);
 
   useEffect(() => {
-    if (note !== '' && hasInteracted.current) {
+    if (note !== "" && hasInteracted.current) {
       setIsSaving(true);
       const timeout = setTimeout(async () => {
         try {
-          const response = await fetch('http://localhost:4000/notes-api/notes', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+          const response = await fetch("http://localhost:4000/notes-api/notes", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ userId, recipeId, userNotes: note })
           });
 
@@ -39,8 +53,10 @@ function Notes({ userId, recipeId }) {
             const errorData = await response.json();
             throw new Error(`Failed to save note: ${response.status} - ${errorData.error}`);
           }
-
+          
           setIsSaving(false);
+          setSaved(true);
+          setTimeout(() => setSaved(false), 2000);
         } catch (error) {
           console.error("Error saving note:", error);
         }
@@ -58,19 +74,49 @@ function Notes({ userId, recipeId }) {
   };
 
   return (
-    <div className="bg-[#F8F6F1] p-4 rounded-2xl shadow-lg w-full max-w-md mx-auto relative">
-      <h3 className="text-lg font-semibold text-[#0A122A] mb-2">Your Notes</h3>
-      <textarea
-        value={note}
-        onChange={handleChange}
-        placeholder="Add your thoughts here... 🍽️✨"
-        className="w-full h-40 p-3 rounded-lg border border-[#E7DECD] bg-[#FBFAF8] focus:ring-2 focus:ring-[#698F3F] focus:outline-none text-[#0A122A] text-sm placeholder:text-[#A0A0A0]"
-      />
-      <p className={`absolute right-4 bottom-4 text-sm ${isSaving ? 'text-[#698F3F]' : 'text-[#A0A0A0]'}`}>
-        {isSaving ? 'Saving...' : 'Saved ✅'}
-      </p>
-    </div>
+    <>
+      {isOpen && (
+        <motion.div className="notes-overlay" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+          <motion.div
+            className="notes-modal"
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+          >
+            <div className="notes-header">
+              <h2>
+                <DocumentTextIcon className="icon" /> Chef’s Log
+              </h2>
+              <motion.button className="close-button p-2" whileHover={{ scale: 1.1 }} whileTap={{ scale: 0.9 }} onClick={() => setShowNotes(false)}>
+                <XIcon className="icon" />
+              </motion.button>
+            </div>
+
+            <textarea
+              ref={textareaRef}
+              className="notes-textarea"
+              placeholder="Jot down your thoughts, secret ingredients, or brilliant ideas..."
+              value={note}
+              onChange={handleChange}
+            />
+
+            <div className="notes-footer">
+              <motion.button className="save-button" whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                {isSaving ? "Saving..." : "Save"}
+              </motion.button>
+
+              {saved && (
+                <motion.span className="saved-status" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                  <CheckCircleIcon className="icon" /> Saved!
+                </motion.span>
+              )}
+            </div>
+          </motion.div>
+        </motion.div>
+      )}
+    </>
   );
-}
+};
 
 export default Notes;
