@@ -6,6 +6,7 @@ import RouletteIcon from '../../assets/images/roulette-icon.png';
 import { HiSparkles } from "react-icons/hi";
 import { FaHeart, FaSave} from "react-icons/fa";
 import { GrPowerReset } from "react-icons/gr";
+import { TfiCommentsSmiley } from "react-icons/tfi";
 import "./NoRecipesMessage.css";
 
 const NoRecipesMessage = ({ type }) => {
@@ -70,6 +71,12 @@ const NoRecipesMessage = ({ type }) => {
         </>
       ),
       buttonText: null, 
+      buttonAction: null,
+    },
+    comments: {
+      text: "No comments yet.",
+      subtext:( <>Be the first to share your thoughts! <TfiCommentsSmiley size={23}/> </>),
+      buttonText: null,
       buttonAction: null,
     },
   };
