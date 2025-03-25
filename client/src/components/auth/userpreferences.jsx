@@ -1,7 +1,7 @@
 import React, { useState, useContext, useRef } from "react";
 import { useForm } from "react-hook-form";
 import Confetti from "react-confetti";
-import "./UserPreferences.css";
+import "./userpreferences.css";
 import { userLoginContext } from "../../contexts/UserLoginContext";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUtensils, faBan, faVenusMars, faCalendar, faRulerVertical, faWeight, faRunning, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
