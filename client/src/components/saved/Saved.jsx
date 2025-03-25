@@ -108,11 +108,14 @@ const SavedRecipes = () => {
     );
 
   if (!loginStatus) return <AccessDenied />;
+  
 
   return (
     <div className="saved-recipes-container">
       <div className="header-container">
         <h2>Your Tasty Saves</h2>
+        <div className="recipe-dropdown-wrapper">
+
         <select
           className="recipe-dropdown"
           value={selectedCategory}
@@ -123,6 +126,7 @@ const SavedRecipes = () => {
           <option value="roulette">Recipe Roulette</option>
           <option value="ai">AI Recipes</option>
         </select>
+        </div>
       </div>
       {error && <p className="saved-error-message">{error}</p>}
 

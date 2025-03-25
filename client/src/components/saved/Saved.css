@@ -80,35 +80,67 @@
 }
 
 /* === DROPDOWN MENU === */
+.recipe-dropdown-wrapper { /* Add a wrapper div */
+  position: relative;  /* Make the wrapper relative */
+  display: inline-block; /* Ensure it's inline */
+}
+
 .recipe-dropdown {
+  appearance: none; /* Hide the default arrow */
+  -webkit-appearance: none; /* For Safari */
+  -moz-appearance: none; /* For Firefox */
   background: #E7DECD; /* Beige */
   color: #0A122A; /* Dark Blue */
   font-weight: 500;
   border: 2px solid #698F3F;
   border-radius: 8px;
-  padding: 8px 12px;
+  padding: 8px 30px 8px 12px; /* Increased right padding for arrow */
   font-size: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  
+  width: 200px; /* Or whatever width you prefer */
 }
 
 .recipe-dropdown:hover {
   background: #0a122a;
   color: white;
 }
-/* === DROPDOWN OPTIONS === */
-.recipe-dropdown option {
-  background: #E7DECD; /* Beige */
-  color: #0A122A; /* Dark Blue */
-  padding: 10px;
-  transition: background 0.3s ease;
-}
+
 
 /* Change color when hovering over an option */
 .recipe-dropdown option:hover {
   background: #698F3F !important; /* Olive Green */
   color: white;
+}
+
+/* Default arrow */
+.recipe-dropdown-wrapper::after {
+  content: '\25BC'; /* Unicode down arrow */
+  position: absolute;
+  top: 50%;
+  right: 12px;
+  transform: translateY(-50%);
+  color: #698F3F;
+  pointer-events: none;
+  transition: transform 0.3s ease;
+  font-size: 14px;
+}
+
+/* When any child (the dropdown) is focused, rotate the arrow */
+.recipe-dropdown-wrapper:focus-within::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: #f8f6f1;
+}
+
+/* When dropdown is focused, rotate the arrow */
+.recipe-dropdown-wrapper:has(.recipe-dropdown:focus)::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: #f8f6f1; /* Optional: change color on focus */
+}
+
+.recipe-dropdown-wrapper:focus-within::after {
+  transform: translateY(-50%) rotate(180deg);
+  color: #f8f6f1;
 }
 
 
