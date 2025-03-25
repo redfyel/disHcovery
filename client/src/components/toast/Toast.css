@@ -3,8 +3,8 @@
     top: 20px !important;
     left: 50% !important;
     transform: translateX(-50%) !important;
-    background: rgba(10, 18, 42, 0.9); /* Deep blue with transparency */
-    color: #FBFAF8; /* Off-white text */
+    background: rgba(10, 18, 42, 0.9); 
+    color: #FBFAF8;
     padding: 16px 28px;
     border-radius: 14px;
     display: flex;
@@ -21,9 +21,8 @@
     animation: fadeIn 0.3s ease-in-out;
 }
 
-/* Custom color themes using the disHcovery palette */
 .toast-container.success {
-    background: linear-gradient(135deg, #698F3F, #8ABF60); /* Olive green shades */
+    background: linear-gradient(135deg, #698F3F, #8ABF60); 
 }
 
 .toast-container.error {
@@ -32,19 +31,19 @@
 }
 
 .toast-container.info {
-    background: linear-gradient(135deg, #0A122A, #2C3E50); /* Dark blue & deep slate */
+    background: linear-gradient(135deg, #0A122A, #2C3E50); 
 }
 
 .toast-container.alert {
-    background: linear-gradient(135deg, #E7DECD, #D5C7A3); /* Soft beige tones */
+    background: linear-gradient(135deg, #E7DECD, #D5C7A3); 
 }
 
 .close-btn {
     background: none;
     border: none;
-    color: white;
+    color: white !important;
     cursor: pointer;
-    font-size: 20px;
+    font-size: 1rem;
     font-weight: bold;
     transition: opacity 0.2s ease-in-out;
 }
