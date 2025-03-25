@@ -3,6 +3,8 @@ import { useForm } from "react-hook-form";
 import Confetti from "react-confetti";
 import "./UserPreferences.css";
 import { userLoginContext } from "../../contexts/UserLoginContext";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faUtensils, faBan, faVenusMars, faCalendar, faRulerVertical, faWeight, faRunning, faLevelUpAlt } from '@fortawesome/free-solid-svg-icons';
 
 export default function UserPreferences({ onComplete }) {
     const [showConfetti, setShowConfetti] = useState(false);
@@ -74,15 +76,18 @@ export default function UserPreferences({ onComplete }) {
     };
 
     return (
-        <div className="preferences-container">
+        <div className="preferencesContainer">
             {showConfetti && <Confetti />}
-            <div className="preferences-card animate-appear">
-                <h2 className="preferences-title">Tell Us About You!</h2>
-                <form onSubmit={handleSubmit(onSubmit)} className="preferences-form">
-                    <label className="preferences-label">Do you follow a special diet?</label>
+            <div className="preferencesCard">
+                <h2 className="preferencesTitle">Tell Us About You!</h2>
+                <form onSubmit={handleSubmit(onSubmit)} className="preferencesForm">
+                    <label className="preferencesLabel">
+                        <FontAwesomeIcon icon={faUtensils} className="icon" />
+                        Do you follow a special diet?
+                    </label>
                     <select
                         {...register("diet")}
-                        className="preferences-input"
+                        className="preferencesInput"
                     >
                         <option value="None">None</option>
                         <option value="Vegetarian">Vegetarian</option>
@@ -92,21 +97,25 @@ export default function UserPreferences({ onComplete }) {
                         <option value="Gluten-Free">Gluten-Free</option>
                     </select>
 
-                    <label className="preferences-label">
+                    <label className="preferencesLabel">
+                        <FontAwesomeIcon icon={faBan} className="icon" />
                         Are you avoiding any ingredients?
                     </label>
                     <input
                         {...register("restrictions")}
-                        className="preferences-input"
+                        className="preferencesInput"
                         placeholder="E.g., Dairy, Nuts, Soy"
                     />
 
-                    <div className="preferences-grid">
+                    <div className="preferencesGrid">
                         <div>
-                            <label className="preferences-label">Sex</label>
+                            <label className="preferencesLabel">
+                                <FontAwesomeIcon icon={faVenusMars} className="icon" />
+                                Sex
+                            </label>
                             <select
                                 {...register("sex")}
-                                className="preferences-input"
+                                className="preferencesInput"
                             >
                                 <option value="Male">Male</option>
                                 <option value="Female">Female</option>
@@ -114,38 +123,50 @@ export default function UserPreferences({ onComplete }) {
                             </select>
                         </div>
                         <div>
-                            <label className="preferences-label">Date of Birth</label>
+                            <label className="preferencesLabel">
+                                <FontAwesomeIcon icon={faCalendar} className="icon" />
+                                Date of Birth
+                            </label>
                             <input
                                 type="date"
                                 {...register("birthYear")}
-                                className="preferences-input"
+                                className="preferencesInput"
                             />
                         </div>
                     </div>
 
-                    <div className="preferences-grid">
+                    <div className="preferencesGrid">
                         <div>
-                            <label className="preferences-label">Height (cm)</label>
+                            <label className="preferencesLabel">
+                                <FontAwesomeIcon icon={faRulerVertical} className="icon" />
+                                Height (cm)
+                            </label>
                             <input
                                 type="number"
                                 {...register("height")}
-                                className="preferences-input"
+                                className="preferencesInput"
                             />
                         </div>
                         <div>
-                            <label className="preferences-label">Weight (kg)</label>
+                            <label className="preferencesLabel">
+                                <FontAwesomeIcon icon={faWeight} className="icon" />
+                                Weight (kg)
+                            </label>
                             <input
                                 type="number"
                                 {...register("weight")}
-                                className="preferences-input"
+                                className="preferencesInput"
                             />
                         </div>
                     </div>
 
-                    <label className="preferences-label">Activity Level</label>
+                    <label className="preferencesLabel">
+                        <FontAwesomeIcon icon={faRunning} className="icon" />
+                        Activity Level
+                    </label>
                     <select
                         {...register("activityLevel")}
-                        className="preferences-input"
+                        className="preferencesInput"
                     >
                         <option value="Sedentary">Sedentary</option>
                         <option value="Lightly Active">Lightly Active</option>
@@ -154,22 +175,25 @@ export default function UserPreferences({ onComplete }) {
                         <option value="Super Active">Super Active</option>
                     </select>
 
-                    <label className="preferences-label">Cooking Skill Level</label>
+                    <label className="preferencesLabel">
+                        <FontAwesomeIcon icon={faLevelUpAlt} className="icon" />
+                        Cooking Skill Level
+                    </label>
                     <input
                         type="range"
                         {...register("cookingSkill")}
                         min="1"
                         max="3"
                         step="1"
-                        className="preferences-slider"
+                        className="preferencesSlider"
                     />
-                    <div className="slider-labels">
+                    <div className="sliderLabels">
                         <span>Beginner</span>
                         <span>Intermediate</span>
                         <span>Advanced</span>
                     </div>
 
-                    <button type="submit" className="preferences-submit">
+                    <button type="submit" className="preferencesSubmit">
                         Save & Continue
                     </button>
                 </form>

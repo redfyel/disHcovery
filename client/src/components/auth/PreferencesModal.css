@@ -14,10 +14,9 @@
 }
 
 .pref-modal-content {
-    background: #FBFAF8; /*  #FBFAF8 */
     border-radius: 12px;
-    width: 90%;
-    max-width: 500px;
+    width: 100%;
+    max-width: 600px;
     max-height: 80vh; /* Prevents overflow */
     padding: 20px;
     position: relative;
@@ -30,19 +29,19 @@
 /* Cute close button */
 .pref-modal-close-btn {
     position: absolute;
-    top: 10px;
-    right: 10px;
-    background: transparent;
+    top: -20px;
+    right: 7px;
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    outline: none;
+    padding: 10px;
+    background: transparent;
     transition: color 0.3s ease-in-out;
-    color: #0A122A; /* #0A122A - Dark Color for Contrast */
+    color: #F8F6F1; /* #0A122A - Dark Color for Contrast */
 }
 
 .pref-modal-close-btn:hover {
-    color: #698F3F; /* #698F3F - Accent Color */
+    color: #0A122A; /* #698F3F - Accent Color */
 }
 
 /* Smooth scrolling */
