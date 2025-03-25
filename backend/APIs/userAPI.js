@@ -9,25 +9,23 @@ const expressAsyncHandler = require("express-async-handler");
 userApp.use(exp.json());
 
 // Middleware to verify JWT token (DRY principle - reuse this)
-const verifyToken = expressAsyncHandler(async (req, res, next) => {
-  const authHeader = req.headers.authorization;
+const verifyToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1]; // Bearer <token>
 
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
-    return res
-      .status(401)
-      .json({ message: "Unauthorized: Invalid token format" });
+  if (!token) {
+    return res.status(401).json({ message: 'No token provided.' });
   }
 
-  const token = authHeader.split(" ")[1];
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => { // Use environment variable!
+    if (err) {
+      return res.status(403).json({ message: 'Invalid token.' }); // 403 Forbidden for invalid token
+    }
 
-  try {
-    const decoded = jwt.verify(token, process.env.SECRET_KEY);
-    req.userId = new ObjectId(decoded.userId); // Attach userId to request
-    next();
-  } catch (error) {
-    return res.status(401).json({ message: "Invalid or expired token", error });
-  }
-});
+    req.user = user; // Attach user data to the request
+    next(); // Proceed to the next middleware/route handler
+  });
+};
 
 //login route
 userApp.post(
@@ -182,10 +180,7 @@ userApp.post(
   })
 );
 
-userApp.post(
-  "/save-recipe",
-  verifyToken,
-  expressAsyncHandler(async (req, res) => {
+userApp.post( "/save-recipe",verifyToken, expressAsyncHandler(async (req, res) => {
     // Apply verifyToken middleware
     const usersCollection = req.app.get("usersCollection");
     const { recipe } = req.body;
@@ -201,7 +196,7 @@ userApp.post(
       // Check if the recipe is already saved
       const isAlreadySaved = user.saved_recipes.some(
         (savedRecipe) => savedRecipe._id.toString() === recipe._id
-      ); // **IMPORTANT: Compare ObjectIds correctly!**
+      ); 
 
       if (isAlreadySaved) {
         return res.status(400).json({ message: "Recipe already saved" });
@@ -229,10 +224,7 @@ userApp.post(
 );
 
 // New /is-recipe-saved route
-userApp.post(
-  "/is-recipe-saved",
-  verifyToken,
-  expressAsyncHandler(async (req, res) => {
+userApp.post( "/is-recipe-saved",verifyToken,expressAsyncHandler(async (req, res) => {
     const usersCollection = req.app.get("usersCollection");
     const { recipeId } = req.body;
     const userId = req.userId; // Get userId from req
@@ -375,25 +367,12 @@ userApp.put(
   })
 );
 // to be liked
-userApp.post(
-  "/like-recipe",
-  expressAsyncHandler(async (req, res) => {
+userApp.post("/like-recipe",verifyToken,expressAsyncHandler(async (req, res) => {
     const usersCollection = req.app.get("usersCollection");
     const { recipe } = req.body;
-    const authHeader = req.headers.authorization;
-
-    if (!authHeader || !authHeader.startsWith("Bearer ")) {
-      return res
-        .status(401)
-        .json({ message: "Unauthorized: Invalid token format" });
-    }
-
-    const token = authHeader.split(" ")[1];
+    const userId = req.userId; 
 
     try {
-      const decoded = jwt.verify(token, process.env.SECRET_KEY);
-      const userId = new ObjectId(decoded.userId);
-
       const user = await usersCollection.findOne({ _id: userId });
 
       if (!user) {
@@ -402,7 +381,7 @@ userApp.post(
 
       // Check if the recipe is already liked
       const isAlreadyLiked = user.liked_recipes.some(
-        (likedRecipe) => likedRecipe._id === recipe._id
+        (likedRecipe) => likedRecipe._id.toString() === recipe._id
       );
 
       if (isAlreadyLiked) {
@@ -429,10 +408,7 @@ userApp.post(
   })
 );
 
-userApp.post(
-    "/is-recipe-liked",
-    verifyToken,
-    expressAsyncHandler(async (req, res) => {
+userApp.post("/is-recipe-liked",verifyToken,expressAsyncHandler(async (req, res) => {
         const usersCollection = req.app.get("usersCollection");
         const { recipeId } = req.body;
         const userId = req.userId;
@@ -448,17 +424,10 @@ userApp.post(
                 return res.status(200).json({ isLiked: false });
             }
 
-            // Construct ObjectId from string, handling potential errors
-            let isLiked = false;
-            try {
-                const recipeObjectId = new ObjectId(recipeId); // Convert to ObjectId
-                isLiked = user.liked_recipes.some(likedRecipe => likedRecipe._id.equals(recipeObjectId)); // Compare ObjectId
-
-            } catch (error) {
-                console.error("Error converting recipeId to ObjectId:", error);
-                // Handle the case where recipeId is not a valid ObjectId string
-                return res.status(400).json({ message: "Invalid recipeId format", isLiked: false });
-            }
+            const isLiked = user.liked_recipes.some(
+              (likedRecipe) => likedRecipe._id.toString() === recipeId
+            ); 
+           
 
             res.status(200).json({ isLiked: isLiked });
         } catch (error) {
@@ -472,16 +441,11 @@ userApp.post("/dislike-recipe",verifyToken, expressAsyncHandler(async (req, res)
         const usersCollection = req.app.get("usersCollection");
         const { recipeId } = req.body;
         const userId = req.userId;
-   
-        console.log("Backend: dislike-recipe endpoint hit");
-        console.log("Backend: dislike-recipe - recipeId received:", recipeId);
-        console.log("Backend: dislike-recipe - userId from token:", userId);
-   
         try {
             const user = await usersCollection.findOne({ _id: userId });
    
             if (!user) {
-                console.log("Backend: dislike-recipe - User not found");
+                // console.log("Backend: dislike-recipe - User not found");
                 return res.status(404).json({ message: "User not found" });
             }
    
@@ -489,9 +453,9 @@ userApp.post("/dislike-recipe",verifyToken, expressAsyncHandler(async (req, res)
             let recipeObjectId;
             try {
                 recipeObjectId = new ObjectId(recipeId);
-                console.log("Backend: dislike-recipe - recipeObjectId created:", recipeObjectId);
+                // console.log("Backend: dislike-recipe - recipeObjectId created:", recipeObjectId);
             } catch (error) {
-                console.error("Backend: dislike-recipe - Invalid recipeId format", error);
+                // console.error("Backend: dislike-recipe - Invalid recipeId format", error);
                 return res.status(400).json({ message: "Invalid recipeId format" });
             }
    
@@ -505,7 +469,7 @@ userApp.post("/dislike-recipe",verifyToken, expressAsyncHandler(async (req, res)
    
             if (updateResult.modifiedCount === 0) {
                 // If modifiedCount is 0, it could mean the recipe wasn't liked in the first place
-                console.log("Backend: dislike-recipe - Recipe not found in liked_recipes, or user already unliked");
+                // console.log("Backend: dislike-recipe - Recipe not found in liked_recipes, or user already unliked");
                 return res.status(404).json({ message: "Recipe not found in liked_recipes, or user already unliked" });
             }
    

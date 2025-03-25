@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useContext } from "react";
+import React, { useState, useEffect, useCallback, useContext, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import Share from "../share/Share";
 import "./Recipe.css";
@@ -6,6 +6,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { HiSparkles } from "react-icons/hi";
 import { IoFastFoodSharp } from "react-icons/io5";
 import { FaUsers } from "react-icons/fa";
+import {CiBookmark,CiStickyNote} from "react-icons/ci";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegComments, FaComments } from "react-icons/fa";
+import {AiFillPrinter} from "react-icons/ai";
+import { IoShareSocialOutline } from "react-icons/io5";
 import {faHeart,faPrint,faBookmark,faComment,faUtensils,faClock,faPlay,faStickyNote,faShare,faPlus,faTimes,faHeartBroken,} from "@fortawesome/free-solid-svg-icons";
 import logo from "../../assets/images/logo_og.png";
 import { TiWarning } from "react-icons/ti";
@@ -36,7 +41,7 @@ const Recipe = () => {
   const [ingredientAlternatives, setIngredientAlternatives] = useState({});
   const [isFetchingAlternatives, setIsFetchingAlternatives] = useState(false);
 
-  const [isFabOpen, setIsFabOpen] = useState(false); // Toggle state for the FAB
+  const [isFabOpen, setIsFabOpen] = useState(false);
   // Create a ref for the toggle button
   const toggleButtonRef = useRef(null);
   // State to control video popup
@@ -87,7 +92,7 @@ const Recipe = () => {
               "Content-Type": "application/json",
               Authorization: `Bearer ${token}`,
             },
-            body: JSON.stringify({ recipeId: recipeId }), // Send the recipe ID
+            body: JSON.stringify({ recipeId: recipeId }), 
           }
         );
 
@@ -106,10 +111,7 @@ const Recipe = () => {
 
   const checkIfRecipeIsLiked = useCallback(
     async (recipeId) => {
-      //   console.log("checkIfRecipeIsLiked called with recipeId:", recipeId); // Add this
-
       if (!loginStatus || !recipeId) {
-        // console.log("checkIfRecipeIsLiked: Not logged in or recipeId missing");
         return;
       }
       try {
@@ -125,13 +127,9 @@ const Recipe = () => {
           }
         );
         if (!response.ok) {
-          console.error(
-            "checkIfRecipeIsLiked: Failed to check if recipe is liked."
-          ); // Add this
           throw new Error("Failed to check if recipe is liked.");
         }
         const liked = await response.json();
-        // console.log("checkIfRecipeIsLiked: Response from server:", liked); // Add this
         setIsLiked(liked.isLiked);
       } catch (error) {
         console.error("Error checking if recipe is liked:", error);
@@ -148,7 +146,7 @@ const Recipe = () => {
 
   useEffect(() => {
     if (recipe) {
-      console.log("useEffect: Recipe changed, checking saved/liked status"); // Add this
+      // console.log("useEffect: Recipe changed, checking saved/liked status"); // Add this
       checkIfRecipeIsSaved(recipe._id);
       checkIfRecipeIsLiked(recipe._id);
     }
@@ -162,8 +160,6 @@ const Recipe = () => {
 
     const endpoint = isLiked ? "dislike-recipe" : "like-recipe";
 
-    console.log("handleLikeRecipe: Sending recipeId:", recipe._id); // Add this line
-
     try {
       const response = await fetch(
         `http://localhost:4000/user-api/${endpoint}`,
@@ -173,17 +169,18 @@ const Recipe = () => {
             "Content-Type": "application/json",
             Authorization: `Bearer ${token}`,
           },
-          body: JSON.stringify({ recipeId: recipe._id, recipe: recipe }),
+          body: JSON.stringify({ recipeId: recipe._id}),
         }
       );
 
       if (!response.ok) {
+        const errorData = await response.json(); // Try to get error message from backend
         throw new Error(
-          `Failed to update like status.  Status: ${response.status}`
+          `Failed to update like status.  Status: ${response.status}, Message: ${errorData?.message || 'Unknown error'}`
         );
       }
 
-      setIsLiked((prevIsLiked) => !prevIsLiked); // Toggle the isLiked state
+      setIsLiked((prevIsLiked) => !prevIsLiked);
 
       const message = isLiked
         ? "Recipe successfully liked!"
@@ -194,7 +191,6 @@ const Recipe = () => {
         `Recipe like/dislike operation failed. Please try again later.${error.message}`,
         "error"
       );
-      console.error("Error in handleLikeRecipe:", error); // Log the error
     }
   };
 
@@ -549,9 +545,16 @@ const Recipe = () => {
           <img src={recipe.image} alt={recipeTitle} className="rrecipe-image" />
           {/* VIDEO PLAY BUTTON */}
           {recipe.videoURL && (
+            <OverlayTrigger
+            placement="top"
+            delay={{ show: 250, hide: 400 }}
+            overlay={renderTooltip(
+              "Watch the Video!"
+            )}>
             <button className="video-button" onClick={openVideoPopup}>
               <FontAwesomeIcon icon={faPlay} />
             </button>
+            </OverlayTrigger>
           )}
         </div>
 
