@@ -255,18 +255,28 @@ Left Column Styles
   padding: 8px 12px;
   border-radius: 5px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 1.1rem;
 }
 
 .ingredient-alternatives-button:hover {
   background-color: #5a7a2e;
 }
-
+.ingredients-section{
+  border-left: 6px solid #698f3f;
+  padding: 30px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(110, 143, 63, 0.3);
+  transition: transform 0.3s ease-in-out;
+  max-width: 800px; 
+  margin: 50px ;
+}
 .ingredients-section ul {
   display: flex;
   flex-wrap: wrap;
+  /* margin-bottom: 40px; */
   gap: 10px;
-  justify-content: center; /* Center ingredients horizontally */
+  justify-content: center; 
+  
 }
 
 .ingredients-section li {
@@ -304,6 +314,7 @@ Left Column Styles
   list-style-type: none;
   padding: 0;
   margin: 0;
+  font-size: 1.9rem;
 }
 
 .recipe-section li {
@@ -324,12 +335,16 @@ Left Column Styles
   position: relative;
   padding-left: 30px;
 }
-.steps-section recipe-section{
+.steps-section {
   border-left: 5px solid #698f3f;
   width:auto;
-
+  padding: 10px;
+  margin-left: 0px;
+  flex-grow: 1;
 }
-
+.steps-section h3{
+  font-size: 1.7rem;
+}
 .steps-section li:before {
   content: counter(step-counter);
   position: absolute;
@@ -344,6 +359,8 @@ Left Column Styles
   line-height: 25px;
   font-size: 14px;
 }
+
+
 
 /* Allergy Warning Section */
 .allergy-warnings-section {
@@ -616,7 +633,7 @@ Ingredient Alternatives Section
 }
 
 .ingredient-selection input[type="checkbox"]:checked::before {
-  content: "\f00c";
+  content: "✓";
   font-family: "Font Awesome 5 Free";
   font-weight: 900;
   font-size: 12px;
@@ -627,10 +644,14 @@ Ingredient Alternatives Section
   transform: translate(-50%, -50%);
 }
 
+.ingredient-selection {
+  display: flex;
+  flex-direction: column; /* Ensures children are stacked */
+  align-items: center; /* Centers horizontally */
+}
+
 .ingredient-selection .ai-button {
-  display: block;
   margin-top: 20px;
-  width: auto;
   padding: 10px 20px;
   border-radius: 8px;
   font-size: 1rem;
@@ -638,6 +659,7 @@ Ingredient Alternatives Section
   color: var(--off-white);
   border: none;
 }
+
 
 .ingredients-section ul li {
   position: relative;
@@ -656,6 +678,7 @@ Ingredient Alternatives Section
 .ingredients-section ul li .ingredient-text {
   flex-grow: 1;
   margin-right: 10px;
+  
   /* background:#698F3F; */
   color: rgb(105, 143, 63, 100);
   font-weight: 630;
@@ -767,10 +790,11 @@ Ingredient Alternatives Section
       text-align: center;  /*Center the text within the button*/
     }
 }
+
 .floating-action-bar {
   position: absolute; /* Relative to the toggle container */
   bottom: 90px;
-  left : 5;
+  left: 20;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -781,15 +805,15 @@ Ingredient Alternatives Section
 }
 
 .floating-action-toggle.open .floating-action-bar {
-  opacity: 1;        /* Visible when open */
-  visibility: visible;   /* Visible when open */
-  pointer-events: auto; /* Allow interaction when open */  
+  opacity: 1;       
+  visibility: visible;   
+  pointer-events: auto; 
 }
 
 .floating-action-bar .icon-button {
-  background-color: #698f3f;  /* Main button color */
+  background-color: #0A122A;  
   color: #fbfaf8;       /* Text/icon color */
-  border: none;          /* Remove border */
+  border: 1px solid #F8F6F1;          /* Remove border */
   padding: 12px;       /* Larger padding for circular shape */
   border-radius: 50%;     /* Make it a circle */
   width: 48px;         /* Fixed width and height */
@@ -835,7 +859,6 @@ Ingredient Alternatives Section
 
 
 /* Recipe.css (or your CSS file) */
-
 .floating-action-toggle {
   position: fixed;
   bottom: 100px;
@@ -867,10 +890,12 @@ Ingredient Alternatives Section
   width: 24px;
   height: 24px;
 }
+.floating-action-toggle .toggle-button.toggle-button:click {
+  background-color: #0A122A ;
 
+}
 .floating-action-bar {
-  position: absolute; /* Relative to the toggle container */
-  /* bottom: 400; */
+  position: absolute; 
   top: 400;
   right: -100;
   display: flex;
@@ -882,8 +907,8 @@ Ingredient Alternatives Section
 }
 
 .floating-action-toggle.open .floating-action-bar {
-  opacity: 1;        /* Visible when open */
-  visibility: visible;   /* Visible when open */
+  opacity: 1;        
+  visibility: visible;   
 }
 
 
@@ -899,23 +924,63 @@ Ingredient Alternatives Section
   }
 }
 
-/* notes */
-.notes-section {
-  margin-top: 15px;
-  text-align: center;
+.share-container {
+  position: absolute;
+  left: -200px;
+  top: 90%;
+  transform: translateY(-50%);
+  padding: 0;
+  background: none; /* No background */
+  border-radius: 0; /* Remove card-like shape */
+  box-shadow: none; /* No extra shadow */
+  display: flex;
+  flex-direction: row; /* Make buttons sit in a row */
+  gap: 8px;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
-.notes-toggle-btn {
-  background-color: #698F3F; /* Olive Green */
-  color: white;
-  padding: 8px 15px;
+.share-container.hidden {
+  opacity: 0;
+  transform: translateY(-50%) scale(0.9);
+  pointer-events: none;
+}
+
+/* Button Styles - More Integrated Look */
+.share-button {
+  background: #698F3F; /* Olive Green */
+  color: #FBFAF8; /* Off-White */
+  border-radius: 6px;
+  padding: 8px 10px;
+  font-size: 1rem;
+  transition: all 0.2s ease-in-out;
   border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: none; /* No extra shadow */
 }
 
-.notes-toggle-btn:hover {
-  background-color: #556B2F;
+.share-button:hover {
+  background: #506B2F;
+  transform: scale(1.05);
+}
+.notes-container {
+  position: absolute;
+  right: 60px;
+  top: 40%;
+  transform: translateY(-50%);
+  padding: 0; 
+  background: none; /* No background */
+  border-radius: 0; /* Remove card-like shape */
+  box-shadow: none; /* No extra shadow */
+  display: flex;
+  flex-direction: row; /* Make buttons sit in a row */
+  gap: 8px;
+  align-items: center;
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notes-container.hidden {
+  display: none;
 }
