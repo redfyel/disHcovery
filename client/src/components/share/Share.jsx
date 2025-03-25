@@ -1,20 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Copy, Share2, ChevronDown, ChevronUp, Check } from "lucide-react";
 import { FaXTwitter } from "react-icons/fa6";
 import { useToast } from "../../contexts/ToastProvider";
 import { FaWhatsapp, FaInstagram, FaSnapchatGhost, FaPinterest, FaFacebookF } from "react-icons/fa";
 import './Share.css'
 
-const Share = ({ recipeTitle, recipeImage }) => {
+const Share = ({ recipeTitle }) => {
     const [copied, setCopied] = useState(false);
     const [showShareOptions, setShowShareOptions] = useState(false);
-    const {toast, showToast} = useToast();
+    const [recipeExists, setRecipeExists] = useState(true);
+    const { toast, showToast } = useToast();
+    
     const titleBeforeBracket = recipeTitle.split('(')[0].trim();
     const sanitizedTitle = titleBeforeBracket.toLowerCase().replace(/[^a-z0-9]+/g, "-");
-    const encodedTitle = encodeURIComponent(sanitizedTitle);
-    const shareUrl = `${window.location.origin}/recipe/${encodedTitle}`;
+    
+    const apiUrl = `https://dishcovery-j22s.onrender.com/recipe-api/recipe/${sanitizedTitle}`;
+    const shareUrl = `${window.location.origin}/recipe/${sanitizedTitle}`;
 
-    const websiteName = "disHcovery";
+    useEffect(() => {
+        // Check if the recipe exists before allowing sharing
+        const checkRecipeExists = async () => {
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("Recipe not found");
+                setRecipeExists(true);
+            } catch (error) {
+                setRecipeExists(false);
+                showToast("This recipe does not exist!", "alert");
+            }
+        };
+
+        checkRecipeExists();
+    }, [apiUrl, showToast]);
 
     const shareMessages = [
         `Discover an amazing recipe on ${websiteName}. A must-try dish: ${shareUrl}`,
@@ -32,12 +49,7 @@ const Share = ({ recipeTitle, recipeImage }) => {
         { name: "WhatsApp", icon: <FaWhatsapp />, url: `https://wa.me/?text=${encodeURIComponent(randomMessage)}` },
         { name: "Instagram", icon: <FaInstagram />, url: `https://www.instagram.com/?url=${encodeURIComponent(shareUrl)}` },
         { name: "Snapchat", icon: <FaSnapchatGhost />, url: `https://www.snapchat.com/share?url=${encodeURIComponent(shareUrl)}` },
-        {
-            name: "Pinterest",
-            icon: <FaPinterest />,
-            url: `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(window.location.origin + "/recipe/" + encodedTitle)}&media=${encodeURIComponent(recipeImage)}&description=${encodeURIComponent("Check out this amazing recipe on disHcovery!")}`
-        },
-        
+        { name: "Pinterest", icon: <FaPinterest />, url: `https://www.pinterest.com/pin/create/button/?url=${encodeURIComponent(shareUrl)}` },
         { name: "Facebook", icon: <FaFacebookF />, url: `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(shareUrl)}` },
         { name: "Twitter", icon: <FaXTwitter />, url: `https://twitter.com/intent/tweet?url=${encodeURIComponent(shareUrl)}&text=${encodeURIComponent(randomMessage)}` }
     ];
@@ -68,44 +80,50 @@ const Share = ({ recipeTitle, recipeImage }) => {
         <div className="share-card">
             <h2 className="share-title">Share this Recipe</h2>
 
-            {/* Main Buttons */}
-            <div className="share-buttons-container">
-                <button
-                    onClick={handleCopy}
-                    className={`share-button copy-button ${copied ? 'copied' : ''}`}
-                    disabled={copied}
-                >
-                    {copied ? <Check size={16} className="share-icon" /> : <Copy size={16} className="share-icon" />}
-                </button>
-                <button
-                    onClick={handleGenericShare}
-                    className="share-button generic-share-button"
-                >
-                    <Share2 size={16} />
-                </button>
-                <button
-                    onClick={() => setShowShareOptions(!showShareOptions)}
-                    className="share-button toggle-options-button"
-                >
-                    {showShareOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
-                </button>
-            </div>
-
-            {/* Social Media Icons */}
-            {showShareOptions && (
-                <div className="social-icons-grid">
-                    {socialLinks.map(({ name, icon, url }) => (
-                        <a
-                            key={name}
-                            href={url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className={`social-icon ${name.toLowerCase().replace(' ', '')}`}
+            {!recipeExists ? (
+                <p className="error-message">⚠️ Recipe not found. Cannot share.</p>
+            ) : (
+                <>
+                    {/* Main Buttons */}
+                    <div className="share-buttons-container">
+                        <button
+                            onClick={handleCopy}
+                            className={`share-button copy-button ${copied ? 'copied' : ''}`}
+                            disabled={copied}
                         >
-                            {icon}
-                        </a>
-                    ))}
-                </div>
+                            {copied ? <Check size={16} className="share-icon" /> : <Copy size={16} className="share-icon" />}
+                        </button>
+                        <button
+                            onClick={handleGenericShare}
+                            className="share-button generic-share-button"
+                        >
+                            <Share2 size={16} />
+                        </button>
+                        <button
+                            onClick={() => setShowShareOptions(!showShareOptions)}
+                            className="share-button toggle-options-button"
+                        >
+                            {showShareOptions ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                        </button>
+                    </div>
+
+                    {/* Social Media Icons */}
+                    {showShareOptions && (
+                        <div className="social-icons-grid">
+                            {socialLinks.map(({ name, icon, url }) => (
+                                <a
+                                    key={name}
+                                    href={url}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className={`social-icon ${name.toLowerCase().replace(' ', '')}`}
+                                >
+                                    {icon}
+                                </a>
+                            ))}
+                        </div>
+                    )}
+                </>
             )}
         </div>
     );
