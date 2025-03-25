@@ -11,6 +11,7 @@ import Desserts from "../../assets/images/dessert.jpg";
 import Healthy from "../../assets/images/Healthy.jpg";
 import Roulette from "../../assets/images/roulette-icon.png";
 import logo from "../../assets/images/logo_darkbg.png";
+import logoo from "../../assets/images/logo_og.png";
 
 const Home = () => {
   const categories = [
@@ -73,9 +74,9 @@ const Home = () => {
     },
     {
       title: "Your Personal Recipe Dashboard",
-      desc: "All your liked recipes, favorite dishes, quick access links and past spins—organized in one place.",
+      desc: "All your preferences, favorite dishes, quick access links and past spins—organized in one place.",
       icon: "/icons/dashboard.svg",
-      image: "/images/dashboard.jpg",
+      image: logoo,
     },
   ];
 
