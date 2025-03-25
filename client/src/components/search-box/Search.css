@@ -17,9 +17,12 @@
   display: flex;
   align-items: center;
   flex: 1;
-  overflow: hidden;
+  /* overflow: hidden; */
   width: 250px; /* Set a fixed or max width */
   max-width: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
 }
 
 .search-input {
@@ -32,7 +35,7 @@
   font-size: 0.9rem;
   outline: none;
   transition: border 0.2s ease-in-out;
-  white-space: nowrap; /* Prevent text wrapping */
+  white-space: nowrap; 
 }
 .search-container:focus-within {
   border: 1px solid #698F3F; 
@@ -48,6 +51,22 @@
   cursor: pointer;
   transition: background 0.2s ease-in-out;
   white-space: nowrap; /* Ensure button stays in one line */
+}
+
+
+.search-icon {
+  position: absolute;
+  left: 10px; 
+  color: #0A122A; /* Adjust as needed */
+  pointer-events: none; /* Allows clicks to pass through the icon to the input */
+  transition: color 0.2s ease; /* Smooth transition for color change */
+}
+
+
+
+.search-input {
+  padding-left: 30px; /* Make room for the icon */
+  /* Other styles */
 }
 
 .roulette-btn img {

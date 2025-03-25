@@ -29,6 +29,7 @@ function Search() {
     const dropdownRef = useRef(null); // Ref for the dropdown container
     const [searchInputWrapperWidth, setSearchInputWrapperWidth] = useState(0);
     const [recipes, setRecipes] = useState([]); // State to hold fetched recipes
+    const [isInputFocused, setIsInputFocused] = useState(false); // State to track focus
 
     // Update searchInputWrapperWidth on component mount and window resize
     useEffect(() => {
@@ -57,6 +58,11 @@ function Search() {
 
     const handleInputFocus = () => {
         setIsDropdownVisible(true);
+        setIsInputFocused(true); // Set focus to true
+    };
+
+    const handleInputBlur = () => {
+        setIsInputFocused(false); // Set focus to false when blurred
     };
 
     // Outside Click Detection (now in Search)
@@ -67,7 +73,7 @@ function Search() {
         <div className="search-container">
             {/* Search Bar with Icon */}
             <div className="search-input-wrapper">
-                <FaSearch className="search-icon" />
+                <FaSearch className={`search-icon ${isInputFocused ? 'active' : ''}`} />
                 <input
                     type="text"
                     className="search-input"
@@ -75,19 +81,19 @@ function Search() {
                     value={query}
                     onChange={handleInputChange}
                     onFocus={handleInputFocus}
+                    onBlur={handleInputBlur}
                     ref={inputRef}
                 />
             </div>
 
-            {/* Conditionally render the SearchBox (dropdown), passing query and ref, and setIsDropdownVisible*/}
             {isDropdownVisible && (
                 <SearchBox
                     searchTerm={query}
                     searchInputRef={inputRef}
                     searchInputWrapperWidth={searchInputWrapperWidth}
                     setRecipes={setRecipes}
-                    setIsDropdownVisible={setIsDropdownVisible} // Pass setIsDropdownVisible
-                    dropdownRef={dropdownRef} // Pass the dropdown ref
+                    setIsDropdownVisible={setIsDropdownVisible}
+                    dropdownRef={dropdownRef}
                 />
             )}
 
