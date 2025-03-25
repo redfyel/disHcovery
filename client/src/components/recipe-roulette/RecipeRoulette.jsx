@@ -78,7 +78,7 @@ const RecipeRoulette = ({ isOpen, onClose }) => {
           return;
         }
 
-        console.log("Sending token:", token);
+        // console.log("Sending token:", token);
 
         const res = await fetch("http://localhost:4000/user-api/spin", {
           method: "POST",

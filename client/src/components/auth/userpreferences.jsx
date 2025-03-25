@@ -42,7 +42,6 @@ export default function UserPreferences({ onComplete }) {
             cookingSkill: parseInt(data.cookingSkill, 10) || 1,
         };
 
-        console.log("📤 Sending Request Data:", requestData);
 
         try {
             const response = await fetch(
@@ -63,7 +62,6 @@ export default function UserPreferences({ onComplete }) {
                 throw new Error(`Failed to save preferences: ${errorData.message}`);
             }
 
-            console.log("✅ Preferences saved successfully!");
             localStorage.setItem("onboardingComplete", "true");
             setShowConfetti(true);
 

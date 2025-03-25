@@ -49,10 +49,10 @@ const Recipes = () => {
         if (location.search) {
           url = `http://localhost:4000/recipe-api/recipes/explore`;
           url += location.search;
-          console.log("Fetching URL with query:", url);
+          // console.log("Fetching URL with query:", url);
         } else if (ingredients) {
           url = `http://localhost:4000/recipe-api/recipes/by-ingredients/${ingredients}`;
-          console.log("Fetching URL by ingredients:", url);
+          // console.log("Fetching URL by ingredients:", url);
         }
 
         const response = await fetch(url);

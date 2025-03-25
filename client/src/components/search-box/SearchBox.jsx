@@ -26,7 +26,7 @@ function SearchBox({
     // Handler to navigate to the recipes page with selected ingredients
     const handleShowRecipes = (e) => {
         e.stopPropagation();
-        console.log("Show Recipes button clicked", selectedIngredients);
+        // console.log("Show Recipes button clicked", selectedIngredients);
         navigate("/recipes/by-ingredients/" + selectedIngredients.join(","));
         setIsDropdownVisible(false);
     };
