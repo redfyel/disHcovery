@@ -1,0 +1,6 @@
+{
+    "rewrites": [
+      { "source": "/recipe/:path*", "destination": "/index.html" }
+    ]
+  }
+  
