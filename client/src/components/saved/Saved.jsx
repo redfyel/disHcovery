@@ -128,7 +128,7 @@ const SavedRecipes = () => {
         </select>
         </div>
       </div>
-      {error && <p className="saved-error-message">{error}</p>}
+      {/* {error && <p className="saved-error-message">{error}</p>} */}
 
       {selectedCategory === "all" ? (
         <>
