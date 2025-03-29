@@ -110,7 +110,7 @@ const Home = () => {
               Discover, Create and Savor!{" "}
             </motion.p>
             <Link
-              to="/explore"
+              to="/recipes"
               className="hero-button"
               aria-label="Explore disHcovery"
             >
