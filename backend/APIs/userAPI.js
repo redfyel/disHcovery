@@ -48,7 +48,16 @@ userApp.post(
 
     newUser.saved_recipes = [];
     newUser.roulette_recipes = [];
-    newUser.preferences = {};
+    newUser.preferences = {
+      diet: "Not set",
+      restrictions: "None",
+      sex: "Not set",
+      birthYear: "",
+      height: 0,
+      weight: 0,
+      activityLevel: "Not set",
+      cookingSkill: 0
+    };
     newUser.liked_recipes = [];
 
     //verifying uniqueness
@@ -95,11 +104,7 @@ userApp.post(
   }
 });
 
-userApp.post(
-  "/preferences",
-  tokenVerify,
-  expressAsyncHandler(async (req, res) => {
-    // Apply tokenVerify middleware
+userApp.post("/preferences",tokenVerify,expressAsyncHandler(async (req, res) => {
     const usersCollection = req.app.get("usersCollection");
     const { userId, ...preferences } = req.body;
 
@@ -114,30 +119,29 @@ userApp.post(
         return res.status(404).json({ message: "User not found" });
       }
 
-      // Ensure the user document has a preferences object
+      // Merge preferences instead of overwriting
+      const updatedPreferences = { ...user.preferences, ...preferences };
+
       const updateResult = await usersCollection.updateOne(
         { _id: new ObjectId(userId) },
-        { $set: { preferences } } // Overwrites preferences object
+        { $set: { preferences: updatedPreferences } }
       );
 
       if (updateResult.modifiedCount === 0) {
-        return res
-          .status(500)
-          .json({ message: "Failed to update preferences" });
+        return res.status(500).json({ message: "Failed to update preferences" });
       }
 
-      res
-        .status(200)
-        .json({
-          message: "Preferences saved successfully!",
-          updatedPreferences: preferences,
-        });
+      res.status(200).json({
+        message: "Preferences saved successfully!",
+        updatedPreferences
+      });
     } catch (error) {
       console.error("Error saving preferences:", error);
       res.status(500).json({ message: "Internal Server Error", error });
     }
   })
 );
+
 
 userApp.post(
   "/spin",

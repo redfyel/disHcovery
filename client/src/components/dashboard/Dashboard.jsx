@@ -35,7 +35,9 @@ const Dashboard = () => {
   const [recipeHistory, setRecipeHistory] = useState([]);
   const [error, setError] = useState(null);
   const handleInput = (e) => setInput(e.target.value);
-
+  console.log("Current User Data:", currentUser);
+  console.log("Preferences:", currentUser?.preferences);
+  
   useEffect(() => {
     if (currentUser && currentUser.roulette_recipes) {
       setRecipeHistory(currentUser.roulette_recipes);
@@ -43,6 +45,15 @@ const Dashboard = () => {
       setRecipeHistory([]);
     }
   }, [currentUser]);
+
+  // useEffect(() => {
+  //   if (currentUser && currentUser.preferences) {
+  //     console.log("Preferences loaded:", currentUser.preferences);
+  //   } else {
+  //     console.log("No preferences found.");
+  //   }
+  // }, [currentUser]);
+  
 
   const handleSend = () => {
     if (!loginStatus) {
@@ -217,44 +228,39 @@ const Dashboard = () => {
 
         {/* Preferences Section */}
         <h3 className="mt-5">Your Preferences</h3>
-        {currentUser.preferences && (
-          <div className="dashboard-preferences">
-            <ul className="preferences-list">
-              <li>
-                <strong>Diet:</strong> {currentUser.preferences.diet}
-              </li>
-              <li>
-                <strong>Restrictions:</strong>{" "}
-                {currentUser.preferences.restrictions}
-              </li>
-              <li>
-                <strong>Sex:</strong> {currentUser.preferences.sex}
-              </li>
-              <li>
-                <strong>Birth Year:</strong> {currentUser.preferences.birthYear}
-              </li>
-              <li>
-                <strong>Height:</strong>{" "}
-                {currentUser.preferences.height?.$numberInt ||
-                  currentUser.preferences.height}
-              </li>
-              <li>
-                <strong>Weight:</strong>{" "}
-                {currentUser.preferences.weight?.$numberInt ||
-                  currentUser.preferences.weight}
-              </li>
-              <li>
-                <strong>Activity Level:</strong>{" "}
-                {currentUser.preferences.activityLevel}
-              </li>
-              <li>
-                <strong>Cooking Skill:</strong>{" "}
-                {currentUser.preferences.cookingSkill?.$numberInt ||
-                  currentUser.preferences.cookingSkill}
-              </li>
-            </ul>
-          </div>
-        )}
+        {currentUser.preferences ? (
+  <div className="dashboard-preferences">
+    <ul className="preferences-list">
+      <li>
+        <strong>Diet:</strong> {currentUser.preferences.diet || "Not set"}
+      </li>
+      <li>
+        <strong>Restrictions:</strong> {currentUser.preferences.restrictions || "Not set"}
+      </li>
+      <li>
+        <strong>Sex:</strong> {currentUser.preferences.sex || "Not set"}
+      </li>
+      <li>
+        <strong>Birth Year:</strong> {currentUser.preferences.birthYear || "Not set"}
+      </li>
+      <li>
+        <strong>Height:</strong> {currentUser.preferences.height?.$numberInt || currentUser.preferences.height || "Not set"}
+      </li>
+      <li>
+        <strong>Weight:</strong> {currentUser.preferences.weight?.$numberInt || currentUser.preferences.weight || "Not set"}
+      </li>
+      <li>
+        <strong>Activity Level:</strong> {currentUser.preferences.activityLevel || "Not set"}
+      </li>
+      <li>
+        <strong>Cooking Skill:</strong> {currentUser.preferences.cookingSkill?.$numberInt || currentUser.preferences.cookingSkill || "Not set"}
+      </li>
+    </ul>
+  </div>
+) : (
+  <p>No preferences set.</p>
+)}
+
       </aside>
 
       <main className="dashboard-main-content">

@@ -8,33 +8,39 @@ function UserLoginStatus({children}){
     let [error, setError] = useState("")
 
 
-    async function onLogin(userCredentials){
-        try{
+    async function onLogin(userCredentials) {
+        try {
             let res = await fetch('https://dishcovery-j22s.onrender.com/user-api/login', {
-                method : "POST",
-                headers : {"Content-type" : "application/json"},
-                body : JSON.stringify(userCredentials)
-            })
-            let result = await res.json()
-            // console.log(result);
-
-            // user logged in successfully
-            if(result.message === "login success"){
-                setCurrentUser(result.user)
-                setLoginStatus(true)
-                setError("")
-                sessionStorage.setItem("token", result.token)
-                setToken(result.token)
-            } 
-            else {
-                setError(result.message)
-                setCurrentUser({})
-                setLoginStatus(false)
+                method: "POST",
+                headers: { "Content-type": "application/json" },
+                body: JSON.stringify(userCredentials)
+            });
+    
+            let result = await res.json();
+    
+            if (result.message === "login success") {
+                sessionStorage.setItem("token", result.token);
+                setToken(result.token);
+                setLoginStatus(true);
+                setError("");
+    
+                // Ensure preferences are set
+                const updatedUser = {
+                    ...result.user,
+                    preferences: result.user.preferences || {} 
+                };
+    
+                setCurrentUser(updatedUser);
+            } else {
+                setError(result.message);
+                setCurrentUser({});
+                setLoginStatus(false);
             }
-        } catch (err){
-            setError(err.message)
+        } catch (err) {
+            setError(err.message);
         }
     }
+    
     
 
     function onLogout() {
