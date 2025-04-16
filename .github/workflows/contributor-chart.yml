@@ -7,7 +7,7 @@ on:
 
 jobs:
   generate:
-    uses: redfyel/contrib-pie-generator/.github/workflows/main.yml@v2.52
+    uses: redfyel/contrib-pie-generator/.github/workflows/main.yml@v2.53
     with:
       chart-size: '5,5'
       palette: "#0A122A, #698F3F, #E7DECD"
