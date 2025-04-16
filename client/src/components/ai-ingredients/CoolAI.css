@@ -1,6 +1,4 @@
-/* ==========================
-   TOOLTIP BACKGROUND & TEXT
-   ========================== */
+/*   TOOLTIP BACKGROUND & TEXT */
    .tooltip-inner {
     background-color: #698F3F !important;
     color: #fbfaf8 !important;
@@ -11,35 +9,25 @@
     text-align: center;
   }
   
-  /* ==========================
-     GENERAL TOOLTIP ARROW STYLING
-     ========================== */
+  /* GENERAL TOOLTIP ARROW STYLING */
   .tooltip .tooltip-arrow::before {
     content: "";
     position: absolute;
     border: 0.5em solid transparent;
   }
   
-  /* ==========================
-     ARROW FOR LEFT-PLACED TOOLTIP (Arrow on Right)
-     ========================== */
+  /* ARROW FOR LEFT-PLACED TOOLTIP (Arrow on Right) */
   .tooltip[data-popper-placement^="left"] .tooltip-arrow::before {
     border-left-color: #698F3F !important;
   }
   
-  /* ==========================
-     ARROW FOR BOTTOM-PLACED TOOLTIP (Arrow on Top)
-     ========================== */
+  /*     ARROW FOR BOTTOM-PLACED TOOLTIP (Arrow on Top) */
   .tooltip[data-popper-placement^="top"] .tooltip-arrow::before {
-    /* Reset border settings */
     border: 0.5em solid transparent;
-    /* Color only the top border to form a triangle pointing upward */
     border-top-color: #698F3F !important;
   }
   
-  /* ==========================
-     AI BUTTON STYLES
-     ========================== */
+  /*AI BUTTON STYLES*/
   .ai-but {
     border: none;
     background-color: #F8F6F1;
