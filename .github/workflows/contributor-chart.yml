@@ -7,6 +7,6 @@ on:
 
 jobs:
   generate:
-    uses: redfyel/contrib-pie-generator/.github/workflows/main.yml@v2.0
+    uses: redfyel/contrib-pie-generator/.github/workflows/main.yml@v2.1
     with:
       chart-size: '6,6'
