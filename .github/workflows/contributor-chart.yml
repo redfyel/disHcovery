@@ -11,4 +11,4 @@ jobs:
     with:
       chart-size: '5,5'
       palette: "#0A122A, #698F3F, #E7DECD"
-      repo-url: "https://api.github.com/repos/${{ github.repository }}/contributors"
+      repo-url: "https://api.github.com/repos/redfyel/dishcovery/contributors"
