@@ -1,0 +1,12 @@
+name: Generate Contributor Pie Chart
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate:
+    uses: redfyel/contrib-pie-generator/.github/workflows/main.yml@v1.0
+    with:
+      chart-size: '6,6'  
