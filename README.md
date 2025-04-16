@@ -53,3 +53,5 @@ disHcovery isn't just another recipe app – it's your **AI-powered, ingredient-
 
 Hungry for a better cooking experience? **Start your disHcovery today! 🚀**
 
+
+![Contributor Pie Chart](contributor-pie.png)
