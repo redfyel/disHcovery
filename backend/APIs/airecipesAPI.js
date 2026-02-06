@@ -19,7 +19,7 @@ airecipesApp.post("/generate-recipe", async (req, res) => {
     }
 
     
-    const modelName = "gemini-1.5-pro-latest";
+    const modelName = "gemini-2.0-flash";
     const model = genAI.getGenerativeModel({ model: modelName, generationConfig: {temperature: 0.3, topP: 0.8} }); 
     const prompt = `Given these ingredients: ${ingredients.join(", ")}, suggest a recipe.
     - IMPORTANT: The recipe MUST primarily use the ingredients provided. Minimize the use of entirely new ingredients. If a new ingredient is absolutely necessary, clearly indicate it as 'New Ingredient:' followed by the ingredient name and its purpose in the recipe.
@@ -116,7 +116,7 @@ airecipesApp.post("/get-ingredient-alternatives", async (req, res) => {
       }
     `;
 
-    const modelName = process.env.GEMINI_MODEL || "gemini-1.5-pro-latest";
+    const modelName = process.env.GEMINI_MODEL || "gemini-2.0-flash";
     const model = genAI.getGenerativeModel({ model: modelName });
 
     const result = await model.generateContent(prompt);
